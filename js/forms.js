@@ -46,7 +46,6 @@ function regformhash(form, firstname,lastname, email, password, conf) {
     // specific guidance to the user
     if (password.value.length < 6) {
         fieldError(password,'Passwords must be at least 6 characters long');
-        form.password.focus();
         errorElem=password;
     }
     // At least one number, one lowercase and one uppercase letter 
@@ -68,14 +67,12 @@ function regformhash(form, firstname,lastname, email, password, conf) {
     if (  lastname.value == ''  ){fieldError(lastname,"Cannot be empty");errorElem=lastname;}
     if(!re.test(lastname.value)) { 
         fieldError(lastname,"Last Name must contain only letters, numbers and underscores"); 
-        lastname.focus();
         errorElem=lastname;
     }
     if (  firstname.value == '' ){fieldError(firstname,"Cannot be empty");errorElem=firstname;}
     re = /^\w+$/; 
     if(!re.test(firstname.value)) { 
         fieldError(firstname,"First Name must contain only letters, numbers and underscores"); 
-        firstname.focus();
         errorElem=firstname; 
     }
 
