@@ -1,0 +1,52 @@
+.Todo-list{
+  list-style: none;
+  padding: 0;
+}
+.Todo-item{
+  border: 1px solid #aaaaaa;
+  border-bottom: none;
+  position: relative;
+  padding:20px;
+}
+.Todo-item .close{
+  position: absolute;top:5px;right:5px;height:20px;width:20px;
+}
+.Todo-list .Todo-item:first-child{
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+}
+.Todo-list .Todo-item:last-child{
+  border: 1px solid #aaaaaa;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+.Todo-amount{
+  float: right;
+  text-align: right;
+}
+.alert{
+  transition: all .5s;
+  opacity:1;
+  height:50px;
+}
+.alert.hide{
+  opacity: 0;
+  height:0;
+}
+.Todo-item-enter {
+  opacity: 0;
+  transition: all .5s ease-in;
+}
+
+.Todo-item-enter.Todo-item-enter-active {
+  opacity: 1;
+}
+
+.Todo-item-leave {
+  opacity: 1;
+  transition: all .5s ease-in;
+}
+
+.Todo-item-leave.Todo-item-leave-active {
+  opacity: 0;
+}

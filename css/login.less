@@ -1,0 +1,162 @@
+@import url(http://fonts.googleapis.com/css?family=Raleway:200,600);
+
+@darkTextColor:#515162;
+@midTextColor:#747dab;
+@greyTextColor:#575757;
+@red: #ff3500;
+@blue: #45b1ff;
+@blueHover: #0094ff;
+@blueDark: #598fd9;
+@fbBlue:#5a74a8;
+@fbBlueHover: #406090;
+@fbBlueDark:#485574;
+@borderColor: #cccccc;
+
+@backgroundColor:#515162;
+@backgroundShadowColor:#434351;
+@loginWidth:340px;
+@loginHeight:360px;
+@registerHeight:480px;
+@loginPadding:20px;
+@loginBorderRadius:5px;
+@inputBorderRadius:5px;
+body{
+  background: @backgroundColor;
+  font-family: 'Raleway', Arial, sans-serif;
+}
+#shadow{
+  fill:@backgroundShadowColor;
+}
+.fb{
+  font-weight: bold;
+  font-style: 'Tahoma', Arial, sans-serif;
+  font-size: 20px;
+}
+a:hover{text-decoration: none;}
+.main{
+  background: white;
+  border-radius: @loginBorderRadius;
+
+  position: absolute;
+  left: 50%;
+  padding:@loginPadding;
+  top:50%;
+}
+.login{
+  width:@loginWidth;
+  height:@loginHeight;
+  margin-top: 0px - (@loginHeight / 2);
+  margin-left: 0px - (@loginWidth / 2);
+}
+.register{
+  width:@loginWidth;
+  height:@registerHeight;
+  margin-top: 0px - (@registerHeight / 2);
+  margin-left: 0px - (@loginWidth / 2);
+}
+.fbBtnWrapper{
+  padding-bottom: 20px;
+  border-bottom: 1px solid @borderColor;
+  margin-bottom: 20px;
+  position: relative;
+  #or{
+    position: absolute;
+    width: 30px;
+    text-align: center;
+    color:@borderColor;
+    background: white;
+    font-size: 14px;
+    line-height: 20px;
+    left:50%;
+    margin-left: -15px;
+    bottom: -10px;
+  }
+}
+.btn,.input{
+  display: block;
+  width: 100%;
+  padding:8px 10px;
+  font-size: 18px;
+  line-height: 25px;
+  border:none;
+  border-radius: @inputBorderRadius;
+  transition:box-shadow .4s,background .4s;
+  &:focus,&:active{outline:none}
+}
+.input-default{
+  background: #eeeeee;
+}
+.inputGroup{margin-bottom: 20px;}
+.inputGroup.horizontal{
+  display:table;
+  table-layout: fixed;
+  .input{
+    display:table-cell;
+    width:50%;padding:12px 10px;
+    border-radius: 0;box-shadow: 0 2px 0 @borderColor;
+    &:hover,&:focus{
+      background: #e0e0e0;
+    }border-right:1px solid @borderColor;
+  }
+  .input:first-child{border-radius: @inputBorderRadius 0 0 @inputBorderRadius;}
+  .input:last-child{border-radius: 0 @inputBorderRadius @inputBorderRadius 0;border-right: none;}
+}
+.inputGroup.vertical{
+  .input{
+    padding:12px 10px;border-bottom:1px solid @borderColor;
+    border-radius: 0;
+    &:hover,&:focus{
+      background: #e0e0e0;
+    }
+  }
+  .input:first-child{border-radius: @inputBorderRadius @inputBorderRadius 0 0;}
+  .input:last-child{border-radius: 0 0 @inputBorderRadius @inputBorderRadius;box-shadow: 0 2px 0 @borderColor;}
+}
+.btn-fb{
+  color:white;
+  background:@fbBlue;
+  box-shadow: 0 2px 0 @fbBlueDark;
+  text-align: center;
+  &:hover{
+    background: @fbBlueHover;
+    color:white;
+  }
+}
+.btn-primary{
+  color:white;
+  background:@blue;
+  box-shadow: 0 2px 0 @blueDark;
+  margin-bottom: 5px;
+  text-align: center;
+  cursor: pointer;
+  &:hover{
+    background: @blueHover;
+  }
+}
+.link{
+  color:@greyTextColor;
+  text-decoration: underline;
+}
+.right{
+  float:right;
+}
+
+.brand{
+  margin:-@loginPadding+10px -@loginPadding 15px;
+  padding-bottom: 5px;
+  display: block;
+  width: @loginWidth;
+  border-bottom: 1px solid @borderColor;
+  text-align: center;
+  span{
+    color:@darkTextColor;
+    font-size: 24px;
+    font-weight: bold;
+    vertical-align: text-bottom;
+  }
+  .fa.fa-heart{
+    color:@red;
+    line-height: 44px;
+    font-size: 40px;
+  }
+}

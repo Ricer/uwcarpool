@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Flat UI Free</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Loading Bootstrap -->
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Loading Flat UI -->
+    <link href="css/flat-ui.css" rel="stylesheet">
+    <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="search.css">
+
+    <link rel="shortcut icon" href="images/favicon.ico">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.js"></script>
+      <script src="js/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class='sidebar'>
+      <ul class="nav nav-pills nav-stacked">
+              <li>
+                <span>Leaving from</span>
+                <div class='input-group' id='searchLeavingFrom'>
+                  <input type='text' class="form-control flat" data-format="YYYY/MM/DD" />
+                  <div class="input-group-btn">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Recent<span class="caret"></span></button>
+                    <span class="dropdown-arrow dropdown-arrow-inverse"></span>
+                    <ul class="dropdown-menu dropdown-inverse pull-right">
+                      <li><a href="#">Action</a></li>
+                      <li><a href="#">Another action</a></li>
+                      <li><a href="#">Something else here</a></li>
+                      <li class="divider"></li>
+                      <li><a href="#">Separated link</a></li>
+                    </ul>
+                  </div><!-- /btn-group -->
+                </div>
+              </li>
+
+              <li>
+                <span for="searchGoingTo">Going to</span>
+                <div class='input-group' id='searchGoingTo'>
+                  <input type='text' class="form-control flat" data-format="YYYY/MM/DD" />
+                  <div class="input-group-btn">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Recent<span class="caret"></span></button>
+                    <span class="dropdown-arrow dropdown-arrow-inverse"></span>
+                    <ul class="dropdown-menu dropdown-inverse pull-right">
+                      <li><a href="#">Action</a></li>
+                      <li><a href="#">Another action</a></li>
+                      <li><a href="#">Something else here</a></li>
+                      <li class="divider"></li>
+                      <li><a href="#">Separated link</a></li>
+                    </ul>
+                  </div><!-- /btn-group -->
+                </div>
+              </li>
+              <li>
+                <span>Depart Date</span>
+                <div class='input-group date' id='searchDepartDatePicker'>
+                  <input type='text' class="form-control flat" data-format="YYYY/MM/DD" />
+                  <span class="input-group-addon">
+                    <i class="fa fa-calendar"></i>
+                  </span>
+                </div>
+              </li>
+              <li>
+                <span>Depart Time</span>
+                <div class='input-group date' id='searchDepartTimePicker'>
+                  <input type='text' class="form-control flat" data-format="h:mm a" />
+                  <span class="input-group-addon">
+                    <i class="fa fa-clock-o"></i>
+                  </span>
+                </div>
+              </li>
+              <li>
+                <span>Return?</span>
+                <input type="checkbox" data-toggle="switch" id='searchReturnToggle'/>
+              </li>
+            </ul>
+            <ul id='searchReturnField' class='shareul hide-at-start'>
+              <li>
+                <span>Return Date</span>
+                <div class='input-group date' id='searchReturnDatePicker'>
+                  <input type='text' class="form-control flat" data-format="YYYY/MM/DD" />
+                  <span class="input-group-addon">
+                    <i class="fa fa-calendar"></i>
+                  </span>
+                </div>
+              </li>
+              <li>
+                <span>Return Time</span>
+                <div class='input-group date' id='searchReturnTimePicker'>
+                  <input type='text' class="form-control flat" data-format="h:mm a" />
+                  <span class="input-group-addon">
+                    <i class="fa fa-clock-o"></i>
+                  </span>
+                </div>
+              </li>
+      </ul>
+    </div>
+      <a id='searchTrigger' class='btn btn-lg btn-info btn-block'>Make request</a>
+    <div class='content'>
+    <div class='listItem requestItem'><div class='type'>OFFER</div>
+      <table><tbody><tr><td class='contact'><i class="fa fa-user"></i> Luke Zhao</td><td class='location'>Waterloo <i class="fa fa-long-arrow-right"></i> Toronto</td><td class='date'><i class="fa fa-calendar-o"></i> January 27th 2014</td></tr></tbody></table></div>
+    <div class="fold">
+      <h2 class='location'>Waterloo University to Toronto Downtown</h2>
+      <h6 class='date'><i class="fa fa-calendar-o"></i> January 27th 2014 - 6:00 PM</h6>
+    </div>
+    <div class='listItem requestItem'><div class='type'>OFFER</div>
+      <table><tbody><tr><td class='contact'><i class="fa fa-user"></i> Luke Zhao</td><td class='location'>Waterloo <i class="fa fa-long-arrow-right"></i> Toronto</td><td class='date'><i class="fa fa-calendar-o"></i> January 27th 2014</td></tr></tbody></table></div>
+    <div class="fold">
+      <h2 class='location'>Waterloo University to Toronto Downtown</h2>
+      <h6 class='date'><i class="fa fa-calendar-o"></i> January 27th 2014 - 6:00 PM</h6>
+    </div>
+    <div class='listItem requestItem'><div class='type'>OFFER</div>
+      <table><tbody><tr><td class='contact'><i class="fa fa-user"></i> Luke Zhao</td><td class='location'>Waterloo <i class="fa fa-long-arrow-right"></i> Toronto</td><td class='date'><i class="fa fa-calendar-o"></i> January 27th 2014</td></tr></tbody></table></div>
+    <div class="fold">
+      <h2 class='location'>Waterloo University to Toronto Downtown</h2>
+      <h6 class='date'><i class="fa fa-calendar-o"></i> January 27th 2014 - 6:00 PM</h6>
+    </div>
+    <div class='listItem requestItem'><div class='type'>OFFER</div>
+      <table><tbody><tr><td class='contact'><i class="fa fa-user"></i> Luke Zhao</td><td class='location'>Waterloo <i class="fa fa-long-arrow-right"></i> Toronto</td><td class='date'><i class="fa fa-calendar-o"></i> January 27th 2014</td></tr></tbody></table></div>
+    <div class="fold">
+      <h2 class='location'>Waterloo University to Toronto Downtown</h2>
+      <h6 class='date'><i class="fa fa-calendar-o"></i> January 27th 2014 - 6:00 PM</h6>
+    </div>
+    <div class='listItem requestItem'><div class='type'>OFFER</div>
+      <table><tbody><tr><td class='contact'><i class="fa fa-user"></i> Luke Zhao</td><td class='location'>Waterloo <i class="fa fa-long-arrow-right"></i> Toronto</td><td class='date'><i class="fa fa-calendar-o"></i> January 27th 2014</td></tr></tbody></table></div>
+    <div class="fold">
+      <h2 class='location'>Waterloo University to Toronto Downtown</h2>
+      <h6 class='date'><i class="fa fa-calendar-o"></i> January 27th 2014 - 6:00 PM</h6>
+    </div>
+    <div class='listItem requestItem'><div class='type'>OFFER</div>
+      <table><tbody><tr><td class='contact'><i class="fa fa-user"></i> Luke Zhao</td><td class='location'>Waterloo <i class="fa fa-long-arrow-right"></i> Toronto</td><td class='date'><i class="fa fa-calendar-o"></i> January 27th 2014</td></tr></tbody></table></div>
+    <div class="fold">
+      <h2 class='location'>Waterloo University to Toronto Downtown</h2>
+      <h6 class='date'><i class="fa fa-calendar-o"></i> January 27th 2014 - 6:00 PM</h6>
+    </div>
+    <div class='listItem requestItem'><div class='type'>OFFER</div>
+      <table><tbody><tr><td class='contact'><i class="fa fa-user"></i> Luke Zhao</td><td class='location'>Waterloo <i class="fa fa-long-arrow-right"></i> Toronto</td><td class='date'><i class="fa fa-calendar-o"></i> January 27th 2014</td></tr></tbody></table></div>
+    <div class="fold">
+      <h2 class='location'>Waterloo University to Toronto Downtown</h2>
+      <h6 class='date'><i class="fa fa-calendar-o"></i> January 27th 2014 - 6:00 PM</h6>
+    </div>
+    </div>
+    <!-- /.container -->
+
+
+    <!-- Load JS here for greater good =============================-->
+    <script src="js/jquery-1.8.3.min.js"></script>
+    <script src="js/jquery-ui-1.10.3.custom.min.js"></script>
+    <script src="js/jquery.ui.touch-punch.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-select.js"></script>
+    <script src="js/bootstrap-switch.js"></script>
+    <script src="js/flatui-checkbox.js"></script>
+    <script src="js/flatui-radio.js"></script>
+    <script src="js/jquery.tagsinput.js"></script>
+    <script src="js/jquery.placeholder.js"></script>
+
+    <script type="text/javascript" src="js/moment.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="search.js"></script>
+  </body>
+</html>

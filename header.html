@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, target-densityDpi=device-dpi" />
+    <title>Budget Tracker</title>
+
+    <!-- Loading Bootstrap -->
+    <link href="http://www.uwcarpool.com/css/bootstrap.css" rel="stylesheet">
+    <link href="http://www.uwcarpool.com/css/bootstrap-theme.css" rel="stylesheet">
+
+    <!-- Loading Flat UI -->
+    <!-- <link href="css/flat-ui.css" rel="stylesheet"> -->
+    <link href="http://www.uwcarpool.com/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="http://www.uwcarpool.com/css/font-awesome.min.css">
+	<link rel="stylesheet" href="http://www.uwcarpool.com/header.css">
+
+    <link rel="shortcut icon" href="http://www.uwcarpool.com/images/favicon.ico">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+      <script src="http://www.uwcarpool.com/js/html5shiv.js"></script>
+      <script src="http://www.uwcarpool.com/js/respond.min.js"></script>
+    <![endif]-->
+    <script src="http://www.uwcarpool.com/js/lib/jquery-1.8.3.min.js"></script>
+    <script src="http://www.uwcarpool.com/js/lib/bootstrap.min.js"></script>
+    <script src="http://www.uwcarpool.com/js/lib/moment.min.js"></script>
+    <script src="http://www.uwcarpool.com/js/lib/bootstrap-datetimepicker.min.js"></script>
+    <script src="http://www.uwcarpool.com/js/lib/react/react-with-addons.min.js"></script>
+    <script src="http://www.uwcarpool.com/js/lib/react/JSXTransformer.js"></script>
+    <script src="http://www.uwcarpool.com/js/setup.js"></script>
+    <script type='text/jsx' src="http://www.uwcarpool.com/js/header.js"></script>
+    
+  </head>
+  <body>
+
+    <div id='main-wrapper'></div>
+
+    <div class="modal fade bs-modal-sm" data-backdrop="static" data-keyboard=false id="loginModal">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Welcome.</h4>
+          </div>
+          <div class="modal-body">
+            <button type="button" class="btn btn-primary" onclick="FB.login()">Log in with <i class="fa fa-facebook-square"></i> Facebook</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div id="fb-root"></div>
+<div class='content'>

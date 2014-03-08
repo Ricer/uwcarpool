@@ -1,0 +1,285 @@
+/** @jsx React.DOM */
+// Patch Bootstrap popover to take a React component instead of a
+// plain HTML string
+$.extend($.fn.popover.Constructor.DEFAULTS, {react: false});
+var oldSetContent = $.fn.popover.Constructor.prototype.setContent;
+$.fn.popover.Constructor.prototype.setContent = function() {
+    if (!this.options.react) {
+        return oldSetContent.call(this);
+    }
+
+    var $tip = this.tip();
+    var title = this.getTitle();
+    var content = this.getContent();
+
+    $tip.removeClass('fade top bottom left right in');
+
+    // If we've already rendered, there's no need to render again
+    if (!$tip.find('.popover-content').html()) {
+        // Render title, if any
+        var $title = $tip.find('.popover-title');
+        if (title) {
+          React.renderComponent(title, $title[0]);
+        } else {
+          $title.hide();
+        }
+
+        React.renderComponent(content,  $tip.find('.popover-content')[0]);
+    }
+};
+
+
+
+CarpoolRow=React.createClass({
+  getInitialState: function() {
+    return {};
+  },
+  componentDidMount:function(e){
+  },
+
+  handleMouseEnter:function(){
+    this.props.onMouseEnter(this.props.data.description);
+  },
+
+  render: function() {
+    var data=this.props.data?this.props.data:{id:-1,type:"offer"}
+    var classString="carpoolRow "+(this.props.className||"")
+    var typeClassString="carpoolRow-type "+data.type
+    var date=moment(data.date);
+    return(
+      <li key={data.id} className={classString}>
+        <a href={'/detail/'+data.id} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.props.onMouseLeave}>
+          <table>
+          <tbody>
+          <tr>
+            <td><div className='carpoolRow-date'>
+              <p className='month'>{date.format("MMM")}</p>
+              <p className='day'>{date.format("DD")}</p>
+              <p className='time'>{date.format("hh:mm")}</p>
+            </div>
+            </td>
+            <td className="departure">{data.departure}</td>
+            <td className="arrival">{data.arrival}</td>
+            <td className="name">{data.name}</td>
+            <td className={"passenger_remaining "+(data.passenger_remaining<2?"one":"")}>{data.passenger_remaining}</td>
+            <td className="price">${data.price}</td>
+          </tr>
+          </tbody>
+          </table>
+        </a>
+      </li>
+    );
+  }
+});
+
+ListView=React.createClass({
+  
+  getInitialState: function() {
+    return {previewHtml:"",showPreview:false,page:1,requestCount:0,list:[],sortBy:"date",sortAsc:true,nomore:false,loading:false};
+  },
+
+  loadNextPage:function(){
+    var that=this;
+    this.setState({loading:true},function(){
+      var data={from:that.props.from,
+                to:that.props.to,
+                date:that.props.date,
+                passenger:that.props.passenger,
+                luggage:that.props.luggage,
+                page:that.state.page,
+                type:type};
+      var rc=that.state.requestCount;
+      console.log("try loading page "+that.state.page);
+      $.getJSON("search.php",data).done(function( json ) {
+        if(rc!=that.state.requestCount)return;
+        console.log("done loading page "+that.state.page);
+        that.setState({page:that.state.page+1,list:that.state.list.concat(json)})
+        if(json.length<5)that.setState({nomore:true});
+        that.setState({loading:false})
+        that.handleScroll();
+      }).fail(function( jqxhr, textStatus, error ) {
+        var err = textStatus + ", " + error;
+        console.log(err)
+        that.setState({loading:false})
+      });
+    });
+  },
+
+  handleScroll: function(e) {
+    var scrollAmount = $(window).scrollTop()+$(window).height();
+    var documentHeight = $(document).height();
+    //console.log(documentHeight-scrollAmount);
+    if(documentHeight-scrollAmount<100){
+      if(!this.state.nomore&&!this.state.loading)this.loadNextPage();
+    }
+  },
+  enableMouseMoveEvent:function(e){
+    MOUSEMOVE_ENABLE=true;
+  },
+  handleMouseMove:function(e){
+    var previewElem=$(".preview").css({top:e.clientY+20,left:e.clientX+15});
+  },
+  reload:function(e){
+    this.setState({requestCount:this.state.requestCount+1,list:[],page:1,nomore:false},this.loadNextPage.bind(this));
+  },
+
+  componentWillUnmount: function() {
+    $(window).off('scroll', this.handleScroll);
+    $(window).off('typeChange', this.reload.bind(this));
+    $(window).off('mousemove', this.handleMouseMove);
+  },
+
+  componentDidUpdate:function(previousProps){
+    if(previousProps.from!=this.props.from||previousProps.to!=this.props.to||previousProps.date!=this.props.date){
+      this.reload();
+    }
+  },
+
+  componentDidMount:function(){
+    this.loadNextPage();
+    $(window).on('typeChange', this.reload.bind(this));
+    $(window).on('scroll', this.handleScroll);
+    $(window).on('mousemove', this.handleMouseMove);
+  },
+
+  compareItems:function(a,b){
+    if (a[this.state.sortBy] < b[this.state.sortBy])
+      return (this.state.sortAsc)?-1:1;
+    if (a[this.state.sortBy] > b[this.state.sortBy])
+      return (this.state.sortAsc)?1:-1;
+    return 0;
+  },
+
+  sortBy:function(str){
+    var sortAsc=true;
+    if(str==this.state.sortBy){
+      sortAsc=!this.state.sortAsc;
+    }
+    this.setState({sortBy:str,sortAsc:sortAsc})
+  },
+
+  showPreview:function(info){
+    //console.log("showing:"+info)
+    this.setState({previewHtml:info,showPreview:true});
+  },
+
+  hidePreview:function(){
+    //console.log("hiding")
+    this.setState({showPreview:false});
+  },
+
+  render: function() {
+    var classString="listContent";
+    var sorted=this.state.list.sort(this.compareItems)
+    var that=this;
+    var items=sorted.map(function(item,i){
+      return (<CarpoolRow key={item.id} data={item} onMouseEnter={that.showPreview.bind(that)} onMouseLeave={that.hidePreview.bind(that)} />);
+    })
+    if(this.state.page==1&&this.state.loading){
+      items=(<div className="loading"><i className="fa fa-spinner fa-spin"></i><p>Loading..</p></div>)
+    }else if(this.state.loading){
+      items.push(<div className="loadingPage"><i className="fa fa-spinner fa-spin"></i></div>)
+    }else if(this.state.nomore&&this.state.list.length==0){
+      items=(<div className="none"><i className="fa fa-frown-o"></i><p>Sorry, we cannot find any carpool that matches your criteria.</p><span className="makeoffer">Make a request <i className="fa fa-angle-right"></i></span></div>)
+    }else if(this.state.nomore)
+      items.push(<div className="nomore"><i className="fa fa-exclamation-triangle"></i> No more carpool avaliable. <span className="makeoffer">Make a request <i className="fa fa-angle-right"></i></span></div>)
+    var preview=(
+      <div className={"preview "+((this.state.showPreview)?"show":"")}>{this.state.previewHtml}</div>
+    )
+    return(
+      <div className={classString}>
+        <div className="container">
+          <ul>
+            {items}
+          </ul>
+
+          {preview}
+        </div>
+      </div>
+    );
+  }
+});
+
+var previousScroll = 0;
+
+FilterView=React.createClass({
+
+  getInitialState: function() {
+    return {hide:false,from:"",to:"",date:"",passenger:1,luggage:0};
+  },
+  handleChange:function(e){
+    var nextState={};
+    nextState[$(e.target).attr("data-change")]=($(e.target).attr("data-html"))?e.target.innerHTML:e.target.value
+    this.setState(nextState);
+  },
+  componentDidMount: function() {
+    var that=this;
+    $('#filter-date').pickadate({
+      format: 'yyyy-mm-dd',
+      container: 'body',
+      onSet:function(){
+        that.handleChange({target:$('#filter-date').get(0)});
+      }
+    })
+    $('.filterPanel').on('affix.bs.affix',function(){
+      that.setState({isTop:false})
+    }).on('affix-top.bs.affix',function(){
+      that.setState({isTop:true})
+    }).affix({
+      offset: {
+        top: 150
+      }
+    })
+  },
+  render: function() {
+    var classString="filterPanel "+(this.state.isTop?"affix-top":"affix");
+    var list=(<ListView ref="list" from={this.state.from} to={this.state.to} date={this.state.date} passenger={this.state.passenger} luggage={this.state.luggage} />)
+
+    return(
+      <div>
+        <form role='form' onSubmit={this.search}>
+        <div className={classString}>
+          <div className="container">
+            <div className='inputs'>
+            <div className="merge-input col-xs-12 col-sm-4"> 
+              <label><span className="glyphicon glyphicon-map-marker from-marker"></span></label>
+              <input value={this.state.from} placeholder="FROM" data-change="from" onChange={this.handleChange} />
+            </div>
+            <div className="merge-input col-xs-12 col-sm-4"> 
+              <label><span className="glyphicon glyphicon-map-marker to-marker"></span></label>
+              <input value={this.state.to} placeholder="TO" data-change="to" onChange={this.handleChange}  />
+            </div>
+            <div className='merge-input col-xs-12 col-sm-4'> 
+              <label><i className='fa fa-calendar date-marker'/></label>
+              <input type='text' ref='dateInput' id='filter-date' placeholder="DATE" className="form-control" data-format="YYYY-MM-DD"  value={this.state.date} data-change="date" onChange={this.handleChange}/>
+            </div>
+            </div>
+
+            <div className="carpoolHeader">
+              <table>
+                <thead>
+                  <tr>
+                    <td>Date</td>
+                    <td>Origin</td>
+                    <td>Destination</td>
+                    <td>Offered by</td>
+                    <td>Seats</td>
+                    <td>Price</td>
+                  </tr>
+                </thead>
+              </table>
+            </div>
+          </div>
+        </div>
+        {list}
+        </form>
+      </div>
+    );
+  }
+});
+
+
+React.renderComponent(
+  <FilterView />,
+  $("#filterWrapper").get(0)
+);
