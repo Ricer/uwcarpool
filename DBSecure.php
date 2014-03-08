@@ -13,4 +13,5 @@ define("DEFAULT_ROLE", "member");
 define("SECURE", FALSE);    // FOR DEVELOPMENT ONLY!!!!<?php
 
 $mysqli = new mysqli(HOST, USER, PASSWORD, DATABASE);
+$GLOBALS['mysqli'] = $mysqli;
 ?>

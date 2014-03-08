@@ -1,7 +1,9 @@
 <?php
 
+include_once 'functions.php';
+sec_session_start();
+getHeader("/css/detail.css");
 include_once 'DB.php';
-include_once 'header.html';
 
 $id = $this->data['id'];
 $query = "
@@ -29,6 +31,11 @@ $query = "
 		";
 $carpool = run_query($query)[0];
 ?>
+
+		<div id="map-wrapper">
+			<div id="map">
+			</div>
+		</div>
 		<div class="panel panel-default info-main">
 			<div class="panel-heading">
 				<h2>Carpool Detail</h2>
@@ -69,11 +76,6 @@ $carpool = run_query($query)[0];
 				</div>
 			</div>
 			</div>
-		<div id="map-wrapper">
-			<div id="map">				
-			
-			</div>
-		</div>
 	</div><!-- content wrapper -->
 
 	<script type="text/javascript"

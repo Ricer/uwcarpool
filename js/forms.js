@@ -64,13 +64,13 @@ function regformhash(form, firstname,lastname, email, password, conf) {
         errorElem=email;
     }
 
+    re = /^\w+$/; 
     if (  lastname.value == ''  ){fieldError(lastname,"Cannot be empty");errorElem=lastname;}
     if(!re.test(lastname.value)) { 
         fieldError(lastname,"Last Name must contain only letters, numbers and underscores"); 
         errorElem=lastname;
     }
     if (  firstname.value == '' ){fieldError(firstname,"Cannot be empty");errorElem=firstname;}
-    re = /^\w+$/; 
     if(!re.test(firstname.value)) { 
         fieldError(firstname,"First Name must contain only letters, numbers and underscores"); 
         errorElem=firstname; 
