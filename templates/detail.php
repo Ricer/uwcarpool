@@ -36,38 +36,39 @@ $carpool = run_query($query)[0];
 			<div id="map">
 			</div>
 		</div>
-		<div class="panel panel-default info-main">
-			<div class="panel-heading">
-				<h2>Carpool Detail</h2>
-			</div>
+		<div class="sidebar">
+			<div class="panel panel-default info-main">
+				<div class="panel-heading">
+					<h2>Carpool Detail</h2>
+				</div>
 
-					<ul class="list-group">
-						<li class="list-group-item">
-							<span class="badge" id="from"><?= $carpool['departure']; ?></span>
-							<i class="fa fa-thumb-tack"></i> From
-						</li>
-						<li class="list-group-item">
-							<span class="badge" id="to"><?= $carpool['arrival']; ?></span>
-							<i class="fa fa-thumb-tack"></i> To
-						</li>
-						<li class="list-group-item">
-							<span class="badge"><?= $carpool['name']; ?></span>
-							<i class="fa fa-user"></i> Offered by
-						</li>
-						<li class="list-group-item">
-							<span class="badge"><?= $carpool['date_date']; ?></span>
-							<i class="fa fa-calendar"></i> Date
-						</li>
-						<li class="list-group-item">
-							<span class="badge"><?= $carpool['date_time']; ?></span>
-							<i class="fa fa-clock-o"></i> Time
-						</li>
-						<li class="list-group-item">
-							<span class="badge"><?= $carpool['price']; ?></span>
-							<i class="fa fa-money"></i> Price
-						</li>
-					</ul>
-		</div>
+						<ul class="list-group">
+							<li class="list-group-item">
+								<span class="badge" id="from"><?= $carpool['departure']; ?></span>
+								<i class="fa fa-thumb-tack"></i> From
+							</li>
+							<li class="list-group-item">
+								<span class="badge" id="to"><?= $carpool['arrival']; ?></span>
+								<i class="fa fa-thumb-tack"></i> To
+							</li>
+							<li class="list-group-item">
+								<span class="badge"><?= $carpool['name']; ?></span>
+								<i class="fa fa-user"></i> Offered by
+							</li>
+							<li class="list-group-item">
+								<span class="badge"><?= $carpool['date_date']; ?></span>
+								<i class="fa fa-calendar"></i> Date
+							</li>
+							<li class="list-group-item">
+								<span class="badge"><?= $carpool['date_time']; ?></span>
+								<i class="fa fa-clock-o"></i> Time
+							</li>
+							<li class="list-group-item">
+								<span class="badge"><?= $carpool['price']; ?></span>
+								<i class="fa fa-money"></i> Price
+							</li>
+						</ul>
+			</div>
 			<div class='info-desc panel panel-default'>
 			<div class="panel-body">
 				<h4>Description</h4>
@@ -76,6 +77,7 @@ $carpool = run_query($query)[0];
 				</div>
 			</div>
 			</div>
+		</div>
 	</div><!-- content wrapper -->
 
 	<script type="text/javascript"
