@@ -3,7 +3,6 @@ include_once 'functions.php';
 sec_session_start();
 
 $logged=login_check($mysqli);
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,7 +42,7 @@ $logged=login_check($mysqli);
   </head>
   <body>
       <div class='main'>
-        <nav class="navbar topbar navbar-default navbar-fixed-top" role="navigation" data-spy="affix" data-offset-top="150">
+        <nav class="navbar topbar navbar-default navbar-fixed-top affix" role="navigation" >
           <div class="container">
             <div class="navbar-header">
               <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">

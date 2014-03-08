@@ -1,10 +1,133 @@
 @import "index.less";
 
-body{padding:0;}
+@infoBarHeight:100px;
+body{padding:0;overflow: hidden;}
 .topbar{
   position:fixed;margin:0;background:rgba(255, 255, 255, 0.9);
 }
-#map-wrapper{position:absolute;top:50px;left:0;right:0;bottom:0;z-index:-1}
+#map-wrapper{position:absolute;top:0;left:0;right:0;bottom:0;z-index:-1}
 #map{width:100%;height:100%}
-.sidebar{
+.carpoolRow a table{
+  height:60px;
+  background: none;
+  box-shadow: none;
+  border-radius: 0;
+  margin: 0;
+  .carpoolRow-date{
+    font-weight: normal;
+    height:35px;
+    border-radius: 20px;
+    width:100%;
+    padding-top:3px;
+    background: linear-gradient(to bottom,#2a2a35 0%,#5c5c74 100%);
+    color:white;
+    p{
+      margin: 0;
+      display:inline-block;
+    }
+    .month{
+      padding-top: 5px;
+      line-height: 20px;
+    }
+    .day{
+      margin: -5px 10px 0 5px;
+      font-size: 22px;
+      &:after{
+        content:" @ "
+      }
+    }
+    .time{
+      line-height: 20px;
+    }
+  }
+  .to{
+    width: 2%;
+    color:@midTextColor;
+  }
+  &:hover{
+    box-shadow: none;
+  }
+}
+.carpoolRow{
+  height:60px;
+  overflow: hidden;
+  background-image: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%);
+  
+  border-radius: 4px;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.075);
+  transition:height .4s;
+}
+.carpoolRow tr td:nth-child(1){
+  padding:0 10px;
+  width:17%;transition:opacity .4s,width .4s;
+}
+.carpoolRow tr td:nth-child(4){
+  width: auto;
+}
+@textBgColor:#eeeeee;
+.hiddenInfo{
+  font-size: 20px;
+  .driverInfo{
+    height:260px;
+    width: 30%;
+    padding:20px;
+    font-size: 24px;
+    text-align: center;
+    float:left;
+    border-right: 2px solid @textBgColor;
+    img.profilePic{
+      width:70px;
+      height:70px;
+      border-radius: 35px;
+      margin-right: 20px;
+    }
+  }
+  .desc{
+    height:260px;
+    background: @textBgColor;
+    width:70%;
+    float:right;
+    padding:20px;
+
+
+    &:before, &:after {
+      content: ' ';
+      height: 0;
+      opacity: 0;
+      width: 0;
+      transition: opacity .4s;
+      border: 15px solid transparent; /* arrow size */
+    }
+
+    /* these arrows will point up */
+
+    /* top-stacked, smaller arrow */
+    &:before {
+      border-right-color: @textBgColor;  /* arrow color */
+
+      /* positioning */
+      position: absolute;
+      margin-left:-50px;
+      margin-top:20px;
+    }
+  }
+}
+.infobar{
+  position: absolute;bottom:0;left:0;right:0;padding-bottom: 50px;
+  &:hover{
+    .carpoolRow{
+      height:300px;
+      box-shadow: 0 3px 0 rgba(0,94,255,0.5);
+      a table{
+        border-bottom: 2px solid @textBgColor;
+        tr td:nth-child(1){
+          opacity:0;
+          width: 0;
+        }
+      }
+      .desc:before{
+        opacity: 1;
+      }
+    }
+  }
 }

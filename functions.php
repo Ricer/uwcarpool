@@ -1,6 +1,5 @@
 <?php
 include_once 'DBSecure.php';
- 
 function sec_session_start() {
     $session_name = 'sec_session_id';   // Set a custom session name
     $secure = SECURE;
@@ -236,7 +235,7 @@ function getHeader($cssUrl=""){
   </head>
   <body>
       <div class='main'>
-        <nav class="navbar topbar navbar-default navbar-fixed-top" role="navigation"  data-spy="affix" data-offset-top="150">
+        <nav class="navbar topbar navbar-default navbar-fixed-top affix" role="navigation">
           <div class="container">
             <div class="navbar-header">
               <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
