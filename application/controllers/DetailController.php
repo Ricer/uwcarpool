@@ -30,6 +30,13 @@ class DetailController extends CarpoolController {
     if(!$view['current']){
       $this->redirect('index',true);
     }
+    $selector = array(
+      'id' => $view['current']->user_id
+    );
+    $driver=User::find($selector);
+    $view['current']->firstname=$driver->firstname;
+    $view['current']->lastname=$driver->lastname;
+
     $view['user'] = $this->user;
     return $view;
   }

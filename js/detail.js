@@ -199,7 +199,7 @@ CarpoolRow=React.createClass({
         </a>
         <div className='hiddenInfo'>
           <div className='driverInfo'><img className="profilePic" src="https://fbcdn-profile-a.akamaihd.net/hprofile-ak-frc1/t1/p160x160/1888716_707739892580029_325955122_n.jpg" />
-          {data.name}</div>
+          {data.firstname+" "+data.lastname}</div>
           <div className='desc'>{data.description}</div>
         </div>
       </li>
