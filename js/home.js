@@ -115,9 +115,6 @@ ListView=React.createClass({
       if(!this.state.nomore&&!this.state.loading)this.loadNextPage();
     }
   },
-  enableMouseMoveEvent:function(e){
-    MOUSEMOVE_ENABLE=true;
-  },
   handleMouseMove:function(e){
     var previewElem=$(".preview").css({top:e.clientY+20,left:e.clientX+15});
   },
@@ -172,7 +169,7 @@ ListView=React.createClass({
 
   render: function() {
     var classString="listContent";
-    var sorted=this.state.list.sort(this.compareItems)
+    var sorted=this.state.list//.sort(this.compareItems)
     var that=this;
     var items=sorted.map(function(item,i){
       return (<CarpoolRow key={item.id} data={item} onMouseEnter={that.showPreview.bind(that)} onMouseLeave={that.hidePreview.bind(that)} />);
