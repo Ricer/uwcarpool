@@ -1,13 +1,12 @@
 <?php
 
-class UserController extends CarpoolController {
+class DashboardController extends CarpoolController {
   /**
    * @var string
    * main template file name, without .html
    */
   protected $layout = 'user';
   
-  private $todo = array();
 
   /**
    * @var null
@@ -23,20 +22,14 @@ class UserController extends CarpoolController {
   
   public function __call($name, $arguments) {
     $view = array();
-    $selector = array(
-      'id' => $this->todo['id']
-    );
-    $view['user'] = User::find($selector);
+    $view['user'] = $this->user;
     return $view;
   }
   
   private function process_url(){
     $url = explode('/', preg_replace(array('/\/+/', '/^\/|\s+|\/$/'), array('/', ''), strtolower(urldecode($_SERVER['REQUEST_URI']))));
-    if (!empty($url[1])) {
-      $this->todo['id'] = $url[1];
-      if($this->todo['id']==$this->user->id){
-        $this->redirect('dashboard',true);
-      }
+    if (count($url)>1) {
+      $this->redirect('dashboard',true);
     }
   }
 }

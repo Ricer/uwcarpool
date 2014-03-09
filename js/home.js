@@ -60,7 +60,7 @@ CarpoolRow=React.createClass({
             </td>
             <td className="departure">{data.departure}</td>
             <td className="arrival">{data.arrival}</td>
-            <td className="name">{data.firstname+" "+data.lastname}</td>
+            <td className="name"><a href={"/user/"+data.user_id}>{data.firstname+" "+data.lastname}</a></td>
             <td className={"passenger_remaining "+(data.passenger_remaining<2?"one":"")}>{data.passenger_remaining}</td>
             <td className="price">${data.price}</td>
           </tr>

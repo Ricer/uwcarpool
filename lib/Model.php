@@ -73,7 +73,7 @@ class Model{
 		
 		$sql = "UPDATE " . static::$_table_name . " SET " . implode(",", $fields) . " WHERE " . static::$_primary_key . " = '" . $model->{static::$_primary_key} . "'";
 		
-		$resource = self::run_query($sql, static::$_connection_name);
+		$resource = self::run_query($sql);
 		
 		return $model;
 	}
@@ -82,7 +82,7 @@ class Model{
 	{
 		if($connection == null) $connection = $GLOBALS['default'];
 		
-		$table_fields = self::_get_fields(static::$_table_name, static::$_connection_name);
+		$table_fields = self::_get_fields(static::$_table_name);
 		
 		$fields = array();
 		$values = array();
@@ -99,7 +99,7 @@ class Model{
 		
 		$sql = "INSERT INTO " . static::$_table_name . " (" . implode(",", $fields) . ") VALUES ('" . implode("','", $values) . "');";
 		
-		$resource = self::run_query($sql, static::$_connection_name);
+		$resource = self::run_query($sql);
 		
 		
 
