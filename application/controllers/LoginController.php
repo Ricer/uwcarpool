@@ -26,6 +26,14 @@ class LoginController extends CarpoolController {
 		
 	}
 	
+	public function logout()
+	{
+		$this->render = false;
+		setcookie('carpoolauth', 0, -1, '/');
+
+		$this->redirect('index', true);
+	}
+	
 	public function submit()
 	{
 		if (!$user = User::login($_REQUEST['email'], $_REQUEST['p']))
