@@ -23,7 +23,6 @@ include_once 'DB.php';
     <link rel="stylesheet" href="/css/picker/default.time.css" id="theme_time">
 
     <link rel="stylesheet" href="/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/detail.css">
     
     <link rel="stylesheet" href="/css/user.css">
   </head>
