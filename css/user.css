@@ -59,3 +59,29 @@ h3{
 #error {
     color: red;
 }
+
+.carpool-date {
+    display: inline-block;
+    background:linear-gradient(to bottom, #2a2a35 0, #5c5c74 100%);
+    color:#fff;
+    border-radius: 10px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 5px;
+    padding-right: 5px;
+    width: 15%;
+}
+
+.carpool-depart, .carpool-arrival {
+    display: inline-block;
+    color: #515162;
+    font-weight: bold;
+    padding-left: 5px;
+    padding-right: 5px;
+    width: 30%;
+}
+
+.carpool-price {
+    display: inline-block;
+    font-weight: bold;
+}

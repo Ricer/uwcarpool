@@ -54,11 +54,16 @@ include_once 'DB.php';
                 <ul class="list-group" "info-left">
                     <!-- for offer in user[currentOffer] -->
                     <li class="list-group-item">
-                        offer['date_date'] offer['departure'] offer['arrival'] offer['price']
+                        <div class="carpool-date">offer['date_date']</div>
+                        <div class="carpool-depart">offer['departure']</div> <div class="carpool-arrival">offer['arrival'] </div>
+                        <div class="carpool-price">offer['price']</div>
                     </li>                
                     <!-- endfor -->
                     <li class="list-group-item">
-                        2014/3/8 waterloo toronto $20 (test)
+                        <div class="carpool-date">2014/3/8</div>
+                        <div class="carpool-depart">Waterloo</div>
+                        <div class="carpool-arrival">Toronto</div>
+                        <div class="carpool-price">$20</div>
                     </li>
                 </ul>
             </div>
@@ -70,11 +75,17 @@ include_once 'DB.php';
                 <ul class="list-group" "info-left">
                     <!-- for offer in user[previousOffer] -->
                     <li class="list-group-item">
-                        offer['date_date'] offer['departure'] offer['arrival'] offer['price']
+                        <div class="carpool-date">offer['date_date'] </div>
+                        <div class="carpool-depart">offer['departure'] </div>
+                        <div class="carpool-arrival">offer['arrival']</div>
+                        <div class="carpool-price">offer['price']</div>
                     </li>
                     <!-- endfor -->
                     <li class="list-group-item">
-                        2014/2/1 waterloo toronto $15 (test)
+                        <div class="carpool-date">2014/2/1</div>
+                        <div class="carpool-depart">Toronto</div>
+                        <div class="carpool-arrival">Waterloo</div>
+                        <div class="carpool-price">$15</div>
                     </li>
                 </ul>
             </div>
@@ -137,9 +148,11 @@ include_once 'DB.php';
         };
         
         var commentSubmit = document.getElementById("commentSubmit");
-        var showError = function(msg) {
-            $('#error').html(msg);
-        }
+        var submit = function() {
+            // TODO
+            // submit to the server
+            // update
+        };
         $('#commentSubmit').click(function(){
             // clear previous error
             $('#error').html("");
