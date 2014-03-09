@@ -21,6 +21,14 @@ class IndexController extends CarpoolController {
 		$this->process_url();
 	}
 	
+	public function logout()
+	{
+		$this->render = false;
+		setcookie('carpoolauth', 0, -1, '/');
+
+		$this->redirect('index', true);
+	}
+	
 	public function index(){
 		$view = array();
 		$view['user'] = $this->user;
