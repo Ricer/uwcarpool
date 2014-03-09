@@ -49,3 +49,10 @@ h3{
     height: 50px;
     margin-right: 10px;
 }
+
+#comment p {
+    margin-left: 60px;
+}
+#comment button[type="submit"] {
+    float: right;
+}

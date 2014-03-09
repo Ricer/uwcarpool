@@ -23,7 +23,6 @@ include_once 'DB.php';
     <link rel="stylesheet" href="/css/picker/default.time.css" id="theme_time">
 
     <link rel="stylesheet" href="/css/font-awesome.min.css">
-    
     <link rel="stylesheet" href="/css/user.css">
   </head>
 
@@ -92,21 +91,39 @@ include_once 'DB.php';
                     <li class="list-group-item">                        
                         <img src="http://www.hootpile.com/img/facebook-default-no-profile-pic.jpg" class="pull-left img-circle">
                         <h4>comment['user']['username']</h4>
-                        <p>comment['content']</p>
+                        <p>
+                            Rating: comment['rating']/5<br>
+                            comment['content']
+                        </p>
                     </li>
                     <!-- endfor -->
                     <li class="list-group-item">
                         <img src="http://www.hootpile.com/img/facebook-default-no-profile-pic.jpg" class="pull-left img-circle">
                         <h4>testuser</h4>
-                        <p>test</p>
+                        <p>
+                            Rating: 4/5<br>
+                            test
+                        </p>
                     </li>
                     
                     <!-- add new comment -->
-                    <li class="list-group-item">
-                        <input type=text" class="form-control" placeholder="Add new comment">
+                    <li class="list-group-item" id="newComment">
+                        <input type="text" class="form-control" placeholder="Add new comment">
+                        <div style="display:none;margin-top: 5px;" id="rating">
+                            Rating: <input type="text" class="form-control" maxlength="1" style="display: inline-block; width: 2.5em;">&nbsp;/5
+                            <button type="submit" class="btn btn-default">Submit</button>
+                        </div>
                     </li>
                 </ul>
             </div>
         </div>
     </div>
+    
+    <script>
+        var newComment = document.getElementById("newComment");
+        var rating  = document.getElementById("rating");
+        newComment.onclick = function() {
+            rating.style.display = "block";
+        };
+    </script>
 </body>
