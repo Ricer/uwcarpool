@@ -20,6 +20,10 @@ $GLOBALS['default'] = $con;
 
 $paths = array();
 $paths[] = APP_ROOT . '/application';
+$paths[] = APP_ROOT . '/application/controllers';
+$paths[] = APP_ROOT . '/application/models';
+$paths[] = APP_ROOT . '/lib';
+
 
 set_include_path(implode(PATH_SEPARATOR, $paths));
 

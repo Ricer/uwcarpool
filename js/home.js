@@ -19,9 +19,9 @@ $.fn.popover.Constructor.prototype.setContent = function() {
         // Render title, if any
         var $title = $tip.find('.popover-title');
         if (title) {
-          React.renderComponent(title, $title[0]);
+            React.renderComponent(title, $title[0]);
         } else {
-          $title.hide();
+            $title.hide();
         }
 
         React.renderComponent(content,  $tip.find('.popover-content')[0]);
@@ -36,11 +36,6 @@ CarpoolRow=React.createClass({
   },
   componentDidMount:function(e){
   },
-
-  handleMouseEnter:function(){
-    this.props.onMouseEnter(this.props.data.description);
-  },
-
   render: function() {
     var data=this.props.data?this.props.data:{id:-1,type:"offer"}
     var classString="carpoolRow "+(this.props.className||"")
@@ -48,7 +43,7 @@ CarpoolRow=React.createClass({
     var date=moment(data.date);
     return(
       <li key={data.id} className={classString}>
-        <a href={'/detail/'+data.id} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.props.onMouseLeave}>
+        <a href={'/detail/'+data.id}>
           <table>
           <tbody>
           <tr>
@@ -61,7 +56,7 @@ CarpoolRow=React.createClass({
             <td className="departure">{data.departure}</td>
             <td className="arrival">{data.arrival}</td>
             <td className="name">{data.name}</td>
-            <td className={"passenger_remaining "+(data.passenger_remaining<2?"one":"")}>{data.passenger_remaining}</td>
+            <td className="passenger_remaining">{data.passenger_remaining}</td>
             <td className="price">${data.price}</td>
           </tr>
           </tbody>
@@ -75,13 +70,15 @@ CarpoolRow=React.createClass({
 ListView=React.createClass({
   
   getInitialState: function() {
-    return {previewHtml:"",showPreview:false,page:1,requestCount:0,list:[],sortBy:"date",sortAsc:true,nomore:false,loading:false};
+    return {page:1,requestCount:0,list:[],sortBy:"date",sortAsc:true,nomore:false,loading:false};
   },
 
   loadNextPage:function(){
     var that=this;
     this.setState({loading:true},function(){
-      var data={from:that.props.from,
+      var data={model:'Carpool',
+				func:'search',
+				from:that.props.from,
                 to:that.props.to,
                 date:that.props.date,
                 passenger:that.props.passenger,
@@ -90,7 +87,7 @@ ListView=React.createClass({
                 type:type};
       var rc=that.state.requestCount;
       console.log("try loading page "+that.state.page);
-      $.getJSON("search.php",data).done(function( json ) {
+      $.ajax({url: "/post", dataType:"json",data:data,type:"POST"}).done(function( json ) {
         if(rc!=that.state.requestCount)return;
         console.log("done loading page "+that.state.page);
         that.setState({page:that.state.page+1,list:that.state.list.concat(json)})
@@ -113,12 +110,6 @@ ListView=React.createClass({
       if(!this.state.nomore&&!this.state.loading)this.loadNextPage();
     }
   },
-  enableMouseMoveEvent:function(e){
-    MOUSEMOVE_ENABLE=true;
-  },
-  handleMouseMove:function(e){
-    var previewElem=$(".preview").css({top:e.clientY+20,left:e.clientX+15});
-  },
   reload:function(e){
     this.setState({requestCount:this.state.requestCount+1,list:[],page:1,nomore:false},this.loadNextPage.bind(this));
   },
@@ -126,7 +117,6 @@ ListView=React.createClass({
   componentWillUnmount: function() {
     $(window).off('scroll', this.handleScroll);
     $(window).off('typeChange', this.reload.bind(this));
-    $(window).off('mousemove', this.handleMouseMove);
   },
 
   componentDidUpdate:function(previousProps){
@@ -139,7 +129,6 @@ ListView=React.createClass({
     this.loadNextPage();
     $(window).on('typeChange', this.reload.bind(this));
     $(window).on('scroll', this.handleScroll);
-    $(window).on('mousemove', this.handleMouseMove);
   },
 
   compareItems:function(a,b){
@@ -158,22 +147,11 @@ ListView=React.createClass({
     this.setState({sortBy:str,sortAsc:sortAsc})
   },
 
-  showPreview:function(info){
-    //console.log("showing:"+info)
-    this.setState({previewHtml:info,showPreview:true});
-  },
-
-  hidePreview:function(){
-    //console.log("hiding")
-    this.setState({showPreview:false});
-  },
-
   render: function() {
     var classString="listContent";
     var sorted=this.state.list.sort(this.compareItems)
-    var that=this;
     var items=sorted.map(function(item,i){
-      return (<CarpoolRow key={item.id} data={item} onMouseEnter={that.showPreview.bind(that)} onMouseLeave={that.hidePreview.bind(that)} />);
+      return (<CarpoolRow key={item.id} data={item}/>);
     })
     if(this.state.page==1&&this.state.loading){
       items=(<div className="loading"><i className="fa fa-spinner fa-spin"></i><p>Loading..</p></div>)
@@ -183,17 +161,13 @@ ListView=React.createClass({
       items=(<div className="none"><i className="fa fa-frown-o"></i><p>Sorry, we cannot find any carpool that matches your criteria.</p><span className="makeoffer">Make a request <i className="fa fa-angle-right"></i></span></div>)
     }else if(this.state.nomore)
       items.push(<div className="nomore"><i className="fa fa-exclamation-triangle"></i> No more carpool avaliable. <span className="makeoffer">Make a request <i className="fa fa-angle-right"></i></span></div>)
-    var preview=(
-      <div className={"preview "+((this.state.showPreview)?"show":"")}>{this.state.previewHtml}</div>
-    )
+    
     return(
       <div className={classString}>
         <div className="container">
-          <ul>
-            {items}
-          </ul>
-
-          {preview}
+        <ul>
+          {items}
+        </ul>
         </div>
       </div>
     );
