@@ -184,18 +184,17 @@ CarpoolRow=React.createClass({
           <table>
           <tbody>
           <tr>
-            <td><div className='carpoolRow-date'>
-              <p className='month'>{date.format("MMM")}</p>
-              <p className='day'>{date.format("DD")}</p>
-              <p className='time'>{date.format("hh:mm")}</p>
-            </div>
-            </td>
             <td className="departure">{data.departure}</td>
             <td className="to">to</td>
             <td className="arrival">{data.arrival}</td>
           </tr>
           </tbody>
           </table>
+          <div className='carpoolRow-date'>
+              <p className='month'>{date.format("MMM")}</p>
+              <p className='day'>{date.format("DD")}</p>
+              <p className='time'>{date.format("hh:mm")}</p>
+            </div>
         </a>
         <div className='hiddenInfo'>
           <div className='driverInfo'><img className="profilePic" src="https://fbcdn-profile-a.akamaihd.net/hprofile-ak-frc1/t1/p160x160/1888716_707739892580029_325955122_n.jpg" />
