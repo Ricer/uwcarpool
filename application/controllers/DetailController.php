@@ -5,7 +5,7 @@ class DetailController extends CarpoolController {
    * @var string
    * main template file name, without .html
    */
-  protected $layout = 'Detail';
+  protected $layout = 'detail';
   
   private $todo = array();
 

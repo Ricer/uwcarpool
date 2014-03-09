@@ -16,10 +16,11 @@ body{padding:0;overflow: hidden;}
   .carpoolRow-date{
     font-weight: normal;
     height:35px;
-    border-radius: 20px;
+    border-radius: 4px;
     width:100%;
     padding-top:3px;
     background: linear-gradient(to bottom,#2a2a35 0%,#5c5c74 100%);
+    opacity: 0.8;
     color:white;
     p{
       margin: 0;
@@ -52,20 +53,19 @@ body{padding:0;overflow: hidden;}
   height:60px;
   overflow: hidden;
   background-image: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%);
-  
   border-radius: 4px;
   box-shadow: 0 3px 0 rgba(0, 0, 0, 0.075);
   transition:height .4s;
 }
 .carpoolRow tr td:nth-child(1){
   padding:0 10px;
-  width:17%;transition:opacity .4s,width .4s;
+  width:17%;
 }
 .carpoolRow tr td:nth-child(4){
   width: auto;
 }
-@textBgColor: #bdc3c7;
-@userBgColor: #ecf0f1;
+@textBgColor: #ecf0f1;
+@userBgColor: #e0e0e0;
 .hiddenInfo{
   font-size: 20px;
   .driverInfo{
@@ -119,12 +119,6 @@ body{padding:0;overflow: hidden;}
   &:hover{
     .carpoolRow{
       height:300px;
-      a table{
-        tr td:nth-child(1){
-          opacity:0;
-          width: 0;
-        }
-      }
       .desc:before{
         opacity: 1;
       }
