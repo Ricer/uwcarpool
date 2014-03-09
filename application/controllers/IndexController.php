@@ -36,10 +36,16 @@ class IndexController extends CarpoolController {
 		return $view;
 	}
 	
+	public function __call($name, $arguments) {
+		if($this->todo){
+			$this->redirect('index', true);
+		}
+	}
+	
 	private function process_url(){
 		$url = explode('/', preg_replace(array('/\/+/', '/^\/|\s+|\/$/'), array('/', ''), strtolower(urldecode($_SERVER['REQUEST_URI']))));
 		if (!empty($url[1])) {
-			$this->redirect('index', true);
+			$this->todo = $url[1];
 		}
 	}
 }
