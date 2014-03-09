@@ -81,16 +81,18 @@ ListView=React.createClass({
   loadNextPage:function(){
     var that=this;
     this.setState({loading:true},function(){
-      var data={from:that.props.from,
+      var data={model:'Carpool',
+                func:'search',
+                from:that.props.from,
                 to:that.props.to,
                 date:that.props.date,
                 passenger:that.props.passenger,
                 luggage:that.props.luggage,
-                page:that.state.page,
+                page:that.state.page-1,
                 type:type};
       var rc=that.state.requestCount;
       console.log("try loading page "+that.state.page);
-      $.getJSON("search.php",data).done(function( json ) {
+      $.ajax({url: "/post", dataType:"json",data:data,type:"POST"}).done(function( json ) {
         if(rc!=that.state.requestCount)return;
         console.log("done loading page "+that.state.page);
         that.setState({page:that.state.page+1,list:that.state.list.concat(json)})
@@ -112,9 +114,6 @@ ListView=React.createClass({
     if(documentHeight-scrollAmount<100){
       if(!this.state.nomore&&!this.state.loading)this.loadNextPage();
     }
-  },
-  enableMouseMoveEvent:function(e){
-    MOUSEMOVE_ENABLE=true;
   },
   handleMouseMove:function(e){
     var previewElem=$(".preview").css({top:e.clientY+20,left:e.clientX+15});
@@ -170,7 +169,7 @@ ListView=React.createClass({
 
   render: function() {
     var classString="listContent";
-    var sorted=this.state.list.sort(this.compareItems)
+    var sorted=this.state.list//.sort(this.compareItems)
     var that=this;
     var items=sorted.map(function(item,i){
       return (<CarpoolRow key={item.id} data={item} onMouseEnter={that.showPreview.bind(that)} onMouseLeave={that.hidePreview.bind(that)} />);
