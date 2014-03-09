@@ -62,7 +62,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <ul class="nav navbar-nav navbar-right">
 
-                <?php if ($view['user']->type > 1) : ?>
+                <?php if ($view['user'] && $view['user']->type > 1) : ?>
                   <script>type="request"</script>
                   <li class="active" id='requestLi'><a onclick="switchTo('request')"><span>Requests</span></a></li>
                   <li id='offerLi'><a onclick="switchTo('offer')"><span>Offers</span></a></li>
