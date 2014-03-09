@@ -24,6 +24,7 @@ include_once 'DB.php';
 
     <link rel="stylesheet" href="/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/user.css">
+    <script src="/js/lib/jquery-1.8.3.min.js"></script>
   </head>
 
 <body>
@@ -108,10 +109,11 @@ include_once 'DB.php';
                     
                     <!-- add new comment -->
                     <li class="list-group-item" id="newComment">
-                        <input type="text" class="form-control" placeholder="Add new comment">
-                        <div style="display:none;margin-top: 5px;" id="rating">
-                            Rating: <input type="text" class="form-control" maxlength="1" style="display: inline-block; width: 2.5em;">&nbsp;/5
-                            <button type="submit" class="btn btn-default">Submit</button>
+                        <textarea id="commentContent" class="form-control" placeholder="Add new comment" rows="1"></textarea>
+                        <div style="display:none;margin-top: 5px;" id="ratingArea">
+                            Rating: <input id="commentRating" type="text" class="form-control" maxlength="1" style="display: inline-block; width: 2.5em;">&nbsp;/5&nbsp;&nbsp;
+                            <span id="error"></span>
+                            <button id="commentSubmit" type="submit" class="btn btn-default">Submit</button>
                         </div>
                     </li>
                 </ul>
@@ -121,9 +123,43 @@ include_once 'DB.php';
     
     <script>
         var newComment = document.getElementById("newComment");
-        var rating  = document.getElementById("rating");
-        newComment.onclick = function() {
-            rating.style.display = "block";
+        var ratingArea  = document.getElementById("ratingArea");
+        var commentContent = document.getElementById("commentContent");
+        newComment.onclick = function(event) {
+            commentContent.rows = "3";
+            ratingArea.style.display = "block";
+            event.stopPropagation();
         };
+        document.onclick=function(event) {
+            commentContent.rows="1";
+            ratingArea.style.display="none";
+            $('#error').html("");
+        };
+        
+        var commentSubmit = document.getElementById("commentSubmit");
+        var showError = function(msg) {
+            $('#error').html(msg);
+        }
+        $('#commentSubmit').click(function(){
+            // clear previous error
+            $('#error').html("");
+            // check -- commentContent commentRating
+            var error = false;
+            var re=/[^\s]+/
+            if (!re.test($('#commentContent').val())) {
+                $('#error').html("Comment must not be empty.");
+                error = true;
+            }
+            re = /^[1-5]$/
+            if (!error && !re.test($('#commentRating').val())) {
+                $('#error').html("Rating must be 1-5.");
+                error = true;
+            }
+            /*
+            if (!error) {
+                submit();
+            }
+            */
+        });
     </script>
 </body>

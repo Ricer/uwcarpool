@@ -53,6 +53,9 @@ h3{
 #comment p {
     margin-left: 60px;
 }
-#comment button[type="submit"] {
+#commentSubmit {
     float: right;
+}
+#error {
+    color: red;
 }
