@@ -14,6 +14,7 @@ body{padding:0;overflow: hidden;}
   border-radius: 0;
   margin: 0;
   .carpoolRow-date{
+    min-width: 170px;
     font-weight: normal;
     height:35px;
     border-radius: 4px;
@@ -59,10 +60,24 @@ body{padding:0;overflow: hidden;}
 }
 .carpoolRow tr td:nth-child(1){
   padding:0 10px;
-  width:17%;
+  width:17%;min-width: 170px;
 }
 .carpoolRow tr td:nth-child(4){
   width: auto;
+}
+
+.topbar .nav>li.accept>a{
+  margin-top:15px;
+  height:(@topbarShortHeight - 30);
+  line-height: (@topbarShortHeight - 30);
+  padding:0 20px ;
+  box-shadow: 0 3px 0 @blueDark;
+  color:white;
+  border-radius: 4px;
+  background: @blue;
+  &:hover{
+    background: @blueHover;
+  }
 }
 @textBgColor: #ecf0f1;
 @userBgColor: #e0e0e0;
@@ -124,4 +139,12 @@ body{padding:0;overflow: hidden;}
       }
     }
   }
+}
+@media(max-width:1024px){
+    .carpoolRow{
+      height:300px;
+      .desc:before{
+        opacity: 1;
+      }
+    }
 }
