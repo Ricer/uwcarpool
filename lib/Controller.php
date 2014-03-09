@@ -18,7 +18,7 @@ class Controller
 	public function render($view_path, $view = array())
 	{
 		if (!isset($this->layout))
-			require_once(APP_ROOT . '/views/layout.html');
+			require_once(APP_ROOT . '/application/views/' . $this->view_override . '.html');
 		else
 			require_once(APP_ROOT . '/application/views/'. $this->layout . '.html');
 	}
