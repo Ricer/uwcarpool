@@ -48,7 +48,6 @@ class LoginController extends CarpoolController {
 		if (!empty($url[1])) {
 			$this->todo['action'] = $url[1];
 		}
-		
 	}
 	
 	

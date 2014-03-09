@@ -33,7 +33,6 @@ class IndexController extends CarpoolController {
 		if (!empty($url[1])) {
 			$this->redirect('index', true);
 		}
-		
 	}
 }
 
