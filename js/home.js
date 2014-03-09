@@ -179,9 +179,9 @@ ListView=React.createClass({
     }else if(this.state.loading){
       items.push(<div className="loadingPage"><i className="fa fa-spinner fa-spin"></i></div>)
     }else if(this.state.nomore&&this.state.list.length==0){
-      items=(<div className="none"><i className="fa fa-frown-o"></i><p>Sorry, we cannot find any carpool that matches your criteria.</p><span className="makeoffer">Make a request <i className="fa fa-angle-right"></i></span></div>)
+      items=(<div className="none"><i className="fa fa-frown-o"></i><p>Sorry, we cannot find any carpool that matches your criteria.</p><span className="makeoffer" data-toggle="modal" data-target="#makeRequest">Make a request <i className="fa fa-angle-right"></i></span></div>)
     }else if(this.state.nomore)
-      items.push(<div className="nomore"><i className="fa fa-exclamation-triangle"></i> No more carpool avaliable. <span className="makeoffer">Make a request <i className="fa fa-angle-right"></i></span></div>)
+      items.push(<div className="nomore"><i className="fa fa-exclamation-triangle"></i> No more carpool avaliable. <span className="makeoffer" data-toggle="modal" data-target="#makeRequest">Make a request <i className="fa fa-angle-right"></i></span></div>)
     var preview=(
       <div className={"preview "+((this.state.showPreview)?"show":"")}>{this.state.previewHtml}</div>
     )
@@ -216,6 +216,7 @@ FilterView=React.createClass({
     $('#filter-date').pickadate({
       format: 'yyyy-mm-dd',
       container: 'body',
+      min: new Date(),
       onSet:function(){
         that.handleChange({target:$('#filter-date').get(0)});
       }
@@ -242,15 +243,15 @@ FilterView=React.createClass({
             <div className='inputs'>
             <div className="merge-input col-xs-12 col-sm-4"> 
               <label><span className="glyphicon glyphicon-map-marker from-marker"></span></label>
-              <input value={this.state.from} placeholder="FROM" data-change="from" onChange={this.handleChange} />
+              <input id='filter-from' value={this.state.from} placeholder="FROM" data-change="from" onChange={this.handleChange} />
             </div>
             <div className="merge-input col-xs-12 col-sm-4"> 
               <label><span className="glyphicon glyphicon-map-marker to-marker"></span></label>
-              <input value={this.state.to} placeholder="TO" data-change="to" onChange={this.handleChange}  />
+              <input id='filter-to' value={this.state.to} placeholder="TO" data-change="to" onChange={this.handleChange}  />
             </div>
             <div className='merge-input col-xs-12 col-sm-4'> 
               <label><i className='fa fa-calendar date-marker'/></label>
-              <input type='text' ref='dateInput' id='filter-date' placeholder="DATE" className="form-control" data-format="YYYY-MM-DD"  value={this.state.date} data-change="date" onChange={this.handleChange}/>
+              <input id='filter-date' type='text' ref='dateInput' id='filter-date' placeholder="DATE" className="form-control" data-format="YYYY-MM-DD"  value={this.state.date} data-change="date" onChange={this.handleChange}/>
             </div>
             </div>
 
