@@ -88,7 +88,7 @@ ListView=React.createClass({
                 date:that.props.date,
                 passenger:that.props.passenger,
                 luggage:that.props.luggage,
-                page:that.state.page,
+                page:that.state.page-1,
                 type:type};
       var rc=that.state.requestCount;
       console.log("try loading page "+that.state.page);
