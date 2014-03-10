@@ -13,7 +13,7 @@ document.onclick=function(event) {
 };
 
 $('#star1').hover(function(){
-    $('#star1').
+    $('#star1');
 });
 
 var commentSubmit = document.getElementById("commentSubmit");
