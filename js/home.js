@@ -79,6 +79,18 @@ MakeRequestModel=React.createClass({
     }).on('shown.bs.modal', function (e) {
       $('#makeRequest-from').focus();
     })
+    makeOffer=this.showMakeOffer.bind(this)
+    makeRequest=this.showMakeRequest.bind(this)
+  },
+
+  showMakeOffer:function(){
+    this.setState({type:"offer"})
+    $('#makeRequest').modal('show');
+  },
+
+  showMakeRequest:function(){
+    this.setState({type:"request"})
+    $('#makeRequest').modal('show');
   },
 
   submit:function(e){
@@ -125,9 +137,9 @@ MakeRequestModel=React.createClass({
   },
 
   render: function() {
-    var singleText=(this.props.type=="request")?"person":"seat avaliable";
-    var multiText=(this.props.type=="request")?"people":"seats avaliable";
-    var title=(this.props.type=="request")?"Request":"Offer";
+    var singleText=(this.state.type=="request")?"person":"seat avaliable";
+    var multiText=(this.state.type=="request")?"people":"seats avaliable";
+    var title=(this.state.type=="request")?"Request":"Offer";
     return(
       <form onSubmit={this.submit} action="post">
         <div className="modal fade" id="makeRequest" tabindex="-1" role="dialog" aria-labelledby="makeRequestLabel" aria-hidden="true">
@@ -326,6 +338,9 @@ ListView=React.createClass({
     //console.log("hiding")
     this.setState({showPreview:false});
   },
+  showMakeModal:function(){
+    this.props.type=="offer"?makeRequest():makeOffer();
+  },
 
   render: function() {
     var classString="listContent";
@@ -339,9 +354,9 @@ ListView=React.createClass({
     }else if(this.state.loading){
       items.push(<div className="loadingPage"><i className="fa fa-spinner fa-spin"></i></div>)
     }else if(this.state.nomore&&this.state.list.length==0){
-      items=(<div className="none"><i className="fa fa-frown-o"></i><p>Sorry, we cannot find any carpool that matches your criteria.</p><span className="makeoffer" data-toggle="modal" data-target="#makeRequest">Make a request <i className="fa fa-angle-right"></i></span></div>)
+      items=(<div className="none"><i className="fa fa-frown-o"></i><p>Sorry, we cannot find any carpool that matches your criteria.</p><span className="makeoffer" onClick={this.showMakeModal}>Make a {that.props.type=="offer"?"request ":"offer "} <i className="fa fa-angle-right"></i></span></div>)
     }else if(this.state.nomore)
-      items.push(<div className="nomore"><i className="fa fa-exclamation-triangle"></i> No more carpool {that.props.type} avaliable. <span className="makeoffer" data-toggle="modal" data-target="#makeRequest">Make a {that.props.type=="offer"?"request ":"offer "} <i className="fa fa-angle-right"></i></span></div>)
+      items.push(<div className="nomore"><i className="fa fa-exclamation-triangle"></i> No more carpool {that.props.type} avaliable. <span className="makeoffer" onClick={this.showMakeModal}>Make a {that.props.type=="offer"?"request ":"offer "} <i className="fa fa-angle-right"></i></span></div>)
     var preview=(
       <div className={"preview "+((this.state.showPreview)?"show":"")}>{this.state.previewHtml}</div>
     )
@@ -442,7 +457,7 @@ FilterView=React.createClass({
         </div>
         {list}
         </form>
-        <MakeRequestModel type={this.state.type=="offer"?"request":"offer"} />
+        <MakeRequestModel />
       </div>
     );
   }

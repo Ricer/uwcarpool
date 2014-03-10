@@ -79,7 +79,10 @@
                     <div class="profile">
                       <div class='info'>
                       <p class="name"><?=$view['user']->firstname . ' ' . $view['user']->lastname?></p>
-                      <span class="makeoffer" data-toggle="modal" data-target="#makeRequest">Make a request <i class="fa fa-angle-right"></i></span>
+                      <span class="makeoffer" onclick="makeRequest()">Make a request <i class="fa fa-angle-right"></i></span>
+                      <?php if ($view['user']->type > 1) : ?>
+                        <span class="makeoffer" onclick="makeOffer()">Make a offer <i class="fa fa-angle-right"></i></span>
+                      <?php endif; ?>
                       </div>
                       <div class='buttons'>
                         <a href="/dashboard"><i class="fa fa-tachometer"></i>Dashboard</a>
