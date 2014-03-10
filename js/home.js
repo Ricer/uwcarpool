@@ -119,7 +119,6 @@ MakeRequestModel=React.createClass({
     }).fail(function( jqxhr, textStatus, error ) {
       var err = textStatus + ", " + error;
       console.log(err)
-      that.setState({loading:false})
     });
     $('#makeRequest').modal('hide');
     return false;
@@ -163,12 +162,12 @@ MakeRequestModel=React.createClass({
                   <div className="dropdown">
                     <button className="form-control" id="makeRequest-people" data-toggle="dropdown" >{this.state.people+" "+(this.state.people==1?singleText:multiText)}</button>
                     <ul className="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                      <li><a onClick={this.handleChange} data-value="1" data-change="people" data-source="data-value">1 {singleText}</a></li>
-                      <li><a onClick={this.handleChange} data-value="2" data-change="people" data-source="data-value">2 {multiText}</a></li>
-                      <li><a onClick={this.handleChange} data-value="3" data-change="people" data-source="data-value">3 {multiText}</a></li>
-                      <li><a onClick={this.handleChange} data-value="4" data-change="people" data-source="data-value">4 {multiText}</a></li>
-                      <li><a onClick={this.handleChange} data-value="5" data-change="people" data-source="data-value">5 {multiText}</a></li>
-                      <li><a onClick={this.handleChange} data-value="6" data-change="people" data-source="data-value">6 {multiText}</a></li>
+                      <li><a onClick={this.handleChange} data-value="1" data-change="people" data-source="data-value">{"1 "+singleText}</a></li>
+                      <li><a onClick={this.handleChange} data-value="2" data-change="people" data-source="data-value">{"2 "+multiText}</a></li>
+                      <li><a onClick={this.handleChange} data-value="3" data-change="people" data-source="data-value">{"3 "+multiText}</a></li>
+                      <li><a onClick={this.handleChange} data-value="4" data-change="people" data-source="data-value">{"4 "+multiText}</a></li>
+                      <li><a onClick={this.handleChange} data-value="5" data-change="people" data-source="data-value">{"5 "+multiText}</a></li>
+                      <li><a onClick={this.handleChange} data-value="6" data-change="people" data-source="data-value">{"6 "+multiText}</a></li>
                     </ul>
                   </div>
                   <label><i className='fa  fa-fw fa-users people-marker'/></label>
