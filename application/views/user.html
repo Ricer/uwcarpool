@@ -68,7 +68,6 @@
         <?php date_default_timezone_set("America/Toronto"); ?>
         
         <div class="column-left">
-            <?php if ($view['user']->type > 1) : ?>
             <?php
                 $prevOffers = array_filter(
                     $view['offers'],
@@ -78,6 +77,15 @@
                 $currentOffers = array_filter(
                     $view['offers'],
                     function($offer) {return $offer->date >= date("Y-m-d");}
+                );
+                $prevRequests = array_filter(
+                    $view['requests'],
+                    function($request) {return $request->date < date("Y-m-d");}
+                );
+                $prevRequests = array_slice($prevRequests, 0, 10, TRUE);
+                $currentRequests = array_filter(
+                    $view['requests'],
+                    function($request) {return $request->date >= date("Y-m-d");}
                 );
             ?>
             <div class="panel panel-default">
@@ -120,19 +128,7 @@
                     <?php endif; ?>
                 </ul>
             </div>
-            <?php endif ?>
-            <?php if ($view['user']->type != 3): ?>
-            <?php
-                $prevRequests = array_filter(
-                    $view['requests'],
-                    function($request) {return $request->date < date("Y-m-d");}
-                );
-                $prevRequests = array_slice($prevRequests, 0, 10, TRUE);
-                $currentRequests = array_filter(
-                    $view['requests'],
-                    function($request) {return $request->date >= date("Y-m-d");}
-                );
-            ?>
+            
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h2>Current Requests</h2>
@@ -175,7 +171,6 @@
                     <?php endif; ?>
                 </ul>
             </div>
-            <?php endif; ?>
         </div>
 
         <div class="column-right">
