@@ -49,22 +49,35 @@
             </div>
         </div>
         
+        <?php date_default_timezone_set("America/Toronto"); ?>
         
-
         <div class="column-left">
+            <?php if ($view['user']->type > 1) : ?>
+            <?php
+                $prevOffers = array_filter(
+                    $view['offers'],
+                    function($offer) {
+                        return $offer->date < date("Y-m-d");
+                    }
+                );
+                $currentOffers = array_filter(
+                    $view['offers'],
+                    function($offer) {
+                        return $offer->date >= date("Y-m-d");
+                    }
+                };
+            ?>
             <div class="panel panel-default">
-                <?php if ($view['user']->type > 1) : ?>
                 <div class="panel-heading">
-                    <h2>Offers</h2>
-                </div>
-                
+                    <h2>Previous Offers</h2>
+                </div>                
                 <ul class="list-group" "info-left">
-                    <?php if (count($view['offers'])== 0): ?>
+                    <?php if (count($prevOffers)== 0): ?>
                         <li class="list-group-item">
-                            <h4>No offers</h4>
+                            <h4>No previous offers</h4>
                         </li>
                     <?php else: ?>
-                        <?php foreach ($view['offers'] as $offer): ?>
+                        <?php foreach ($prevOffers as $offer): ?>
                             <li class="list-group-item">
                                 <div class="carpool-date"><?=explode(" ",$offer->date)[0]?></div>
                                 <div class="carpool-depart"><?=$offer->departure?></div>
@@ -74,7 +87,10 @@
                         <?php endforeach ?>
                     <?php endif; ?>
                 </ul>
-                <?php elseif ($view['user']->type != 3): ?>
+            </div>
+            <?php endif ?>
+            <?php if ($view['user']->type != 3): ?>
+            <div class="panel panel-default">
                 <div class="panel-heading">
                     <h2>Requests</h2>
                 </div>
@@ -95,9 +111,8 @@
                         <?php endforeach ?>
                     <?php endif; ?>
                 </ul>
-                
-                <?php endif; ?>
             </div>
+            <?php endif; ?>
         </div>
 
         <div class="column-right">
