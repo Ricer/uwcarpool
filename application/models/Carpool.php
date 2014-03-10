@@ -58,6 +58,25 @@ class Carpool extends Model{
 			$result = DB::run_query($query);
 			return json_encode($result);
 		}
+		
+		if ($data['func'] == 'make') {
+			$data_array = array(
+				'user_id' => $data['user_id'],
+				'date' => $data['date'],
+				'departure' => $data['from'],
+				'arrival' => $data['to'],
+				'type' => $data['type'],
+				'description' => $data['description'],
+				'price' => $data['price'],
+				'passenger' => $data['people'],
+				'luggage' => 0
+			);
+			$carpool = new Carpool();
+			$carpool->populate($data_array);
+			$result = $carpool->save();
+			return json_encode(array('success' => $result ? 1:0));
+		}
+		
 	}
 }	
 ?>

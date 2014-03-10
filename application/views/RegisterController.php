@@ -72,16 +72,17 @@ class RegisterController extends CarpoolController {
 		{
 			$email = $_REQUEST['email'];
 			// check if user exist
-			if ($user = User::find_by_email($email))
+			if (User::find_by_email($email))
 			{
-				$message = "Hi " . $user->firstname . ", your carpool from waterloo to toronto has been accepted by Luke!";
+				$message = "Reset your password by following this link: ";
 				
-				Mail::send($email, $message);
-				$this->redirect('register/success/', true);
+				echo Mail::send($email, $message);
+				exit;
+				$this->reidrect('register/success', true);
+				$this->redirect('register/success/?failure=1', true);
 			}
-			$this->redirect('register/success/?failure=1', true);
+			else echo 'hi';
 		}
-		$this->redirect('register/success/?failure=1', true);
 	}
 	
 	public function __call($name, $arguments) {
