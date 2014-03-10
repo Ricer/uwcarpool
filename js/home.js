@@ -29,8 +29,9 @@ $.fn.popover.Constructor.prototype.setContent = function() {
 };
 function fieldError(fieldElem,errorStr){
   fieldElem.tooltip({
-      placement:'top',
+      placement:fieldElem.is("#makeRequest-time")?"right":"left",
       trigger:'manual',
+      container:'#makeRequest',
       title:errorStr,
   }).tooltip('show').addClass('has-tooltip').closest('.form-group').addClass('has-error')
   fieldElem.one('keypress blur change',function(){
@@ -39,7 +40,7 @@ function fieldError(fieldElem,errorStr){
 }
 MakeRequestModel=React.createClass({
   getInitialState: function() {
-    return {hasError:false,errorMsg:""};
+    return {people:"1 person",price:""};
   },
 
   componentWillUnmount: function() {
@@ -48,14 +49,22 @@ MakeRequestModel=React.createClass({
   componentDidUpdate:function(previousProps){
   },
 
+  handleChange:function(e){
+    var nextState={};
+    nextState[$(e.target).attr("data-change")]=($(e.target).attr("data-html"))?e.target.innerHTML:e.target.value
+    this.setState(nextState);
+  },
+
   componentDidMount:function(){
     $('#makeRequest-date').pickadate({
       container:'body',
-      min: new Date()
+      min: new Date(),
+      clear:""
     })
     $('#makeRequest-time').pickatime({
       container:'body',
       interval: 10,
+      clear:""
     })
     $('#makeRequest').on('show.bs.modal', function (e) {
       $('#makeRequest-from').val($('#filter-from').val())
@@ -65,6 +74,7 @@ MakeRequestModel=React.createClass({
       $('#makeRequest-from').focus();
     })
   },
+
   submit:function(e){
     e.preventDefault();
     var errorElem;
@@ -73,18 +83,41 @@ MakeRequestModel=React.createClass({
     var date=$('#makeRequest-date')
     var time=$('#makeRequest-time')
     var desc=$('#makeRequest-desc')
-    if (  from.val() == ''      ){fieldError(from,"Cannot be empty");errorElem=from;}
-    if (  to.val() == ''      ){fieldError(to,"Cannot be empty");errorElem=to;}
-    if (  date.val() == ''      ){fieldError(date,"Cannot be empty");errorElem=date;}
+    var price=$('#makeRequest-price')
+    var re=/^\d+(\.\d{2})?$/
+    if (  price.val() == ''      ){fieldError(price,"Cannot be empty");errorElem=price;}
+    else if ( !re.test(price.val()) ){fieldError(price,"Not a valid price, only numbers and decimal point are allowed");errorElem=price;}
+
     if (  time.val() == ''      ){fieldError(time,"Cannot be empty");errorElem=time;}
+    if (  date.val() == ''      ){fieldError(date,"Cannot be empty");errorElem=date;}
+    if (  to.val() == ''      ){fieldError(to,"Cannot be empty");errorElem=to;}
+    if (  from.val() == ''      ){fieldError(from,"Cannot be empty");errorElem=from;}
 
     if(errorElem){
-        //errorElem.focus();
+        errorElem.focus();
         return false
     }
+    var data={
+      model:'Carpool',
+      func:'make',
+      type:this.props.type,
+      from:from.val(),
+      to:to.val(),
+      date:moment(date.val()+" "+time.val()).format('YYYY-MM-DD hh:mm'),
+      description:desc.val(),
+      price:price.val(),
+      people:parseInt(this.state.people.substr(0,1))
+    }
+    $.ajax({url: "/post", dataType:"json",data:data,type:"POST"}).done(function( json ) {
+    }).fail(function( jqxhr, textStatus, error ) {
+      var err = textStatus + ", " + error;
+      console.log(err)
+      that.setState({loading:false})
+    });
     $('#makeRequest').modal('hide');
     return false;
   },
+
   render: function() {
     return(
       <form onSubmit={this.submit} action="post">
@@ -97,16 +130,38 @@ MakeRequestModel=React.createClass({
               </div>
               <div className="modal-body">
                 <div className="form-group col-sm-12">
-                <input type="text" className="form-control" id="makeRequest-from" placeholder="From" />
+                  <input type="text" className="form-control" id="makeRequest-from" placeholder="From" />
+                  <label><span className="glyphicon glyphicon-map-marker from-marker"></span></label>
                 </div>
                 <div className="form-group col-sm-12">
-                    <input type="text" className="form-control" id="makeRequest-to" placeholder="To" />
+                  <input type="text" className="form-control" id="makeRequest-to" placeholder="To" />
+                  <label><span className="glyphicon glyphicon-map-marker to-marker"></span></label>
                 </div>
                 <div className="col-sm-6 form-group">
                   <input type="text" className="form-control" id="makeRequest-date" placeholder="Date" />
+                  <label><i className='fa  fa-fw fa-calendar date-marker'/></label>
                 </div>
                 <div className="col-sm-6 form-group">
                   <input type="text" className="form-control" id="makeRequest-time" placeholder="Time" />
+                  <label><i className='fa  fa-fw fa-clock-o date-marker'/></label>
+                </div>
+                <div className="col-sm-6 form-group">
+                  <input type="text" className="form-control" id="makeRequest-price" placeholder="Price" value={this.state.price} onChange={this.handleChange} data-change="price"/>
+                  <label><i className='fa  fa-fw fa-dollar price-marker'/></label>
+                </div>
+                <div className="col-sm-6 form-group">
+                  <div className="dropdown">
+                    <button className="form-control" id="makeRequest-people" data-toggle="dropdown" >{this.state.people}</button>
+                    <ul className="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                      <li><a onClick={this.handleChange} data-change="people" data-html="true">1 person</a></li>
+                      <li><a onClick={this.handleChange} data-change="people" data-html="true">2 people</a></li>
+                      <li><a onClick={this.handleChange} data-change="people" data-html="true">3 people</a></li>
+                      <li><a onClick={this.handleChange} data-change="people" data-html="true">4 people</a></li>
+                      <li><a onClick={this.handleChange} data-change="people" data-html="true">5 people</a></li>
+                      <li><a onClick={this.handleChange} data-change="people" data-html="true">6 people</a></li>
+                    </ul>
+                  </div>
+                  <label><i className='fa  fa-fw fa-users people-marker'/></label>
                 </div>
                 <div className="form-group col-sm-12 nomargin">
                   <textarea className="form-control" style={{resize: "vertical"}} placeholder="Description" rows="8"></textarea>
@@ -165,6 +220,9 @@ CarpoolRow=React.createClass({
   }
 });
 
+
+
+
 ListView=React.createClass({
   
   getInitialState: function() {
@@ -178,7 +236,7 @@ ListView=React.createClass({
                 func:'search',
                 from:that.props.from,
                 to:that.props.to,
-                date:that.props.date,
+                date:(that.props.date==""?"":moment(that.props.date).format('YYYY-MM-DD')),
                 passenger:that.props.passenger,
                 luggage:that.props.luggage,
                 page:that.state.page-1,
@@ -297,7 +355,7 @@ var previousScroll = 0;
 FilterView=React.createClass({
 
   getInitialState: function() {
-    return {hide:false,from:"",to:"",date:"",passenger:1,luggage:0,type:"request"};
+    return {hide:false,from:"",to:"",date:"",passenger:1,luggage:0,type:type};
   },
   componentWillUnmount: function() {
     $(window).off('typeChange', this.handleTypeChange.bind(this));
@@ -312,10 +370,10 @@ FilterView=React.createClass({
     this.setState({type:type});
   },
   componentDidMount: function() {
+
     $(window).on('typeChange', this.handleTypeChange.bind(this));
     var that=this;
     $('#filter-date').pickadate({
-      format: 'yyyy-mm-dd',
       container: 'body',
       min: new Date(),
       onSet:function(){
@@ -375,7 +433,7 @@ FilterView=React.createClass({
         </div>
         {list}
         </form>
-        <MakeRequestModel type='request' />
+        <MakeRequestModel type="request" />
       </div>
     );
   }

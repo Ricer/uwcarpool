@@ -18,7 +18,7 @@
 @blueHover: #0094ff;
 @blueDark: #598fd9;
 @red: #ff3500;
-@green:#3fbf51;
+@green:#3fbf51;@yellow:#f1c40f;
 @filterColor: #f2f4f4;
 @listColor:#e9e8ea;
 
@@ -269,6 +269,25 @@ body{
   }
 }
 
+.form-label{
+  position:absolute;
+  padding:0 15px;
+  .from-marker{
+    color:@blue;
+  }
+  .to-marker{
+    color:@red;
+  }
+  .date-marker{
+    color:@green;
+  }
+  .price-marker{
+    color:@yellow;
+  }
+  .people-marker{
+    color:@midTextColor;
+  }
+}
 .filterPanel{
   padding: 15px 0 0;
   height:@filterHeight;
@@ -286,12 +305,11 @@ body{
     position:relative;
     margin-bottom: 15px;
     label{
-      position:absolute;
+      .form-label;
       top:(@filterHeight - 65px)/2 - 16px;
       transition:top .4s;
       width:30px;
       line-height: 30px;
-      padding:0 15px;
       font-size: 35px;
       .from-marker{
         color:@blue;
@@ -447,16 +465,39 @@ body{
 }
 
 
-.form-control{
-  padding:15px;
-  height:auto;
-  box-shadow: 0 2px 0  #dddddd;
+
+.modal-body{
+  background: #eeeeee;
+  label{
+    .form-label;
+    top:17px;
+    left:12px;
+    font-size: 20px;
+    line-height: 25px;
+  }
+  .form-control{
+    padding:15px;
+    height:auto;
+    box-shadow: 0 2px 0  #dddddd;
+    font-size: 18px;
+    text-align: left;
+    &:hover,&:focus{
+      box-shadow: 0 2px 0 @blue;
+    }
+  }
+  input.form-control,button.form-control{padding-left:40px;}
+}
+.form-group.has-error .form-control{
+  box-shadow: 0 2px 0 #a94442;
+}
+.form-group .dropdown-menu{
+  width: 100%;
+  text-align: left;
   font-size: 18px;
-  &:hover,&:focus{
-    box-shadow: 0 2px 0 @blue;
+  a{
+    padding-left: 40px;
   }
 }
-.modal-body{background: #eeeeee}
 .modal-title{text-align: center;}
 .modal-header{border-bottom:  2px solid  #dddddd;}
 .form-group.nomargin{
