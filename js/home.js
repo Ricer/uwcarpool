@@ -40,7 +40,7 @@ function fieldError(fieldElem,errorStr){
 }
 MakeRequestModel=React.createClass({
   getInitialState: function() {
-    return {people:"1 person",price:""};
+    return {people:"1",price:""};
   },
 
   componentWillUnmount: function() {
@@ -48,10 +48,16 @@ MakeRequestModel=React.createClass({
 
   componentDidUpdate:function(previousProps){
   },
-
   handleChange:function(e){
     var nextState={};
-    nextState[$(e.target).attr("data-change")]=($(e.target).attr("data-html"))?e.target.innerHTML:e.target.value
+    var target=$(e.target);
+    if(!target.attr("data-source")||target.attr("data-source")=="value"){
+      nextState[target.attr("data-change")]=target.val();
+    }else if(target.attr("data-source")=="html"){
+      nextState[target.attr("data-change")]=target.html();
+    }else{
+      nextState[target.attr("data-change")]=target.attr(target.attr("data-source"))
+    }
     this.setState(nextState);
   },
 
@@ -100,25 +106,28 @@ MakeRequestModel=React.createClass({
     var data={
       model:'Carpool',
       func:'make',
+      user_id:user_id,
       type:this.props.type,
       from:from.val(),
       to:to.val(),
       date:moment(date.val()+" "+time.val()).format('YYYY-MM-DD hh:mm'),
       description:desc.val(),
       price:price.val(),
-      people:parseInt(this.state.people.substr(0,1))
+      people:this.state.people
     }
     $.ajax({url: "/post", dataType:"json",data:data,type:"POST"}).done(function( json ) {
     }).fail(function( jqxhr, textStatus, error ) {
       var err = textStatus + ", " + error;
       console.log(err)
-      that.setState({loading:false})
     });
     $('#makeRequest').modal('hide');
     return false;
   },
 
   render: function() {
+    var singleText=(this.props.type=="request")?"person":"seat avaliable";
+    var multiText=(this.props.type=="request")?"people":"seats avaliable";
+    var title=(this.props.type=="request")?"Request":"Offer";
     return(
       <form onSubmit={this.submit} action="post">
         <div className="modal fade" id="makeRequest" tabindex="-1" role="dialog" aria-labelledby="makeRequestLabel" aria-hidden="true">
@@ -126,7 +135,7 @@ MakeRequestModel=React.createClass({
             <div className="modal-content">
               <div className="modal-header">
                 <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 className="modal-title" id="makeRequestLabel">Make a Request</h4>
+                <h4 className="modal-title" id="makeRequestLabel">Make a {title}</h4>
               </div>
               <div className="modal-body">
                 <div className="form-group col-sm-12">
@@ -151,20 +160,20 @@ MakeRequestModel=React.createClass({
                 </div>
                 <div className="col-sm-6 form-group">
                   <div className="dropdown">
-                    <button className="form-control" id="makeRequest-people" data-toggle="dropdown" >{this.state.people}</button>
+                    <button className="form-control" id="makeRequest-people" data-toggle="dropdown" >{this.state.people+" "+(this.state.people==1?singleText:multiText)}</button>
                     <ul className="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                      <li><a onClick={this.handleChange} data-change="people" data-html="true">1 person</a></li>
-                      <li><a onClick={this.handleChange} data-change="people" data-html="true">2 people</a></li>
-                      <li><a onClick={this.handleChange} data-change="people" data-html="true">3 people</a></li>
-                      <li><a onClick={this.handleChange} data-change="people" data-html="true">4 people</a></li>
-                      <li><a onClick={this.handleChange} data-change="people" data-html="true">5 people</a></li>
-                      <li><a onClick={this.handleChange} data-change="people" data-html="true">6 people</a></li>
+                      <li><a onClick={this.handleChange} data-value="1" data-change="people" data-source="data-value">{"1 "+singleText}</a></li>
+                      <li><a onClick={this.handleChange} data-value="2" data-change="people" data-source="data-value">{"2 "+multiText}</a></li>
+                      <li><a onClick={this.handleChange} data-value="3" data-change="people" data-source="data-value">{"3 "+multiText}</a></li>
+                      <li><a onClick={this.handleChange} data-value="4" data-change="people" data-source="data-value">{"4 "+multiText}</a></li>
+                      <li><a onClick={this.handleChange} data-value="5" data-change="people" data-source="data-value">{"5 "+multiText}</a></li>
+                      <li><a onClick={this.handleChange} data-value="6" data-change="people" data-source="data-value">{"6 "+multiText}</a></li>
                     </ul>
                   </div>
                   <label><i className='fa  fa-fw fa-users people-marker'/></label>
                 </div>
                 <div className="form-group col-sm-12 nomargin">
-                  <textarea className="form-control" style={{resize: "vertical"}} placeholder="Description" rows="8"></textarea>
+                  <textarea className="form-control" style={{resize: "vertical"}} id="makeRequest-desc" placeholder="Description" rows="8"></textarea>
                 </div>
                 <div className=' clearfix'></div>
               </div>
@@ -332,7 +341,7 @@ ListView=React.createClass({
     }else if(this.state.nomore&&this.state.list.length==0){
       items=(<div className="none"><i className="fa fa-frown-o"></i><p>Sorry, we cannot find any carpool that matches your criteria.</p><span className="makeoffer" data-toggle="modal" data-target="#makeRequest">Make a request <i className="fa fa-angle-right"></i></span></div>)
     }else if(this.state.nomore)
-      items.push(<div className="nomore"><i className="fa fa-exclamation-triangle"></i> No more carpool {that.props.type} avaliable. <span className="makeoffer" data-toggle="modal" data-target={that.props.type=="offer"?"#makeRequest":"#makeOffer"}>Make a {that.props.type=="offer"?"request ":"offer "} <i className="fa fa-angle-right"></i></span></div>)
+      items.push(<div className="nomore"><i className="fa fa-exclamation-triangle"></i> No more carpool {that.props.type} avaliable. <span className="makeoffer" data-toggle="modal" data-target="#makeRequest">Make a {that.props.type=="offer"?"request ":"offer "} <i className="fa fa-angle-right"></i></span></div>)
     var preview=(
       <div className={"preview "+((this.state.showPreview)?"show":"")}>{this.state.previewHtml}</div>
     )
@@ -433,7 +442,7 @@ FilterView=React.createClass({
         </div>
         {list}
         </form>
-        <MakeRequestModel type="request" />
+        <MakeRequestModel type={this.state.type=="offer"?"request":"offer"} />
       </div>
     );
   }
