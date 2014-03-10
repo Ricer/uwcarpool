@@ -23,6 +23,8 @@ class DashboardController extends CarpoolController {
   public function __call($name, $arguments) {
     $view = array();
     $view['user'] = $this->user;
+    $view['offers'] = Carpool::find_all("user_id=".$this->user->id." AND type='offer'");
+    $view['requests'] = Carpool::find_all("user_id=".$this->user->id." AND type='request'");
     return $view;
   }
   
