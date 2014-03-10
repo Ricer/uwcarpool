@@ -23,10 +23,11 @@ class UserController extends CarpoolController {
   
   public function __call($name, $arguments) {
     $view = array();
-    $selector = array(
+    $view['user'] = User::find(array(
       'id' => $this->todo['id']
-    );
-    $view['user'] = User::find($selector);
+    ));
+    $view['offers'] = Carpool::find_all("user_id=".$this->todo['id']." AND type='offer'");
+    $view['requests'] = Carpool::find_all("user_id=".$this->todo['id']." AND type='request'");
     return $view;
   }
   

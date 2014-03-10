@@ -27,7 +27,100 @@ $.fn.popover.Constructor.prototype.setContent = function() {
         React.renderComponent(content,  $tip.find('.popover-content')[0]);
     }
 };
+function fieldError(fieldElem,errorStr){
+  fieldElem.tooltip({
+      placement:'top',
+      trigger:'manual',
+      title:errorStr,
+  }).tooltip('show').addClass('has-tooltip').closest('.form-group').addClass('has-error')
+  fieldElem.one('keypress blur change',function(){
+      fieldElem.tooltip('destroy').removeClass('has-tooltip').closest('.form-group').removeClass('has-error')
+  });
+}
+MakeRequestModel=React.createClass({
+  getInitialState: function() {
+    return {hasError:false,errorMsg:""};
+  },
 
+  componentWillUnmount: function() {
+  },
+
+  componentDidUpdate:function(previousProps){
+  },
+
+  componentDidMount:function(){
+    $('#makeRequest-date').pickadate({
+      container:'body',
+      min: new Date()
+    })
+    $('#makeRequest-time').pickatime({
+      container:'body',
+      interval: 10,
+    })
+    $('#makeRequest').on('show.bs.modal', function (e) {
+      $('#makeRequest-from').val($('#filter-from').val())
+      $('#makeRequest-to').val($('#filter-to').val())
+      $('#makeRequest-date').val($('#filter-date').val())
+    }).on('shown.bs.modal', function (e) {
+      $('#makeRequest-from').focus();
+    })
+  },
+  submit:function(e){
+    e.preventDefault();
+    var errorElem;
+    var from=$('#makeRequest-from')
+    var to=$('#makeRequest-to')
+    var date=$('#makeRequest-date')
+    var time=$('#makeRequest-time')
+    var desc=$('#makeRequest-desc')
+    if (  from.val() == ''      ){fieldError(from,"Cannot be empty");errorElem=from;}
+    if (  to.val() == ''      ){fieldError(to,"Cannot be empty");errorElem=to;}
+    if (  date.val() == ''      ){fieldError(date,"Cannot be empty");errorElem=date;}
+    if (  time.val() == ''      ){fieldError(time,"Cannot be empty");errorElem=time;}
+
+    if(errorElem){
+        //errorElem.focus();
+        return false
+    }
+    $('#makeRequest').modal('hide');
+    return false;
+  },
+  render: function() {
+    return(
+      <form onSubmit={this.submit} action="post">
+        <div className="modal fade" id="makeRequest" tabindex="-1" role="dialog" aria-labelledby="makeRequestLabel" aria-hidden="true">
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 className="modal-title" id="makeRequestLabel">Make a Request</h4>
+              </div>
+              <div className="modal-body">
+                <div className="form-group col-sm-12">
+                <input type="text" className="form-control" id="makeRequest-from" placeholder="From" />
+                </div>
+                <div className="form-group col-sm-12">
+                    <input type="text" className="form-control" id="makeRequest-to" placeholder="To" />
+                </div>
+                <div className="col-sm-6 form-group">
+                  <input type="text" className="form-control" id="makeRequest-date" placeholder="Date" />
+                </div>
+                <div className="col-sm-6 form-group">
+                  <input type="text" className="form-control" id="makeRequest-time" placeholder="Time" />
+                </div>
+                <div className="form-group col-sm-12 nomargin">
+                  <textarea className="form-control" style={{resize: "vertical"}} placeholder="Description" rows="8"></textarea>
+                </div>
+                <div className=' clearfix'></div>
+              </div>
+              <button type="button" className="btn btn-primary modal-footer" type="submit" >Submit</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    );
+  }
+});
 
 
 CarpoolRow=React.createClass({
@@ -89,7 +182,7 @@ ListView=React.createClass({
                 passenger:that.props.passenger,
                 luggage:that.props.luggage,
                 page:that.state.page-1,
-                type:type};
+                type:that.props.type};
       var rc=that.state.requestCount;
       console.log("try loading page "+that.state.page);
       $.ajax({url: "/post", dataType:"json",data:data,type:"POST"}).done(function( json ) {
@@ -118,25 +211,25 @@ ListView=React.createClass({
   handleMouseMove:function(e){
     var previewElem=$(".preview").css({top:e.clientY+20,left:e.clientX+15});
   },
+
   reload:function(e){
     this.setState({requestCount:this.state.requestCount+1,list:[],page:1,nomore:false},this.loadNextPage.bind(this));
   },
 
   componentWillUnmount: function() {
     $(window).off('scroll', this.handleScroll);
-    $(window).off('typeChange', this.reload.bind(this));
     $(window).off('mousemove', this.handleMouseMove);
   },
 
   componentDidUpdate:function(previousProps){
-    if(previousProps.from!=this.props.from||previousProps.to!=this.props.to||previousProps.date!=this.props.date){
+    if(previousProps.from!=this.props.from||previousProps.to!=this.props.to||previousProps.date!=this.props.date||previousProps.type!=this.props.type){
+      console.log(previousProps.type+this.props.type);
       this.reload();
     }
   },
 
   componentDidMount:function(){
     this.loadNextPage();
-    $(window).on('typeChange', this.reload.bind(this));
     $(window).on('scroll', this.handleScroll);
     $(window).on('mousemove', this.handleMouseMove);
   },
@@ -179,9 +272,9 @@ ListView=React.createClass({
     }else if(this.state.loading){
       items.push(<div className="loadingPage"><i className="fa fa-spinner fa-spin"></i></div>)
     }else if(this.state.nomore&&this.state.list.length==0){
-      items=(<div className="none"><i className="fa fa-frown-o"></i><p>Sorry, we cannot find any carpool that matches your criteria.</p><span className="makeoffer">Make a request <i className="fa fa-angle-right"></i></span></div>)
+      items=(<div className="none"><i className="fa fa-frown-o"></i><p>Sorry, we cannot find any carpool that matches your criteria.</p><span className="makeoffer" data-toggle="modal" data-target="#makeRequest">Make a request <i className="fa fa-angle-right"></i></span></div>)
     }else if(this.state.nomore)
-      items.push(<div className="nomore"><i className="fa fa-exclamation-triangle"></i> No more carpool avaliable. <span className="makeoffer">Make a request <i className="fa fa-angle-right"></i></span></div>)
+      items.push(<div className="nomore"><i className="fa fa-exclamation-triangle"></i> No more carpool {that.props.type} avaliable. <span className="makeoffer" data-toggle="modal" data-target={that.props.type=="offer"?"#makeRequest":"#makeOffer"}>Make a {that.props.type=="offer"?"request ":"offer "} <i className="fa fa-angle-right"></i></span></div>)
     var preview=(
       <div className={"preview "+((this.state.showPreview)?"show":"")}>{this.state.previewHtml}</div>
     )
@@ -204,18 +297,27 @@ var previousScroll = 0;
 FilterView=React.createClass({
 
   getInitialState: function() {
-    return {hide:false,from:"",to:"",date:"",passenger:1,luggage:0};
+    return {hide:false,from:"",to:"",date:"",passenger:1,luggage:0,type:"request"};
+  },
+  componentWillUnmount: function() {
+    $(window).off('typeChange', this.handleTypeChange.bind(this));
   },
   handleChange:function(e){
     var nextState={};
     nextState[$(e.target).attr("data-change")]=($(e.target).attr("data-html"))?e.target.innerHTML:e.target.value
     this.setState(nextState);
   },
+  handleTypeChange:function(e){
+    console.log("type changed")
+    this.setState({type:type});
+  },
   componentDidMount: function() {
+    $(window).on('typeChange', this.handleTypeChange.bind(this));
     var that=this;
     $('#filter-date').pickadate({
       format: 'yyyy-mm-dd',
       container: 'body',
+      min: new Date(),
       onSet:function(){
         that.handleChange({target:$('#filter-date').get(0)});
       }
@@ -232,8 +334,9 @@ FilterView=React.createClass({
   },
   render: function() {
     var classString="filterPanel "+(this.state.isTop?"affix-top":"affix");
-    var list=(<ListView ref="list" from={this.state.from} to={this.state.to} date={this.state.date} passenger={this.state.passenger} luggage={this.state.luggage} />)
-
+    var list=(<ListView ref="list" type={this.state.type} from={this.state.from} to={this.state.to} date={this.state.date} passenger={this.state.passenger} luggage={this.state.luggage} />)
+    var text=this.state.type=="offer"?"Offered":"Requested";
+    var seatsText=this.state.type=="offer"?"Seats":"# of People";
     return(
       <div>
         <form role='form' onSubmit={this.search}>
@@ -242,15 +345,15 @@ FilterView=React.createClass({
             <div className='inputs'>
             <div className="merge-input col-xs-12 col-sm-4"> 
               <label><span className="glyphicon glyphicon-map-marker from-marker"></span></label>
-              <input value={this.state.from} placeholder="FROM" data-change="from" onChange={this.handleChange} />
+              <input id='filter-from' value={this.state.from} placeholder="FROM" data-change="from" onChange={this.handleChange} />
             </div>
             <div className="merge-input col-xs-12 col-sm-4"> 
               <label><span className="glyphicon glyphicon-map-marker to-marker"></span></label>
-              <input value={this.state.to} placeholder="TO" data-change="to" onChange={this.handleChange}  />
+              <input id='filter-to' value={this.state.to} placeholder="TO" data-change="to" onChange={this.handleChange}  />
             </div>
             <div className='merge-input col-xs-12 col-sm-4'> 
               <label><i className='fa fa-calendar date-marker'/></label>
-              <input type='text' ref='dateInput' id='filter-date' placeholder="DATE" className="form-control" data-format="YYYY-MM-DD"  value={this.state.date} data-change="date" onChange={this.handleChange}/>
+              <input id='filter-date' type='text' ref='dateInput' id='filter-date' placeholder="DATE" className="form-control" data-format="YYYY-MM-DD"  value={this.state.date} data-change="date" onChange={this.handleChange}/>
             </div>
             </div>
 
@@ -261,8 +364,8 @@ FilterView=React.createClass({
                     <td>Date</td>
                     <td>Origin</td>
                     <td>Destination</td>
-                    <td>Offered by</td>
-                    <td>Seats</td>
+                    <td>{text} by</td>
+                    <td>{seatsText}</td>
                     <td>Price</td>
                   </tr>
                 </thead>
@@ -272,6 +375,7 @@ FilterView=React.createClass({
         </div>
         {list}
         </form>
+        <MakeRequestModel type='request' />
       </div>
     );
   }

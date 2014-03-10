@@ -11,7 +11,7 @@
 @filterHeight:170px;
 @carpoolRowHeight:100px;
 
-
+@cloud: #ecf0f1;
 @darkTextColor:#515162;
 @midTextColor:#747dab;
 @blue: #45b1ff;
@@ -352,6 +352,9 @@ body{
   &.affix{
     top:@topbarShortHeight - (@filterHeight - 45px);
   }
+  &.affix:hover{
+    top:@topbarShortHeight;
+  }
 }
 
 .searchBtn{
@@ -444,6 +447,36 @@ body{
 }
 
 
+.form-control{
+  padding:15px;
+  height:auto;
+  box-shadow: 0 2px 0  #dddddd;
+  font-size: 18px;
+  &:hover,&:focus{
+    box-shadow: 0 2px 0 @blue;
+  }
+}
+.modal-body{background: #eeeeee}
+.modal-title{text-align: center;}
+.modal-header{border-bottom:  2px solid  #dddddd;}
+.form-group.nomargin{
+  margin-bottom: 0;
+}
+.form-control[readonly]{
+  cursor: pointer;
+  background: white;
+}
+.btn-primary.modal-footer{
+  margin:0;
+  width:100%;
+  text-align: center;
+  font-size: 20px;
+  padding:10px;
+  border-radius: 0 0 4px 4px;
+  background: @blue;
+  border-top: 1px solid @blueDark;
+  &:hover{background: @blueHover}
+}
 .transition{
   transition:all .4s;
 }
