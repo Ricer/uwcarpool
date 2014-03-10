@@ -17,18 +17,20 @@
     <link rel="stylesheet" href="/css/user.css">
     <script src="/js/lib/jquery-1.8.3.min.js"></script>
     <script>
-        var displayItem = function($parent, carpool_date, carpool_depart, carpool_arrival, carpool_price){
+        var displayItem = function($parent, carpool_date, carpool_depart, carpool_arrival, carpool_price, carpool_id){
             var $listGroup = $('<li class="list-group-item"></li>');
+            var $link = $('<a href="/detail/'+carpool_id+'"></a>');
             
             var $date = $('<div class="carpool-date">'+carpool_date+'</div>');
-            $listGroup.append($date);
+            $link.append($date);
             var $depart = $('<div class="carpool-depart">'+carpool_depart+'</div>');
-            $listGroup.append($depart);
+            $link.append($depart);
             var $arrival = $('<div class="carpool-arrival">'+carpool_arrival+'</div>');
-            $listGroup.append($arrival);
+            $link.append($arrival);
             var $price = $('<div class="carpool-price">$'+carpool_price+'</div>');
-            $listGroup.append($price);     
+            $link.append($price); 
             
+            $listGroup.append($link);
             $parent.append($listGroup);
         }
     </script>
@@ -101,7 +103,7 @@
                         <?php foreach ($currentOffers as $item): ?>
                             <script>
                                 displayItem($('#currentOfferList'),
-                                    "<?=explode(" ",$item->date)[0]?>","<?=$item->departure?>","<?=$item->arrival?>","<?=$item->price?>"
+                                    "<?=explode(" ",$item->date)[0]?>","<?=$item->departure?>","<?=$item->arrival?>","<?=$item->price?>","<?=$item->id?>"
                                 );
                             </script>
                         <?php endforeach ?>
@@ -121,7 +123,7 @@
                         <?php foreach ($prevOffers as $item): ?>
                             <script>
                                 displayItem($('#prevOfferList'),
-                                    "<?=explode(" ",$item->date)[0]?>","<?=$item->departure?>","<?=$item->arrival?>","<?=$item->price?>"
+                                    "<?=explode(" ",$item->date)[0]?>","<?=$item->departure?>","<?=$item->arrival?>","<?=$item->price?>","<?=$item->id?>"
                                 );
                             </script>
                         <?php endforeach ?>
@@ -143,7 +145,7 @@
                         <?php foreach ($currentRequests as $item): ?>
                             <script>
                                 displayItem($('#currentRequestList'),
-                                    "<?=explode(" ",$item->date)[0]?>","<?=$item->departure?>","<?=$item->arrival?>","<?=$item->price?>"
+                                    "<?=explode(" ",$item->date)[0]?>","<?=$item->departure?>","<?=$item->arrival?>","<?=$item->price?>","<?=$item->id?>"
                                 );
                             </script>
                         <?php endforeach ?>
@@ -164,7 +166,7 @@
                         <?php foreach ($prevRequests as $item): ?>
                             <script>
                                 displayItem($('#prevRequestList'),
-                                    "<?=explode(" ",$item->date)[0]?>","<?=$item->departure?>","<?=$item->arrival?>","<?=$item->price?>"
+                                    "<?=explode(" ",$item->date)[0]?>","<?=$item->departure?>","<?=$item->arrival?>","<?=$item->price?>","<?=$item->id?>"
                                 );
                             </script>
                         <?php endforeach ?>

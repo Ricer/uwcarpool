@@ -88,9 +88,9 @@ h3{
     padding-right: 5px;
     width: 30%;
 }
-
 .carpool-price {
     display: inline-block;
+    color: #515162;
     font-weight: bold;
 }
 
