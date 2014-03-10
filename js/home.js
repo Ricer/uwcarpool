@@ -27,7 +27,100 @@ $.fn.popover.Constructor.prototype.setContent = function() {
         React.renderComponent(content,  $tip.find('.popover-content')[0]);
     }
 };
+function fieldError(fieldElem,errorStr){
+  fieldElem.tooltip({
+      placement:'top',
+      trigger:'manual',
+      title:errorStr,
+  }).tooltip('show').addClass('has-tooltip').closest('.form-group').addClass('has-error')
+  fieldElem.one('keypress blur change',function(){
+      fieldElem.tooltip('destroy').removeClass('has-tooltip').closest('.form-group').removeClass('has-error')
+  });
+}
+MakeRequestModel=React.createClass({
+  getInitialState: function() {
+    return {hasError:false,errorMsg:""};
+  },
 
+  componentWillUnmount: function() {
+  },
+
+  componentDidUpdate:function(previousProps){
+  },
+
+  componentDidMount:function(){
+    $('#makeRequest-date').pickadate({
+      container:'body',
+      min: new Date()
+    })
+    $('#makeRequest-time').pickatime({
+      container:'body',
+      interval: 10,
+    })
+    $('#makeRequest').on('show.bs.modal', function (e) {
+      $('#makeRequest-from').val($('#filter-from').val())
+      $('#makeRequest-to').val($('#filter-to').val())
+      $('#makeRequest-date').val($('#filter-date').val())
+    }).on('shown.bs.modal', function (e) {
+      $('#makeRequest-from').focus();
+    })
+  },
+  submit:function(e){
+    e.preventDefault();
+    var errorElem;
+    var from=$('#makeRequest-from')
+    var to=$('#makeRequest-to')
+    var date=$('#makeRequest-date')
+    var time=$('#makeRequest-time')
+    var desc=$('#makeRequest-desc')
+    if (  from.val() == ''      ){fieldError(from,"Cannot be empty");errorElem=from;}
+    if (  to.val() == ''      ){fieldError(to,"Cannot be empty");errorElem=to;}
+    if (  date.val() == ''      ){fieldError(date,"Cannot be empty");errorElem=date;}
+    if (  time.val() == ''      ){fieldError(time,"Cannot be empty");errorElem=time;}
+
+    if(errorElem){
+        //errorElem.focus();
+        return false
+    }
+    $('#makeRequest').modal('hide');
+    return false;
+  },
+  render: function() {
+    return(
+      <form onSubmit={this.submit} action="post">
+        <div className="modal fade" id="makeRequest" tabindex="-1" role="dialog" aria-labelledby="makeRequestLabel" aria-hidden="true">
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 className="modal-title" id="makeRequestLabel">Make a Request</h4>
+              </div>
+              <div className="modal-body">
+                <div className="form-group col-sm-12">
+                <input type="text" className="form-control" id="makeRequest-from" placeholder="From" />
+                </div>
+                <div className="form-group col-sm-12">
+                    <input type="text" className="form-control" id="makeRequest-to" placeholder="To" />
+                </div>
+                <div className="col-sm-6 form-group">
+                  <input type="text" className="form-control" id="makeRequest-date" placeholder="Date" />
+                </div>
+                <div className="col-sm-6 form-group">
+                  <input type="text" className="form-control" id="makeRequest-time" placeholder="Time" />
+                </div>
+                <div className="form-group col-sm-12 nomargin">
+                  <textarea className="form-control" style={{resize: "vertical"}} placeholder="Description" rows="8"></textarea>
+                </div>
+                <div className=' clearfix'></div>
+              </div>
+              <button type="button" className="btn btn-primary modal-footer" type="submit" >Submit</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    );
+  }
+});
 
 
 CarpoolRow=React.createClass({
@@ -273,6 +366,7 @@ FilterView=React.createClass({
         </div>
         {list}
         </form>
+        <MakeRequestModel type='request' />
       </div>
     );
   }
