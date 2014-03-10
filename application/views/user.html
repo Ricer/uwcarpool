@@ -16,6 +16,22 @@
     <link rel="stylesheet" href="/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/user.css">
     <script src="/js/lib/jquery-1.8.3.min.js"></script>
+    <script>
+        var displayItem = function($parent, carpool_date, carpool_depart, carpool_arrival, carpool_price){
+            var $listGroup = $('<li class="list-group-item"></li>');
+            
+            var $date = $('<div class="carpool-date">'+carpool_date+'</div>');
+            $listGroup.append($date);
+            var $depart = $('<div class="carpool-depart">'+carpool_depart+'</div>');
+            $listGroup.append($depart);
+            var $arrival = $('<div class="carpool-arrival">'+carpool_arrival+'</div>');
+            $listGroup.append($arrival);
+            var $price = $('<div class="carpool-price">$'+carpool_price+'</div>');
+            $listGroup.append($price);     
+            
+            $parent.append($listGroup);
+        }
+    </script>
   </head>
 
 <body>
@@ -56,58 +72,105 @@
             <?php
                 $prevOffers = array_filter(
                     $view['offers'],
-                    function($offer) {
-                        return $offer->date < date("Y-m-d");
-                    }
+                    function($offer) {return $offer->date < date("Y-m-d");}
                 );
+                $prevOffers = array_slice($prevOffers, 0, 10, TRUE);
                 $currentOffers = array_filter(
                     $view['offers'],
-                    function($offer) {
-                        return $offer->date >= date("Y-m-d");
-                    }
+                    function($offer) {return $offer->date >= date("Y-m-d");}
                 );
             ?>
             <div class="panel panel-default">
                 <div class="panel-heading">
+                    <h2>Current Offers</h2>
+                </div>                
+                <ul class="list-group" "info-left" id="currentOfferList">
+                    <?php if (count($currentOffers)== 0): ?>
+                        <li class="list-group-item">
+                            <h4>No current offers</h4>
+                        </li>
+                    <?php else: ?>
+                        <?php foreach ($currentOffers as $item): ?>
+                            <script>
+                                displayItem($('#currentOfferList'),
+                                    "<?=explode(" ",$item->date)[0]?>","<?=$item->departure?>","<?=$item->arrival?>","<?=$item->price?>"
+                                );
+                            </script>
+                        <?php endforeach ?>
+                    <?php endif; ?>
+                </ul>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
                     <h2>Previous Offers</h2>
                 </div>                
-                <ul class="list-group" "info-left">
+                <ul class="list-group" "info-left" id="prevOfferList">
                     <?php if (count($prevOffers)== 0): ?>
                         <li class="list-group-item">
                             <h4>No previous offers</h4>
                         </li>
                     <?php else: ?>
-                        <?php foreach ($prevOffers as $offer): ?>
-                            <li class="list-group-item">
-                                <div class="carpool-date"><?=explode(" ",$offer->date)[0]?></div>
-                                <div class="carpool-depart"><?=$offer->departure?></div>
-                                <div class="carpool-arrival"><?=$offer->arrival?></div>
-                                <div class="carpool-price">$<?=$offer->price?></div>
-                            </li>
+                        <?php foreach ($prevOffers as $item): ?>
+                            <script>
+                                displayItem($('#prevOfferList'),
+                                    "<?=explode(" ",$item->date)[0]?>","<?=$item->departure?>","<?=$item->arrival?>","<?=$item->price?>"
+                                );
+                            </script>
                         <?php endforeach ?>
                     <?php endif; ?>
                 </ul>
             </div>
             <?php endif ?>
             <?php if ($view['user']->type != 3): ?>
+            <?php
+                $prevRequests = array_filter(
+                    $view['requests'],
+                    function($request) {return $request->date < date("Y-m-d");}
+                );
+                $prevRequests = array_slice($prevRequests, 0, 10, TRUE);
+                $currentRequests = array_filter(
+                    $view['requests'],
+                    function($request) {return $request->date >= date("Y-m-d");}
+                );
+            ?>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h2>Requests</h2>
+                    <h2>Current Requests</h2>
                 </div>
                 
-                <ul class="list-group" "info-left">
-                    <?php if (count($view['requests'])== 0): ?>
+                <ul class="list-group" "info-left" id="currentRequestList">
+                    <?php if (count($currentRequests)== 0): ?>
                         <li class="list-group-item">
-                            <h4>No requests</h4>
+                            <h4>No current requests</h4>
                         </li>
                     <?php else: ?>
-                        <?php foreach ($view['requests'] as $request): ?>
-                            <li class="list-group-item">
-                                <div class="carpool-date"><?=explode(" ",$request->date)[0]?></div>
-                                <div class="carpool-depart"><?=$request->departure?></div>
-                                <div class="carpool-arrival"><?=$request->arrival?></div>
-                                <div class="carpool-price">$<?=$request->price?></div>
-                            </li>
+                        <?php foreach ($currentRequests as $item): ?>
+                            <script>
+                                displayItem($('#currentRequestList'),
+                                    "<?=explode(" ",$item->date)[0]?>","<?=$item->departure?>","<?=$item->arrival?>","<?=$item->price?>"
+                                );
+                            </script>
+                        <?php endforeach ?>
+                    <?php endif; ?>
+                </ul>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2>Previous Requests</h2>
+                </div>
+                
+                <ul class="list-group" "info-left" id="prevRequestList">
+                    <?php if (count($prevRequests)== 0): ?>
+                        <li class="list-group-item">
+                            <h4>No previous requests</h4>
+                        </li>
+                    <?php else: ?>
+                        <?php foreach ($prevRequests as $item): ?>
+                            <script>
+                                displayItem($('#prevRequestList'),
+                                    "<?=explode(" ",$item->date)[0]?>","<?=$item->departure?>","<?=$item->arrival?>","<?=$item->price?>"
+                                );
+                            </script>
                         <?php endforeach ?>
                     <?php endif; ?>
                 </ul>
