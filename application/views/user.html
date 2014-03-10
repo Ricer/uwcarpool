@@ -52,40 +52,42 @@
 
         <div class="column-left">
             <div class="panel panel-default">
+                <?php if ($view['user']->type > 1) : ?>
                 <div class="panel-heading">
-                    <h2>Current Offers</h2>
+                    <h2>Offers</h2>
                 </div>
                 
                 <ul class="list-group" "info-left">
-                    <!-- for offer in user[currentOffer] -->
-                    <li class="list-group-item">
-                        <div class="carpool-date">offer['date_date']</div>
-                        <div class="carpool-depart">offer['departure']</div> <div class="carpool-arrival">offer['arrival'] </div>
-                        <div class="carpool-price">offer['price']</div>
-                    </li>                
-                    <!-- endfor -->
-                    <li class="list-group-item">
-                        <div class="carpool-date">2014/3/8</div>
-                        <div class="carpool-depart">Waterloo</div>
-                        <div class="carpool-arrival">Toronto</div>
-                        <div class="carpool-price">$20</div>
-                    </li>
+                    <?php if (count($view['offers'])== 0): ?>
+                        <li class="list-group-item">
+                            <h4>No offers</h4>
+                        </li>
+                    <?php else: ?>
+                        <?php foreach ($view['offers'] as $offer): ?>
+                            <li class="list-group-item">
+                                <div class="carpool-date"><?=explode(" ",$offer->date)[0]?></div>
+                                <div class="carpool-depart"><?=$offer->departure?></div>
+                                <div class="carpool-arrival"><?=$offer->arrival?></div>
+                                <div class="carpool-price">$<?=$offer->price?></div>
+                            </li>
+                        <?php endforeach ?>
+                    <?php endif; ?>
                 </ul>
+                <?php endif; ?>
             </div>
+            <!-- 
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h2>Previous Offers</h2>
                 </div>
                 
                 <ul class="list-group" "info-left">
-                    <!-- for offer in user[previousOffer] -->
                     <li class="list-group-item">
                         <div class="carpool-date">offer['date_date'] </div>
                         <div class="carpool-depart">offer['departure'] </div>
                         <div class="carpool-arrival">offer['arrival']</div>
                         <div class="carpool-price">offer['price']</div>
                     </li>
-                    <!-- endfor -->
                     <li class="list-group-item">
                         <div class="carpool-date">2014/2/1</div>
                         <div class="carpool-depart">Toronto</div>
@@ -94,8 +96,7 @@
                     </li>
                 </ul>
             </div>
-            <div>
-            </div>
+            -->
         </div>
 
         <div class="column-right">
