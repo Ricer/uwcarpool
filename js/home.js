@@ -182,7 +182,7 @@ ListView=React.createClass({
                 passenger:that.props.passenger,
                 luggage:that.props.luggage,
                 page:that.state.page-1,
-                type:type};
+                type:that.props.type};
       var rc=that.state.requestCount;
       console.log("try loading page "+that.state.page);
       $.ajax({url: "/post", dataType:"json",data:data,type:"POST"}).done(function( json ) {
@@ -211,25 +211,25 @@ ListView=React.createClass({
   handleMouseMove:function(e){
     var previewElem=$(".preview").css({top:e.clientY+20,left:e.clientX+15});
   },
+
   reload:function(e){
     this.setState({requestCount:this.state.requestCount+1,list:[],page:1,nomore:false},this.loadNextPage.bind(this));
   },
 
   componentWillUnmount: function() {
     $(window).off('scroll', this.handleScroll);
-    $(window).off('typeChange', this.reload.bind(this));
     $(window).off('mousemove', this.handleMouseMove);
   },
 
   componentDidUpdate:function(previousProps){
-    if(previousProps.from!=this.props.from||previousProps.to!=this.props.to||previousProps.date!=this.props.date){
+    if(previousProps.from!=this.props.from||previousProps.to!=this.props.to||previousProps.date!=this.props.date||previousProps.type!=this.props.type){
+      console.log(previousProps.type+this.props.type);
       this.reload();
     }
   },
 
   componentDidMount:function(){
     this.loadNextPage();
-    $(window).on('typeChange', this.reload.bind(this));
     $(window).on('scroll', this.handleScroll);
     $(window).on('mousemove', this.handleMouseMove);
   },
@@ -274,7 +274,7 @@ ListView=React.createClass({
     }else if(this.state.nomore&&this.state.list.length==0){
       items=(<div className="none"><i className="fa fa-frown-o"></i><p>Sorry, we cannot find any carpool that matches your criteria.</p><span className="makeoffer" data-toggle="modal" data-target="#makeRequest">Make a request <i className="fa fa-angle-right"></i></span></div>)
     }else if(this.state.nomore)
-      items.push(<div className="nomore"><i className="fa fa-exclamation-triangle"></i> No more carpool avaliable. <span className="makeoffer" data-toggle="modal" data-target="#makeRequest">Make a request <i className="fa fa-angle-right"></i></span></div>)
+      items.push(<div className="nomore"><i className="fa fa-exclamation-triangle"></i> No more carpool {that.props.type} avaliable. <span className="makeoffer" data-toggle="modal" data-target={that.props.type=="offer"?"#makeRequest":"#makeOffer"}>Make a {that.props.type=="offer"?"request ":"offer "} <i className="fa fa-angle-right"></i></span></div>)
     var preview=(
       <div className={"preview "+((this.state.showPreview)?"show":"")}>{this.state.previewHtml}</div>
     )
@@ -297,14 +297,22 @@ var previousScroll = 0;
 FilterView=React.createClass({
 
   getInitialState: function() {
-    return {hide:false,from:"",to:"",date:"",passenger:1,luggage:0};
+    return {hide:false,from:"",to:"",date:"",passenger:1,luggage:0,type:"request"};
+  },
+  componentWillUnmount: function() {
+    $(window).off('typeChange', this.handleTypeChange.bind(this));
   },
   handleChange:function(e){
     var nextState={};
     nextState[$(e.target).attr("data-change")]=($(e.target).attr("data-html"))?e.target.innerHTML:e.target.value
     this.setState(nextState);
   },
+  handleTypeChange:function(e){
+    console.log("type changed")
+    this.setState({type:type});
+  },
   componentDidMount: function() {
+    $(window).on('typeChange', this.handleTypeChange.bind(this));
     var that=this;
     $('#filter-date').pickadate({
       format: 'yyyy-mm-dd',
@@ -326,8 +334,9 @@ FilterView=React.createClass({
   },
   render: function() {
     var classString="filterPanel "+(this.state.isTop?"affix-top":"affix");
-    var list=(<ListView ref="list" from={this.state.from} to={this.state.to} date={this.state.date} passenger={this.state.passenger} luggage={this.state.luggage} />)
-
+    var list=(<ListView ref="list" type={this.state.type} from={this.state.from} to={this.state.to} date={this.state.date} passenger={this.state.passenger} luggage={this.state.luggage} />)
+    var text=this.state.type=="offer"?"Offered":"Requested";
+    var seatsText=this.state.type=="offer"?"Seats":"# of People";
     return(
       <div>
         <form role='form' onSubmit={this.search}>
@@ -355,8 +364,8 @@ FilterView=React.createClass({
                     <td>Date</td>
                     <td>Origin</td>
                     <td>Destination</td>
-                    <td>Offered by</td>
-                    <td>Seats</td>
+                    <td>{text} by</td>
+                    <td>{seatsText}</td>
                     <td>Price</td>
                   </tr>
                 </thead>
