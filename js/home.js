@@ -119,7 +119,7 @@ MakeRequestModel=React.createClass({
       model:'Carpool',
       func:'make',
       user_id:user_id,
-      type:this.props.type,
+      type:this.state.type,
       from:from.val(),
       to:to.val(),
       date:moment(date.val()+" "+time.val()).format('YYYY-MM-DD hh:mm'),
@@ -128,6 +128,7 @@ MakeRequestModel=React.createClass({
       people:this.state.people
     }
     $.ajax({url: "/post", dataType:"json",data:data,type:"POST"}).done(function( json ) {
+      console.log(json)
     }).fail(function( jqxhr, textStatus, error ) {
       var err = textStatus + ", " + error;
       console.log(err)

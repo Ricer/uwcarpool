@@ -2,8 +2,8 @@
 define("APP_ROOT", dirname(__FILE__));
 
 define('hostname', "localhost");
-define('username', "root");
-define('password', "");
+define('username', "uwcarpool");
+define('password', "Thisispassword");
 define('database', "carpoolfinder");
 
 define('DEFAULT_CONTROLLER', "index");
@@ -14,10 +14,11 @@ define('FB_APP_ID', '414737555322863');
 define('FB_APP_SECRET', '54275a5a600f76b04fa957d9c1d72d37');
 
 
+date_default_timezone_set('EST');
+
 $con = mysqli_connect(hostname, username, password, database);
 mysqli_set_charset($con, "utf8");
 $GLOBALS['default'] = $con;
-
 $paths = array();
 $paths[] = APP_ROOT . '/application';
 $paths[] = APP_ROOT . '/application/controllers';

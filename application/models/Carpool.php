@@ -69,7 +69,7 @@ class Carpool extends Model{
 			$carpool = new Carpool();
 			$carpool->populate($data_array);
 			$result = $carpool->save();
-			return json_encode(array('success' => $result ? 1:0));
+			return json_encode(array('success' => $result ? 1:0,'data'=>$result));
 		}
 		
 	}
