@@ -31,10 +31,24 @@
             <div class="media-body">
                 <div class="media-body">
                     <h2 class="media-heading"><?=$view['user']->firstname?> <?=$view['user']->lastname?></h2>
-                    <p>Description</p>
+                    <p>
+                        <h4><?=$view['user']->email?></h4>
+                        <?php
+                            $t = $view['user']->type;
+                            if ($t == 1) {
+                                echo "Passenger";
+                            } elseif ($t == 3) {
+                                echo "Driver";
+                            } elseif ($t == 5) {
+                                echo "Administrator";
+                            }
+                        ?>
+                    </p>
                 </div>
             </div>
         </div>
+        
+        
 
         <div class="column-left">
             <div class="panel panel-default">
@@ -80,6 +94,8 @@
                     </li>
                 </ul>
             </div>
+            <div>
+            </div>
         </div>
 
         <div class="column-right">
@@ -104,7 +120,12 @@
                         <img src="http://www.hootpile.com/img/facebook-default-no-profile-pic.jpg" class="pull-left img-circle">
                         <h4>testuser</h4>
                         <p>
-                            Rating: <i class="fa-star fa-2px"></i>4/5<br>
+                            Rating: <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star-o"></i>
+                            <br>
                             test
                         </p>
                     </li>
@@ -122,48 +143,7 @@
             </div>
         </div>
     </div>
+   
     
-    <script>
-        var newComment = document.getElementById("newComment");
-        var ratingArea  = document.getElementById("ratingArea");
-        var commentContent = document.getElementById("commentContent");
-        newComment.onclick = function(event) {
-            commentContent.rows = "3";
-            ratingArea.style.display = "block";
-            event.stopPropagation();
-        };
-        document.onclick=function(event) {
-            commentContent.rows="1";
-            ratingArea.style.display="none";
-            $('#error').html("");
-        };
-        
-        var commentSubmit = document.getElementById("commentSubmit");
-        var submit = function() {
-            // TODO
-            // submit to the server
-            // update
-        };
-        $('#commentSubmit').click(function(){
-            // clear previous error
-            $('#error').html("");
-            // check -- commentContent commentRating
-            var error = false;
-            var re=/[^\s]+/
-            if (!re.test($('#commentContent').val())) {
-                $('#error').html("Comment must not be empty.");
-                error = true;
-            }
-            re = /^[1-5]$/
-            if (!error && !re.test($('#commentRating').val())) {
-                $('#error').html("Rating must be 1-5.");
-                error = true;
-            }
-            /*
-            if (!error) {
-                submit();
-            }
-            */
-        });
-    </script>
 </body>
+<script src="/js/user.js"></script>
