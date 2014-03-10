@@ -1,0 +1,149 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, target-densityDpi=device-dpi" />
+    <title>UWCarpool★</title>
+    <link rel="shortcut icon" href="images/favicon.ico">
+
+    <!-- Loading CSS -->
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/picker/default.css" id="theme_base">
+    <link rel="stylesheet" href="/css/picker/default.date.css" id="theme_date">
+    <link rel="stylesheet" href="/css/picker/default.time.css" id="theme_time">
+
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/user.css">
+    <script src="/js/lib/jquery-1.8.3.min.js"></script>
+  </head>
+
+<body>
+    <!-- menu bar -->
+    
+    <div id="headerImage">
+        <img src="http://evergreenpictureframers.info/wp-content/uploads/2012/09/Classified-Header.jpg">
+    </div>
+    
+    <div id="mainContent">
+        <div id="userinfo" class="media">
+            <img src="http://www.hootpile.com/img/facebook-default-no-profile-pic.jpg" class="pull-left img-thumbnail">
+            <div class="media-body">
+                <div class="media-body">
+                    <h2 class="media-heading"><?=$view['user']->firstname?> <?=$view['user']->lastname?></h2>
+                    <p>
+                        <h4><?=$view['user']->email?></h4>
+                        <?php
+                            $t = $view['user']->type;
+                            if ($t == 1) {
+                                echo "Passenger";
+                            } elseif ($t == 3) {
+                                echo "Driver";
+                            } elseif ($t == 5) {
+                                echo "Administrator";
+                            }
+                        ?>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        
+
+        <div class="column-left">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2>Current Offers</h2>
+                </div>
+                
+                <ul class="list-group" "info-left">
+                    <!-- for offer in user[currentOffer] -->
+                    <li class="list-group-item">
+                        <div class="carpool-date">offer['date_date']</div>
+                        <div class="carpool-depart">offer['departure']</div> <div class="carpool-arrival">offer['arrival'] </div>
+                        <div class="carpool-price">offer['price']</div>
+                    </li>                
+                    <!-- endfor -->
+                    <li class="list-group-item">
+                        <div class="carpool-date">2014/3/8</div>
+                        <div class="carpool-depart">Waterloo</div>
+                        <div class="carpool-arrival">Toronto</div>
+                        <div class="carpool-price">$20</div>
+                    </li>
+                </ul>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2>Previous Offers</h2>
+                </div>
+                
+                <ul class="list-group" "info-left">
+                    <!-- for offer in user[previousOffer] -->
+                    <li class="list-group-item">
+                        <div class="carpool-date">offer['date_date'] </div>
+                        <div class="carpool-depart">offer['departure'] </div>
+                        <div class="carpool-arrival">offer['arrival']</div>
+                        <div class="carpool-price">offer['price']</div>
+                    </li>
+                    <!-- endfor -->
+                    <li class="list-group-item">
+                        <div class="carpool-date">2014/2/1</div>
+                        <div class="carpool-depart">Toronto</div>
+                        <div class="carpool-arrival">Waterloo</div>
+                        <div class="carpool-price">$15</div>
+                    </li>
+                </ul>
+            </div>
+            <div>
+            </div>
+        </div>
+
+        <div class="column-right">
+            <div id="comment" class="panel panel-default">
+                <div class="panel-heading">
+                    <h2>Comments</h2>
+                </div>
+                
+                <!-- for comment in user[comments] -->
+                <ul class="list-group" "info-left">
+                    <!-- for comment in user[comments] -->
+                    <li class="list-group-item">                        
+                        <img src="http://www.hootpile.com/img/facebook-default-no-profile-pic.jpg" class="pull-left img-circle">
+                        <h4>comment['user']['username']</h4>
+                        <p>
+                            Rating: comment['rating']/5<br>
+                            comment['content']
+                        </p>
+                    </li>
+                    <!-- endfor -->
+                    <li class="list-group-item">
+                        <img src="http://www.hootpile.com/img/facebook-default-no-profile-pic.jpg" class="pull-left img-circle">
+                        <h4>testuser</h4>
+                        <p>
+                            Rating: <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star-o"></i>
+                            <br>
+                            test
+                        </p>
+                    </li>
+                    
+                    <!-- add new comment -->
+                    <li class="list-group-item" id="newComment">
+                        <textarea id="commentContent" class="form-control" placeholder="Add new comment" rows="1"></textarea>
+                        <div style="display:none;margin-top: 5px;" id="ratingArea">
+                            Rating: <input id="commentRating" type="text" class="form-control" maxlength="1" style="display: inline-block; width: 2.5em;">&nbsp;/5&nbsp;&nbsp;
+                            <span id="error"></span>
+                            <button id="commentSubmit" type="submit" class="btn btn-default">Submit</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+   
+    
+</body>
+<script src="/js/user.js"></script>
