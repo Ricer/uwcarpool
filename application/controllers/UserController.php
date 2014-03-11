@@ -35,7 +35,7 @@ class UserController extends CarpoolController {
     $url = explode('/', preg_replace(array('/\/+/', '/^\/|\s+|\/$/'), array('/', ''), strtolower(urldecode($_SERVER['REQUEST_URI']))));
     if (!empty($url[1])) {
       $this->todo['id'] = $url[1];
-      if($this->todo['id']==$this->user->id){
+      if(($this->user) && ($this->todo['id']==$this->user->id)){
         $this->redirect('dashboard',true);
       }
     }
