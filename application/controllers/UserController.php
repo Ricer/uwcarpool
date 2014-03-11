@@ -38,6 +38,9 @@ class UserController extends CarpoolController {
       if(($this->user) && ($this->todo['id']==$this->user->id)){
         $this->redirect('dashboard',true);
       }
+      if(!User::find(array('id' => $this->todo['id']))) {
+        $this->redirect('', true);
+      }
     }
   }
 }
