@@ -118,7 +118,7 @@ MakeRequestModel=React.createClass({
     var data={
       model:'Carpool',
       func:'make',
-      user_id:user_id,
+      user_id:data.user.id,
       type:this.state.type,
       from:from.val(),
       to:to.val(),
@@ -231,58 +231,25 @@ SettingsModel=React.createClass({
 
   submit:function(e){
     e.preventDefault();
-    var errorElem;
-    var from=$('#makeRequest-from')
-    var to=$('#makeRequest-to')
-    var date=$('#makeRequest-date')
-    var time=$('#makeRequest-time')
-    var desc=$('#makeRequest-desc')
-    var price=$('#makeRequest-price')
-    var re=/^\d+(\.\d{2})?$/
-    if (  price.val() == ''      ){fieldError(price,"Cannot be empty");errorElem=price;}
-    else if ( !re.test(price.val()) ){fieldError(price,"Not a valid price, only numbers and decimal point are allowed");errorElem=price;}
-
-    if (  time.val() == ''      ){fieldError(time,"Cannot be empty");errorElem=time;}
-    if (  date.val() == ''      ){fieldError(date,"Cannot be empty");errorElem=date;}
-    if (  to.val() == ''      ){fieldError(to,"Cannot be empty");errorElem=to;}
-    if (  from.val() == ''      ){fieldError(from,"Cannot be empty");errorElem=from;}
-
-    if(errorElem){
-        errorElem.focus();
-        return false
-    }
-    var data={
-      model:'Carpool',
-      func:'make',
-      user_id:user.id,
-      type:this.state.type,
-      from:from.val(),
-      to:to.val(),
-      date:moment(date.val()+" "+time.val()).format('YYYY-MM-DD hh:mm'),
-      description:desc.val(),
-      price:price.val(),
-      people:this.state.people
-    }
-    $.ajax({url: "/post", dataType:"json",data:data,type:"POST"}).done(function( json ) {
-      window.location="/detail/"+(json.data.id)
-    }).fail(function( jqxhr, textStatus, error ) {
-      var err = textStatus + ", " + error;
-      console.log(err)
-    });
-    $('#makeRequest').modal('hide');
     return false;
   },
   uploadNew:function(){
     $("#profilePicFileInput").click();
   },
   upload:function(){
+    var that=this;
     console.log("try to upload")
     var formData = new FormData($('.profilePicForm').get(0));
     $.ajax({
         url: '/post',  //Server script to process data
         type: 'POST',
+        dataType:'json',
         success: function(json){
-          console.log(json);
+          if(json.success==1){
+            console.log(json)
+            data.user=json.data;
+            that.forceUpdate();
+          }
         },
         error: function(){
         },
@@ -306,11 +273,12 @@ SettingsModel=React.createClass({
             <div className="modal-body">
               <div className='sidebar'>
                 <div className="profilePicWrapper">
-                  <img className="profilePic img-thumbnail" src={user.profilePicture||"/images/no_profile.png"} />
-                  <button className="changeProfilePic" onClick={this.uploadNew}>{user.profilePicture?"Upload New":"Upload"}</button>
+                  <img className="profilePic img-thumbnail" src={data.user.profilePicture||"/images/no_profile.png"} />
+                  <button className="changeProfilePic" onClick={this.uploadNew}><i className="fa fa-pencil"></i>{data.user.profilePicture?" Change Picture":" Upload Picture"}</button>
                   <form className="profilePicForm" action="/post" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="model" value="User" />
                     <input type="hidden" name="func" value="changeProfilePicture" />
+                    <input type="hidden" name="user_id" value={data.user.id} />
                     <input type="file" name="profilePicture" id="profilePicFileInput" onChange={this.upload} />
                   </form>
                 </div>
@@ -517,7 +485,7 @@ var previousScroll = 0;
 FilterView=React.createClass({
 
   getInitialState: function() {
-    return {hide:false,from:"",to:"",date:"",passenger:1,luggage:0,type:type};
+    return {hide:false,from:"",to:"",date:"",passenger:1,luggage:0,type:data.type};
   },
   componentWillUnmount: function() {
     $(window).off('typeChange', this.handleTypeChange.bind(this));
@@ -529,7 +497,7 @@ FilterView=React.createClass({
   },
   handleTypeChange:function(e){
     console.log("type changed")
-    this.setState({type:type});
+    this.setState({type:data.type});
   },
   componentDidMount: function() {
 

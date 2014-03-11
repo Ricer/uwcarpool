@@ -33,14 +33,13 @@
     <script src="js/lib/react/react-with-addons.min.js"></script>
     <script src="js/lib/react/JSXTransformer.js"></script>
     <script>
-      type="offer"
+      data={type:"offer",user:<?=$view['user']?json_encode($view['user']):"{}"?>}
       function switchTo(str){
         $('#requestLi,#offerLi').removeClass('active')
         $('#'+str+"Li").addClass('active');
-        type=str;
+        data.type=str;
         $(window).trigger('typeChange');
       }
-      user=<?=$view['user']?json_encode($view['user']):"{}"?>
     </script>
     <script type='text/jsx' src="js/home.js"></script>
     
@@ -64,7 +63,7 @@
               <ul class="nav navbar-nav navbar-right">
 
                 <?php if ($view['user'] && $view['user']->type > 1) : ?>
-                  <script>type="request"</script>
+                  <script>data.type="request"</script>
                   <li class="active" id='requestLi'><a onclick="switchTo('request')"><span>Requests</span></a></li>
                   <li id='offerLi'><a onclick="switchTo('offer')"><span>Offers</span></a></li>
                 <?php else:?>

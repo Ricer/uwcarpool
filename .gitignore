@@ -6,3 +6,6 @@ DB.php
 DBSecure.php
 
 DBSecure.php
+config.php
+images/dp/**
+images/tdp/**
