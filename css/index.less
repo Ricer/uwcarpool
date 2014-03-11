@@ -152,8 +152,6 @@ body{
       border: 10px solid transparent; /* arrow size */
     }
 
-    /* these arrows will point up */
-
     /* top-stacked, smaller arrow */
     &:before {
       border-bottom-color: #57566d;  /* arrow color */
@@ -467,7 +465,8 @@ body{
 
 
 .modal-body{
-  background: #eeeeee;
+  background: #e0e0e0;
+  position: relative;
   label{
     .form-label;
     top:17px;
@@ -486,6 +485,80 @@ body{
     }
   }
   input.form-control,button.form-control{padding-left:40px;}
+  &:last-child{border-radius: 0 0 4px 4px;}
+  .sidebar{
+    width:200px;
+
+    .profilePicWrapper{
+      position: relative;
+      .profilePic{width: 100%;display:block}
+      .changeProfilePic{
+        cursor: pointer;
+        position: absolute;
+        opacity: 0;
+        width:140px;left:30px;top:150px;
+        padding:5px;
+        border-radius: 4px;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.9);
+        transition:box-shadow .4s;
+        border:none;
+        &:hover{
+          box-shadow: 0 0 8px @blue;
+        }
+        &:active{
+          background: rgba(0, 0, 0, 0.5);
+          color:white;
+          box-shadow: 0 0 8px @blue;
+        }
+      }
+      .profilePicForm{display: none}
+      &:hover{
+        .changeProfilePic{
+          opacity: 1;
+        }
+      }
+    }
+    .userName{
+      font-size: 20px;
+      text-align: center;
+      display: block;
+      width: 100%;
+      margin: 10px 0 20px;
+    }
+    .nav-pills > li > a{
+      color:@midTextColor;
+      &:hover{
+        color:@darkTextColor;
+      }
+    }
+    .nav-pills > li.active > a{
+      background: @darkTextColor;
+      color:white;
+      &:before {
+        content: ' ';
+        height: 0;
+        position: absolute;
+        width: 0;
+        border: 7px solid transparent;
+        border-right-color: #e0e0e0;  /* arrow color */
+        top: 14px;
+        right: 0;
+        z-index: 2;
+      }
+    }
+  }
+  .tab-content{
+    position: absolute;
+    background: @cloud;
+    left:230px;
+    top:0;
+    right:0;
+    bottom:0;
+    padding:20px;
+    border-bottom-right-radius: 4px;
+    border-left:  1px solid  #cccccc;
+  }
 }
 .form-group.has-error .form-control{
   box-shadow: 0 2px 0 #a94442;
@@ -499,7 +572,7 @@ body{
   }
 }
 .modal-title{text-align: center;}
-.modal-header{border-bottom:  2px solid  #dddddd;}
+.modal-header{border-bottom:  1px solid  #cccccc;}
 .form-group.nomargin{
   margin-bottom: 0;
 }

@@ -40,7 +40,7 @@
         type=str;
         $(window).trigger('typeChange');
       }
-      user_id=<?=$view['user']?$view['user']->id:"-1"?>
+      user=<?=$view['user']?json_encode($view['user']):"{}"?>
     </script>
     <script type='text/jsx' src="js/home.js"></script>
     
@@ -86,7 +86,7 @@
                       </div>
                       <div class='buttons'>
                         <a href="/dashboard"><i class="fa fa-tachometer"></i>Dashboard</a>
-                        <a href="/settings"><i class="fa fa-cog"></i>Settings</a>
+                        <a onclick="settings()"><i class="fa fa-cog"></i>Settings</a>
                         <a href="/index/logout"><i class="fa fa-power-off"></i>Logout</a>
                       </div>
                     </div>

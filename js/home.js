@@ -128,7 +128,7 @@ MakeRequestModel=React.createClass({
       people:this.state.people
     }
     $.ajax({url: "/post", dataType:"json",data:data,type:"POST"}).done(function( json ) {
-      console.log(json)
+      window.location="/detail/"+(json.data.id)
     }).fail(function( jqxhr, textStatus, error ) {
       var err = textStatus + ", " + error;
       console.log(err)
@@ -199,6 +199,143 @@ MakeRequestModel=React.createClass({
   }
 });
 
+SettingsModel=React.createClass({
+  getInitialState: function() {
+    return {};
+  },
+  componentWillUnmount: function() {
+  },
+  componentDidUpdate:function(previousProps){
+  },
+  handleChange:function(e){
+    var nextState={};
+    var target=$(e.target);
+    if(!target.attr("data-source")||target.attr("data-source")=="value"){
+      nextState[target.attr("data-change")]=target.val();
+    }else if(target.attr("data-source")=="html"){
+      nextState[target.attr("data-change")]=target.html();
+    }else{
+      nextState[target.attr("data-change")]=target.attr(target.attr("data-source"))
+    }
+    this.setState(nextState);
+  },
+
+  componentDidMount:function(){
+    settings=this.showSettings.bind(this)
+    $(".settingsNav>li>a").tab();
+  },
+
+  showSettings:function(){
+    $('#settingsModal').modal('show');
+  },
+
+  submit:function(e){
+    e.preventDefault();
+    var errorElem;
+    var from=$('#makeRequest-from')
+    var to=$('#makeRequest-to')
+    var date=$('#makeRequest-date')
+    var time=$('#makeRequest-time')
+    var desc=$('#makeRequest-desc')
+    var price=$('#makeRequest-price')
+    var re=/^\d+(\.\d{2})?$/
+    if (  price.val() == ''      ){fieldError(price,"Cannot be empty");errorElem=price;}
+    else if ( !re.test(price.val()) ){fieldError(price,"Not a valid price, only numbers and decimal point are allowed");errorElem=price;}
+
+    if (  time.val() == ''      ){fieldError(time,"Cannot be empty");errorElem=time;}
+    if (  date.val() == ''      ){fieldError(date,"Cannot be empty");errorElem=date;}
+    if (  to.val() == ''      ){fieldError(to,"Cannot be empty");errorElem=to;}
+    if (  from.val() == ''      ){fieldError(from,"Cannot be empty");errorElem=from;}
+
+    if(errorElem){
+        errorElem.focus();
+        return false
+    }
+    var data={
+      model:'Carpool',
+      func:'make',
+      user_id:user.id,
+      type:this.state.type,
+      from:from.val(),
+      to:to.val(),
+      date:moment(date.val()+" "+time.val()).format('YYYY-MM-DD hh:mm'),
+      description:desc.val(),
+      price:price.val(),
+      people:this.state.people
+    }
+    $.ajax({url: "/post", dataType:"json",data:data,type:"POST"}).done(function( json ) {
+      window.location="/detail/"+(json.data.id)
+    }).fail(function( jqxhr, textStatus, error ) {
+      var err = textStatus + ", " + error;
+      console.log(err)
+    });
+    $('#makeRequest').modal('hide');
+    return false;
+  },
+  uploadNew:function(){
+    $("#profilePicFileInput").click();
+  },
+  upload:function(){
+    console.log("try to upload")
+    var formData = new FormData($('.profilePicForm').get(0));
+    $.ajax({
+        url: '/post',  //Server script to process data
+        type: 'POST',
+        success: function(json){
+          console.log(json);
+        },
+        error: function(){
+        },
+        // Form data
+        data: formData,
+        //Options to tell jQuery not to process data or worry about content-type.
+        processData: false,
+        cache: false,
+        contentType: false,
+    });
+  },
+  render: function() {
+    return(
+      <div className="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div className="modal-dialog modal-lg">
+          <div className="modal-content">
+            <div className="modal-header">
+              <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 className="modal-title" >Settings</h4>
+            </div>
+            <div className="modal-body">
+              <div className='sidebar'>
+                <div className="profilePicWrapper">
+                  <img className="profilePic img-thumbnail" src={user.profilePicture||"/images/no_profile.png"} />
+                  <button className="changeProfilePic" onClick={this.uploadNew}>{user.profilePicture?"Upload New":"Upload"}</button>
+                  <form className="profilePicForm" action="/post" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="model" value="User" />
+                    <input type="hidden" name="func" value="changeProfilePicture" />
+                    <input type="file" name="profilePicture" id="profilePicFileInput" onChange={this.upload} />
+                  </form>
+                </div>
+                <span className="userName">Luke Zhao</span>
+                <ul className="nav nav-pills nav-stacked settingsNav">
+                  <li className="active"><a href="#general" data-toggle="pill">General</a></li>
+                  <li><a href="#password" data-toggle="pill">Password</a></li>
+                  <li><a href="#vehicle" data-toggle="pill">Vehicle</a></li>
+                  <li><a href="#facebookConnect" data-toggle="pill">Facebook Connect</a></li>
+                </ul>
+              </div>
+              <div className="tab-content">
+                <div className="tab-pane fade in active" id="general">general setting</div>
+                <div className="tab-pane fade" id="password">password</div>
+                <div className="tab-pane fade" id="vehicle">vehicle</div>
+                <div className="tab-pane fade" id="facebookConnect">Connect to facebook</div>
+              </div>
+              <div className="clearfix"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+});
 
 CarpoolRow=React.createClass({
   getInitialState: function() {
@@ -459,6 +596,7 @@ FilterView=React.createClass({
         {list}
         </form>
         <MakeRequestModel />
+        <SettingsModel />
       </div>
     );
   }
