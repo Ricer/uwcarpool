@@ -65,6 +65,7 @@ h3{
 }
 #error {
     color: red;
+    font-size: 12px;
 }
 
 .carpool-date {
@@ -96,4 +97,35 @@ h3{
 
 #ratingArea{
     overflow: auto;
+}
+#commentContent.error {
+    border-color: red;
+}
+
+.rating {
+    direction: rtl;
+    font-size: 24px;
+    color: #5c5c74;
+    display: inline-block;
+}
+.rating div.star {
+    font-family: FontAwesome;
+    display: inline-block;
+    font-style: normal;
+    font-weight: normal;
+    position: relative;
+}
+.rating div.star:before {
+    content:"\f006";
+    padding-right: 2px;
+}
+.rating div.star.fill:before{
+    content:"\f005";
+}
+#rateMessage {
+    color: #5c5c74;
+    font-size: 24px;
+}
+.star.error:before {
+    color:red;
 }

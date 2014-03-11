@@ -211,7 +211,14 @@
                     <li class="list-group-item" id="newComment">
                         <textarea id="commentContent" class="form-control" placeholder="Add new comment" rows="1"></textarea>
                         <div style="display:none;margin-top: 5px;" id="ratingArea">
-                            Rating: <input id="commentRating" type="text" class="form-control" maxlength="1" style="display: inline-block; width: 2.5em;">&nbsp;/5&nbsp;&nbsp;
+                            <div class="rating">
+                                <div class="star" id="star5"></div>
+                                <div class="star" id="star4"></div>
+                                <div class="star" id="star3"></div>
+                                <div class="star" id="star2"></div>
+                                <div class="star" id="star1"></div>
+                            </div>
+                            <span id="rateMessage"></span>
                             <span id="error"></span>
                             <button id="commentSubmit" type="submit" class="btn btn-default">Submit</button>
                         </div>
