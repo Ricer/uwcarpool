@@ -37,7 +37,17 @@
     
 
       <script>
-        item=<?= json_encode($view['current']); ?>
+        data={item:<?= json_encode($view['current']); ?>,user:<?=$view['user']?json_encode($view['user']):"{}"?>}
+        function showProfile(){
+          if(!$('.profile').is(".show")){
+            $(window).one('click',function(){
+              $('.profile').addClass('show');
+              $(window).one('click',function(){
+                $('.profile').removeClass('show');
+              })
+            })
+          }
+        }
       </script>
   </head>
   <body>
@@ -58,16 +68,20 @@
               <ul class="nav navbar-nav navbar-right">
                 <li class='accept'><a href="/"><span>Take this offer for $<?= $view['current']->price ?></span></a></li>
                 
+                
                 <?php if ($view['user']) : ?>
-                  <li><a onclick="$('.profile').toggleClass('show')"><?= $view['user']->firstname?></a>
+                  <li><a onclick="showProfile()"><?= $view['user']->firstname?></a>
                     <div class="profile">
                       <div class='info'>
-                      <p class="name"><?= $view['user']->firstname?> <?= $view['user']->lastname ?></p>
-                      <span class="makeoffer">Make a request <i class="fa fa-angle-right"></i></span>
+                      <p class="name"><?=$view['user']->firstname . ' ' . $view['user']->lastname?></p>
+                      <span class="makeoffer" onclick="makeRequest(this)">Make a request <i class="fa fa-angle-right"></i></span>
+                      <?php if ($view['user']->type > 1) : ?>
+                        <span class="makeoffer" onclick="makeOffer(this)">Make a offer <i class="fa fa-angle-right"></i></span>
+                      <?php endif; ?>
                       </div>
                       <div class='buttons'>
                         <a href="/dashboard"><i class="fa fa-tachometer"></i>Dashboard</a>
-                        <a href="/settings"><i class="fa fa-cog"></i>Settings</a>
+                        <a onclick="settings()"><i class="fa fa-cog"></i>Settings</a>
                         <a href="/index/logout"><i class="fa fa-power-off"></i>Logout</a>
                       </div>
                     </div>
@@ -81,6 +95,7 @@
         </nav>
     </script>
 
+    <script type='text/jsx' src='/js/settings.js'></script>
     <script type='text/jsx' src='/js/detail.js'></script>
     <div id="map-wrapper">
     </div>

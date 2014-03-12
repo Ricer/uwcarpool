@@ -207,10 +207,10 @@ CarpoolRow=React.createClass({
 });
 
 React.renderComponent(
-  <MapView from={item.departure} to={item.arrival} showDirection="true" />,
+  <MapView from={data.item.departure} to={data.item.arrival} showDirection="true" />,
   $("#map-wrapper").get(0)
 );
 React.renderComponent(
-  <CarpoolRow data={item} />,
+  <CarpoolRow data={data.item} />,
   $("#carpoolRow-wrapper").get(0)
 );
