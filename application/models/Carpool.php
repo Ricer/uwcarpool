@@ -21,7 +21,8 @@ class Carpool extends Model{
 			FROM (
 				SELECT
 					`c`.`id` , `c`.`departure`, `c`.`arrival` , 
-					`u`.`firstname`, `u`.`lastname`, `c`.`user_id`,
+					`u`.`firstname`, `u`.`lastname`, `u`.`type` AS `user_type`,
+					`c`.`user_id`,
 					`c`.`date` , `c`.`price` , `c`.`type`, `c`.`description`, 
 					`c`.`date_created` , `c`.`last_edited` , `c`.`passenger` , 
 					`c`.`passenger` - SUM(case when `p`.`passenger` IS NULL then 0 else `p`.`passenger` end) AS `passenger_remaining`

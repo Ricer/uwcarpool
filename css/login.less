@@ -1,25 +1,5 @@
 @import url(http://fonts.googleapis.com/css?family=Raleway:200,600);
-
-@darkTextColor:#515162;
-@midTextColor:#747dab;
-@greyTextColor:#575757;
-@red: #ff3500;
-@blue: #45b1ff;
-@blueHover: #0094ff;
-@blueDark: #598fd9;
-@fbBlue:#5a74a8;
-@fbBlueHover: #406090;
-@fbBlueDark:#485574;
-@borderColor: #cccccc;
-
-@backgroundColor:#515162;
-@backgroundShadowColor:#434351;
-@loginWidth:340px;
-@loginHeight:360px;
-@registerHeight:480px;
-@loginPadding:20px;
-@loginBorderRadius:5px;
-@inputBorderRadius:5px;
+@import "main.less";
 body{
   background: @backgroundColor;
   font-family: 'Raleway', Arial, sans-serif;
@@ -73,15 +53,7 @@ a:hover{text-decoration: none;}
   }
 }
 .btn,.input{
-  display: block;
   width: 100%;
-  padding:8px 10px;
-  font-size: 18px;
-  line-height: 25px;
-  border:none;
-  border-radius: @inputBorderRadius;
-  transition:box-shadow .4s,background .4s;
-  &:focus,&:active{outline:none}
 }
 .input-default{
   background: #eeeeee;
@@ -112,35 +84,6 @@ a:hover{text-decoration: none;}
   .input:first-child{border-radius: @inputBorderRadius @inputBorderRadius 0 0;}
   .input:last-child{border-radius: 0 0 @inputBorderRadius @inputBorderRadius;box-shadow: 0 2px 0 @borderColor;}
 }
-.btn-fb{
-  color:white;
-  background:@fbBlue;
-  box-shadow: 0 2px 0 @fbBlueDark;
-  text-align: center;
-  &:hover{
-    background: @fbBlueHover;
-    color:white;
-  }
-}
-.btn-primary{
-  color:white;
-  background:@blue;
-  box-shadow: 0 2px 0 @blueDark;
-  margin-bottom: 5px;
-  text-align: center;
-  cursor: pointer;
-  &:hover{
-    background: @blueHover;
-  }
-}
-.link{
-  color:@greyTextColor;
-  text-decoration: underline;
-}
-.right{
-  float:right;
-}
-
 .brand{
   margin:-@loginPadding+10px -@loginPadding 15px;
   padding-bottom: 5px;

@@ -1,0 +1,327 @@
+
+
+//LESS
+@topbarHeight:120px; 
+@topbarShortHeight:70px;
+@topbarPadding:5px;
+@topbarColor:white;
+@filterHeight:170px;
+@carpoolRowHeight:80px; 
+ 
+@darkTextColor:#515162;
+@midTextColor:#747dab;
+@greyTextColor:#575757;
+
+
+@blue: #45b1ff;
+@blueHover: #0094ff;
+@blueDark: #598fd9;
+@fbBlue:#5a74a8;
+@fbBlueHover: #406090;
+@fbBlueDark:#485574;
+@lightBorderColor:#cccccc;
+@midBorderColor:#aaaaaa;
+
+@cloud: #ecf0f1;
+@red: #ff3500;
+@green:#3fbf51;
+@yellow:#f1c40f;
+
+@filterColor: #f2f4f4;
+@listColor:#e9e8ea;
+
+//login
+@borderColor: #cccccc;
+@backgroundColor:#515162;
+@backgroundShadowColor:#434351;
+
+@loginWidth:340px;
+@loginHeight:360px;
+@registerHeight:480px;
+@loginPadding:20px;
+@loginBorderRadius:5px;
+@inputBorderRadius:5px;
+@animationFn:cubic-bezier(.51,1.37,.78,1.45);
+
+@import "modal.less";
+
+ul{
+  padding: 0;margin:0;list-style: none;
+}
+body{
+  font-family: 'Raleway', Arial, sans-serif;
+}
+a{cursor: pointer;}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
+  font-weight: 700;
+}
+.btn,.input{
+  display: block;
+  padding:8px 10px;
+  font-size: 18px;
+  line-height: 25px;
+  border:none;
+  border-radius: @inputBorderRadius;
+  transition:box-shadow .4s,background .4s;
+  &:focus,&:active{outline:none}
+}
+.btn-fb{
+  color:white;
+  background:@fbBlue;
+  box-shadow: 0 2px 0 @fbBlueDark;
+  text-align: center;
+  &:hover{
+    background: @fbBlueHover;
+    color:white;
+  }
+}
+.btn-primary{
+  color:white;
+  background:@blue;
+  box-shadow: 0 2px 0 @blueDark;
+  margin-bottom: 5px;
+  text-align: center;
+  cursor: pointer;
+  &:hover{
+    background: @blueHover;
+  }
+}
+.link{
+  color:@greyTextColor;
+  text-decoration: underline;
+}
+.right{
+  float:right;
+}
+
+.hoverBlue{
+  cursor: pointer;
+  transition:color .4s;
+  &:hover{
+    color:@blue;
+  }
+}
+.fadeShow(@opac:1){
+  opacity: 0;
+  pointer-events:none;
+  transition:opacity .2s,-webkit-transform .2s @animationFn;
+  -webkit-transform:scale(0.5);
+  transform:scale(0.5);
+  &.show{
+    opacity: @opac;
+    pointer-events:all;
+    -webkit-transform:scale(1);
+    transform:scale(1);
+  }
+}
+
+.noPadding{padding: 0;}
+
+@media (min-width: 768px){
+.topbar{
+  position:fixed;
+  top:0;left:0;right:0;
+  min-height:@topbarHeight;
+  background: @topbarColor;
+  a{color:@darkTextColor;}
+  box-shadow: none;
+  border-bottom: 1px solid @lightBorderColor;
+  padding:0;
+  .navbar-brand,.nav>li{
+    margin-left:15px;
+    margin-right:15px;
+  }
+  .navbar-brand,.nav>li>a,.navbar-toggle{
+    line-height: 44px;
+    font-size: 20px;
+    padding:(@topbarHeight - 44px)/2 0;
+    border-bottom: 4px solid transparent;
+  }
+  .container .navbar-brand{
+    margin-left: 0;
+    span{
+      color:@darkTextColor;
+      font-size: 24px;
+      font-weight: bold;
+      vertical-align: text-bottom;
+    }
+    .fa.fa-heart{
+      color:@red;
+      line-height: 44px;
+      font-size: 40px;
+    }
+  }
+  
+  .navbar-nav > .active > a,.navbar-nav > .active > a:hover{
+    font-weight: bold;
+    background: none;
+    border-bottom: 4px solid @red;
+    box-shadow: none;
+  }
+  .navbar-toggle{
+    margin:10px;
+    padding:0 10px;
+  }
+  .user-info {
+    margin-left: 50px;
+    img{
+      display: block;
+      height:40px;
+      border-radius: 2px;
+    }
+  }
+  .container{position:relative;}
+
+  transition:min-height .4s;
+  .navbar-toggle,.navbar-brand,.nav>li>a,.navbar-toggle{
+    transition:margin .4s,padding .4s;
+  }
+  &.affix{
+    min-height:@topbarShortHeight;
+    .navbar-toggle{
+      margin:(@topbarShortHeight - 40px)/2;
+    }
+    .navbar-brand,.nav>li>a,.navbar-toggle{
+      padding:(@topbarShortHeight - 44px)/2 0;
+    }
+  }
+}
+}
+
+.navbar-collapse.in{
+  overflow-y:visible;
+}
+.profile{
+  transform-origin:90% 0%;
+  -webkit-transform-origin:90% 0%;
+  background: linear-gradient(to bottom,#57566d 0%,#2d2d39 100%);
+  color:white;
+  position:absolute;
+  right:0;
+  width: 400px;
+  height:200px;
+  text-align: center;
+  border-radius: 5px;
+  margin-top: 5px;
+  font-size: 18px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  .info{
+    height:100px;
+    padding:30px;
+    .name{
+      font-size: 22px;
+      line-height: 22px;margin:0;
+    }
+    border-bottom: 4px solid #cfced0;
+  }
+  .buttons{
+    display:table;
+    height:100px;
+    border-radius: 0 0 5px 5px;
+    width:100%;
+    background: white;
+    padding:15px 0;
+    table-layout: fixed;
+    a{
+      color:#999999;
+      i{display: block;width:50px;margin:0 auto;font-size: 40px}
+      display: table-cell;
+      .hoverBlue;
+      &:hover{
+        text-decoration: none;
+      }
+    }
+  }
+
+  &:before, &:after {
+    content: ' ';
+    height: 0;
+    position: absolute;
+    width: 0;
+    border: 10px solid transparent; /* arrow size */
+  }
+
+  /* top-stacked, smaller arrow */
+  &:before {
+    border-bottom-color: #57566d;  /* arrow color */
+
+    /* positioning */
+    position: absolute;
+    top: -19px;
+    right: 15px;
+    z-index: 2;
+  }
+
+  /* arrow which acts as a background shadow */
+  &:after {
+    border-bottom-color: #333;  /* arrow color */
+
+    /* positioning */
+    position: absolute;
+    top: -20px;
+    right: 15px;
+    z-index: 1;
+  }
+  .fadeShow;
+}
+.carpoolRow>a{
+  display: block;
+  height:@carpoolRowHeight;
+  background-image: linear-gradient(to bottom, #ffffff 0%, #f9f9f9 100%);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.075);
+  width:100%;
+  border-radius: 5px;
+  transition:border .4s,box-shadow .4s;
+  margin-bottom:10px;
+  &:hover{
+    text-decoration: none;
+    box-shadow: 0 3px 0 #0094ff;
+  } 
+}
+.carpoolRow a table{
+  color:@darkTextColor;
+  font-size: 20px;
+  font-weight: bold;
+  padding:0;
+  width:100%;
+  table-layout: fixed;
+  text-align: center;
+  .carpoolRow-date{
+    font-weight: normal;
+    width:80px;
+    height:80px;
+    margin:0 auto;
+    color:@darkTextColor;
+    p{
+      margin: 0;
+    }
+    .month{
+      padding-top: 5px;
+      line-height: 20px;
+    }
+    .day{
+      margin-top: -5px;
+      font-size: 36px;
+      line-height: 30px;
+    }
+    .time{
+      line-height: 22px;
+    }
+  }
+  .name a{
+    font-size: 18px;
+    color:@midTextColor;
+  }
+  .passenger_remaining,.price{
+    font-size: 40px;font-weight: normal;
+    line-height: 40px;
+  }
+  .passenger_remaining{
+    color:@green;
+    &.one{color:@red;}
+  }
+  .price{
+    color:@midTextColor;
+  }
+}

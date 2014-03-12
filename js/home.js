@@ -151,27 +151,27 @@ MakeRequestModel=React.createClass({
                 <h4 className="modal-title" id="makeRequestLabel">Make a {title}</h4>
               </div>
               <div className="modal-body">
-                <div className="form-group col-sm-12">
+                <div className="form-group has-icon col-sm-12">
                   <input type="text" className="form-control" id="makeRequest-from" placeholder="From" />
                   <label><span className="glyphicon glyphicon-map-marker from-marker"></span></label>
                 </div>
-                <div className="form-group col-sm-12">
+                <div className="form-group has-icon col-sm-12">
                   <input type="text" className="form-control" id="makeRequest-to" placeholder="To" />
                   <label><span className="glyphicon glyphicon-map-marker to-marker"></span></label>
                 </div>
-                <div className="col-sm-6 form-group">
+                <div className="col-sm-6 form-group has-icon">
                   <input type="text" className="form-control" id="makeRequest-date" placeholder="Date" />
                   <label><i className='fa  fa-fw fa-calendar date-marker'/></label>
                 </div>
-                <div className="col-sm-6 form-group">
+                <div className="col-sm-6 form-group has-icon">
                   <input type="text" className="form-control" id="makeRequest-time" placeholder="Time" />
                   <label><i className='fa  fa-fw fa-clock-o date-marker'/></label>
                 </div>
-                <div className="col-sm-6 form-group">
+                <div className="col-sm-6 form-group has-icon">
                   <input type="text" className="form-control" id="makeRequest-price" placeholder="Price" value={this.state.price} onChange={this.handleChange} data-change="price"/>
                   <label><i className='fa  fa-fw fa-dollar price-marker'/></label>
                 </div>
-                <div className="col-sm-6 form-group">
+                <div className="col-sm-6 form-group has-icon">
                   <div className="dropdown">
                     <button className="form-control" id="makeRequest-people" data-toggle="dropdown" >{this.state.people+" "+(this.state.people==1?singleText:multiText)}</button>
                     <ul className="dropdown-menu" role="menu" aria-labelledby="dLabel">
@@ -201,23 +201,23 @@ MakeRequestModel=React.createClass({
 
 SettingsModel=React.createClass({
   getInitialState: function() {
-    return {};
+    return {user:data.user};
   },
   componentWillUnmount: function() {
   },
   componentDidUpdate:function(previousProps){
   },
   handleChange:function(e){
-    var nextState={};
+    var user=this.state.user;
     var target=$(e.target);
     if(!target.attr("data-source")||target.attr("data-source")=="value"){
-      nextState[target.attr("data-change")]=target.val();
+      user[target.attr("data-change")]=target.val();
     }else if(target.attr("data-source")=="html"){
-      nextState[target.attr("data-change")]=target.html();
+      user[target.attr("data-change")]=target.html();
     }else{
-      nextState[target.attr("data-change")]=target.attr(target.attr("data-source"))
+      user[target.attr("data-change")]=target.attr(target.attr("data-source"))
     }
-    this.setState(nextState);
+    this.setState({user:user});
   },
 
   componentDidMount:function(){
@@ -236,6 +236,9 @@ SettingsModel=React.createClass({
   uploadNew:function(){
     $("#profilePicFileInput").click();
   },
+  refreshUser:function(){
+    this.setState({user:data.user});
+  },
   upload:function(){
     var that=this;
     console.log("try to upload")
@@ -248,7 +251,7 @@ SettingsModel=React.createClass({
           if(json.success==1){
             console.log(json)
             data.user=json.data;
-            that.forceUpdate();
+            that.refreshUser();
           }
         },
         error: function(){
@@ -270,31 +273,63 @@ SettingsModel=React.createClass({
               <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
               <h4 className="modal-title" >Settings</h4>
             </div>
-            <div className="modal-body">
+            <div className="modal-body noPadding">
               <div className='sidebar'>
                 <div className="profilePicWrapper">
-                  <img className="profilePic img-thumbnail" src={data.user.profilePicture||"/images/no_profile.png"} />
-                  <button className="changeProfilePic" onClick={this.uploadNew}><i className="fa fa-pencil"></i>{data.user.profilePicture?" Change Picture":" Upload Picture"}</button>
+                  <img className="profilePic" src={this.state.user.profilePicture||"/images/no_profile.png"} />
+                  <button className="changeProfilePic" onClick={this.uploadNew}><i className="fa fa-pencil"></i>{this.state.user.profilePicture?" Change Picture":" Upload Picture"}</button>
                   <form className="profilePicForm" action="/post" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="model" value="User" />
                     <input type="hidden" name="func" value="changeProfilePicture" />
-                    <input type="hidden" name="user_id" value={data.user.id} />
+                    <input type="hidden" name="user_id" value={this.state.user.id} />
                     <input type="file" name="profilePicture" id="profilePicFileInput" onChange={this.upload} />
                   </form>
+                  <span className="userName">{this.state.user.firstname+" "+this.state.user.lastname}</span>
                 </div>
-                <span className="userName">Luke Zhao</span>
                 <ul className="nav nav-pills nav-stacked settingsNav">
-                  <li className="active"><a href="#general" data-toggle="pill">General</a></li>
-                  <li><a href="#password" data-toggle="pill">Password</a></li>
-                  <li><a href="#vehicle" data-toggle="pill">Vehicle</a></li>
-                  <li><a href="#facebookConnect" data-toggle="pill">Facebook Connect</a></li>
+                  <li className="active"><a href="#general" data-toggle="pill"><i className="fa fa-fw fa-user"></i> General</a></li>
+                  <li><a href="#password" data-toggle="pill"><i className="fa fa-fw fa-pencil-square"></i> Password</a></li>
+                  <li><a href="#vehicle" data-toggle="pill"><i className="fa fa-fw fa-truck"></i> Vehicle</a></li>
+                  <li><a href="#facebookConnect" data-toggle="pill"><i className="fa fa-fw fa-facebook-square"></i> Facebook Connect</a></li>
+                  <li><a href="#about" data-toggle="pill"><i className="fa fa-fw fa-info-circle"></i> About UWCarpool</a></li>
                 </ul>
               </div>
               <div className="tab-content">
-                <div className="tab-pane fade in active" id="general">general setting</div>
+                <div className="tab-pane fade in active" id="general">
+                  <form role="form">
+                    <div className="form-group">
+                    <div className="col-sm-6">
+                      <label for="general-firstname">First Name</label>
+                      <input type="email" className="form-control" id="general-firstname" placeholder="First Name" data-change="firstname" onChange={this.handleChange} value={this.state.user.firstname} />
+                    </div>
+                    <div className="col-sm-6">
+                      <label for="general-lastname">Last Name</label>
+                      <input type="email" className="form-control" id="general-lastname" placeholder="Last Name" data-change="lastname" onChange={this.handleChange}  value={this.state.user.lastname} />
+                    </div>
+                    <p className="help-block col-sm-12">Please user your real name so people knows who is who. It does not have to be legal name.</p>
+                    </div>
+                    <div className="form-group col-sm-12">
+                      <label for="general-email">Email address</label>
+                      <input type="email" className="form-control" id="general-email" placeholder="Email" data-change="email" onChange={this.handleChange}   value={this.state.user.email} />
+                      
+                      <div className="checkbox">
+                        <label>
+                          <input type="checkbox" /> Let UWCarpool send you the lasted promotion infomation.
+                        </label>
+                      </div>
+                    </div>
+                    <div className="col-sm-12">
+                      <label for="general-cellphone">Cell phone</label>
+                      <input type="email" className="form-control" id="general-cellphone" placeholder="Cell phone"  data-change="cellphone" onChange={this.handleChange}  value={this.state.user.cellphone}  />
+                    </div>
+                    <div className="clearfix"></div>
+                    <button type="submit" className="btn btn-primary btn-lg submitBtn">Save</button>
+                  </form>
+                </div>
                 <div className="tab-pane fade" id="password">password</div>
                 <div className="tab-pane fade" id="vehicle">vehicle</div>
                 <div className="tab-pane fade" id="facebookConnect">Connect to facebook</div>
+                <div className="tab-pane fade" id="about">Connect to facebook</div>
               </div>
               <div className="clearfix"></div>
             </div>
@@ -313,12 +348,12 @@ CarpoolRow=React.createClass({
   },
 
   handleMouseEnter:function(){
-    this.props.onMouseEnter(this.props.data.description);
+    this.props.onMouseEnter(this.props.data);
   },
 
   render: function() {
     var data=this.props.data?this.props.data:{id:-1,type:"offer"}
-    var classString="carpoolRow "+(this.props.className||"")
+    var classString="carpoolRow "+(this.props.className||"")+(this.props.data.user_type>3?"pro":"");
     var typeClassString="carpoolRow-type "+data.type
     var date=moment(data.date);
     return(
@@ -353,7 +388,7 @@ CarpoolRow=React.createClass({
 ListView=React.createClass({
   
   getInitialState: function() {
-    return {previewHtml:"",showPreview:false,page:1,requestCount:0,list:[],sortBy:"date",sortAsc:true,nomore:false,loading:false};
+    return {previewData:{name:"",description:""},showPreview:false,page:1,requestCount:0,list:[],sortBy:"date",sortAsc:true,nomore:false,loading:false};
   },
 
   loadNextPage:function(){
@@ -402,7 +437,7 @@ ListView=React.createClass({
   },
 
   componentWillUnmount: function() {
-    $(window).off('scroll', this.handleScroll);
+    $(window).off('scroll resize', this.handleScroll);
     $(window).off('mousemove', this.handleMouseMove);
   },
 
@@ -415,7 +450,7 @@ ListView=React.createClass({
 
   componentDidMount:function(){
     this.loadNextPage();
-    $(window).on('scroll', this.handleScroll);
+    $(window).on('scroll resize', this.handleScroll);
     $(window).on('mousemove', this.handleMouseMove);
   },
 
@@ -435,9 +470,9 @@ ListView=React.createClass({
     this.setState({sortBy:str,sortAsc:sortAsc})
   },
 
-  showPreview:function(info){
+  showPreview:function(data){
     //console.log("showing:"+info)
-    this.setState({previewHtml:info,showPreview:true});
+    this.setState({previewData:data,showPreview:true});
   },
 
   hidePreview:function(){
@@ -462,14 +497,14 @@ ListView=React.createClass({
     }else if(this.state.nomore&&this.state.list.length==0){
       items=(<div className="none"><i className="fa fa-frown-o"></i><p>Sorry, we cannot find any carpool that matches your criteria.</p><span className="makeoffer" onClick={this.showMakeModal}>Make a {that.props.type=="offer"?"request ":"offer "} <i className="fa fa-angle-right"></i></span></div>)
     }else if(this.state.nomore)
-      items.push(<div className="nomore"><i className="fa fa-exclamation-triangle"></i> No more carpool {that.props.type} avaliable. <span className="makeoffer" onClick={this.showMakeModal}>Make a {that.props.type=="offer"?"request ":"offer "} <i className="fa fa-angle-right"></i></span></div>)
+      items.push(<div className="nomore"><i className="fa fa-exclamation-triangle"></i> No more matching carpool {that.props.type} avaliable. <a className="makeoffer" onClick={this.showMakeModal}>Make a {that.props.type=="offer"?"request ":"offer "} <i className="fa fa-angle-right"></i></a></div>)
     var preview=(
-      <div className={"preview "+((this.state.showPreview)?"show":"")}>{this.state.previewHtml}</div>
+      <div className={"preview "+((this.state.showPreview)?"show":"")}><h5>{this.state.previewData.firstname+" "+this.state.previewData.lastname+": "}</h5>{this.state.previewData.description}</div>
     )
     return(
       <div className={classString}>
         <div className="container">
-          <ul>
+          <ul id="carpoolList">
             {items}
           </ul>
 

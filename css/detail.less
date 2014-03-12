@@ -1,4 +1,4 @@
-@import "index.less";
+@import "main.less";
 
 @infoBarHeight:100px;
 body{padding:0;overflow: hidden;}
@@ -69,17 +69,12 @@ body{padding:0;overflow: hidden;}
 }
 
 .topbar .nav>li.accept>a{
+  .btn;
+  .btn-primary;
   margin-top:15px;
   height:(@topbarShortHeight - 30);
   line-height: (@topbarShortHeight - 30);
   padding:0 20px ;
-  box-shadow: 0 3px 0 @blueDark;
-  color:white;
-  border-radius: 4px;
-  background: @blue;
-  &:hover{
-    background: @blueHover;
-  }
 }
 @textBgColor: #ecf0f1;
 @userBgColor: #e0e0e0;
