@@ -40,7 +40,7 @@ function fieldError(fieldElem,errorStr){
 }
 MakeRequestModel=React.createClass({
   getInitialState: function() {
-    return {people:"1",price:""};
+    return {people:"1",price:"",style:{}};
   },
 
   componentWillUnmount: function() {
@@ -83,14 +83,16 @@ MakeRequestModel=React.createClass({
     makeRequest=this.showMakeRequest.bind(this)
   },
 
-  showMakeOffer:function(){
-    this.setState({type:"offer"})
-    $('#makeRequest').modal('show');
+  showMakeOffer:function(e){
+    this.setState({type:"offer"},function(){
+      $('#makeRequest').modal('show');
+    })
   },
 
-  showMakeRequest:function(){
-    this.setState({type:"request"})
-    $('#makeRequest').modal('show');
+  showMakeRequest:function(e){
+    this.setState({type:"request"},function(){
+      $('#makeRequest').modal('show');
+    })
   },
 
   submit:function(e){
@@ -144,7 +146,7 @@ MakeRequestModel=React.createClass({
     return(
       <form onSubmit={this.submit} action="post">
         <div className="modal fade" id="makeRequest" tabindex="-1" role="dialog" aria-labelledby="makeRequestLabel" aria-hidden="true">
-          <div className="modal-dialog">
+          <div className="modal-dialog" style={this.state.style}>
             <div className="modal-content">
               <div className="modal-header">
                 <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -479,8 +481,8 @@ ListView=React.createClass({
     //console.log("hiding")
     this.setState({showPreview:false});
   },
-  showMakeModal:function(){
-    this.props.type=="offer"?makeRequest():makeOffer();
+  showMakeModal:function(e){
+    this.props.type=="offer"?makeRequest(e):makeOffer(e);
   },
 
   render: function() {

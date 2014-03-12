@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Raleway:400,600);
+
 @import "main.less";
 
 body{
@@ -28,6 +28,7 @@ body{
   transition:top .4s;
   z-index: 10;
   .merge-input{
+      .hoverZoom;
     padding: 0;
     padding-right:20px;
     position:relative;
@@ -141,6 +142,7 @@ body{
     .makeoffer{
       float:right;
     }
+    .hoverZoom;
   }
   .none{
     color:@darkTextColor;
@@ -342,14 +344,17 @@ body{
     padding: 50px 0;
   }
   .filterPanel,.filterPanel.affix{
+    transition:none;
     position: relative;
     height:auto;
     top:0;
     .merge-input{
       padding:0 !important;
-      label{top:5px;left:5px !important;width:20px;text-align: center;}
+      label{top:5px;left:5px !important;width:20px;text-align: center;
+    transition:none;}
       input,input.form-control[readonly]{
         height:50px;
+        transition:none;
       }
     }
   } 
