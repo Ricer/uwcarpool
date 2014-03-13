@@ -38,6 +38,7 @@ function fieldError(fieldElem,errorStr){
       fieldElem.tooltip('destroy').removeClass('has-tooltip').closest('.form-group').removeClass('has-error')
   });
 }
+
 MakeRequestModel=React.createClass({
   getInitialState: function() {
     return {people:"1",price:"",style:{}};
@@ -114,13 +115,14 @@ MakeRequestModel=React.createClass({
     if (  from.val() == ''      ){fieldError(from,"Cannot be empty");errorElem=from;}
 
     if(errorElem){
-        errorElem.focus();
-        return false
+      errorElem.focus();
+      return false
     }
+
     var data={
       model:'Carpool',
       func:'make',
-      user_id:data.user.id,
+      user_id:this.props.user.id,
       type:this.state.type,
       from:from.val(),
       to:to.val(),
@@ -215,7 +217,7 @@ CarpoolRow=React.createClass({
 
   render: function() {
     var data=this.props.data?this.props.data:{id:-1,type:"offer"}
-    var classString="carpoolRow "+(this.props.className||"")+(this.props.data.user_type>3?"pro":"");
+    var classString="carpoolRow "+(this.props.className||"");
     var typeClassString="carpoolRow-type "+data.type
     var date=moment(data.date);
     return(
@@ -243,9 +245,6 @@ CarpoolRow=React.createClass({
     );
   }
 });
-
-
-
 
 ListView=React.createClass({
   
@@ -350,7 +349,11 @@ ListView=React.createClass({
     var sorted=this.state.list//.sort(this.compareItems)
     var that=this;
     var items=sorted.map(function(item,i){
-      return (<CarpoolRow key={item.id} data={item} onMouseEnter={that.showPreview.bind(that)} onMouseLeave={that.hidePreview.bind(that)} />);
+      if(that.props.user&&item.user_id==that.props.user.id){
+        item.firstname=that.props.user.firstname;
+        item.lastname=that.props.user.lastname;
+      }
+      return (<CarpoolRow key={item.id} data={item} onMouseEnter={that.showPreview.bind(that)} onMouseLeave={that.hidePreview.bind(that)}/>);
     })
     if(this.state.page==1&&this.state.loading){
       items=(<div className="loading"><i className="fa fa-spinner fa-spin"></i><p>Loading..</p></div>)
@@ -359,14 +362,18 @@ ListView=React.createClass({
     }else if(this.state.nomore&&this.state.list.length==0){
       items=(<div className="none"><i className="fa fa-frown-o"></i><p>Sorry, we cannot find any carpool that matches your criteria.</p><span className="makeoffer" onClick={this.showMakeModal}>Make a {that.props.type=="offer"?"request ":"offer "} <i className="fa fa-angle-right"></i></span></div>)
     }else if(this.state.nomore)
-      items.push(<div className="nomore"><i className="fa fa-exclamation-triangle"></i> No more matching carpool {that.props.type} avaliable. <a className="makeoffer" onClick={this.showMakeModal}>Make a {that.props.type=="offer"?"request ":"offer "} <i className="fa fa-angle-right"></i></a></div>)
+      items.push(<div className="alert alert-danger"><i className="fa fa-exclamation-triangle"></i> Thats all matching {that.props.type} avaliable. <a className="alert-link pull-right" onClick={this.showMakeModal}>Make a {that.props.type=="offer"?"request ":"offer "} <i className="fa fa-angle-right"></i></a></div>)
     var preview=(
       <div className={"preview "+((this.state.showPreview)?"show":"")}><h5>{this.state.previewData.firstname+" "+this.state.previewData.lastname+": "}</h5>{this.state.previewData.description}</div>
     )
+    var emailVerification=this.props.user&&this.props.user.emailverified==0?(
+      <li className="alert alert-warning">Please verify your email address.<a href="/resendEmail" className="alert-link pull-right">Resend email</a></li>
+    ):{}
     return(
       <div className={classString}>
         <div className="container">
           <ul id="carpoolList">
+            {emailVerification}
             {items}
           </ul>
 
@@ -377,12 +384,9 @@ ListView=React.createClass({
   }
 });
 
-var previousScroll = 0;
-
 FilterView=React.createClass({
-
   getInitialState: function() {
-    return {hide:false,from:"",to:"",date:"",passenger:1,luggage:0,type:data.type};
+    return {hide:false,from:"",to:"",date:"",passenger:1,luggage:0};
   },
   componentWillUnmount: function() {
     $(window).off('typeChange', this.handleTypeChange.bind(this));
@@ -419,9 +423,9 @@ FilterView=React.createClass({
   },
   render: function() {
     var classString="filterPanel "+(this.state.isTop?"affix-top":"affix");
-    var list=(<ListView ref="list" type={this.state.type} from={this.state.from} to={this.state.to} date={this.state.date} passenger={this.state.passenger} luggage={this.state.luggage} />)
-    var text=this.state.type=="offer"?"Offered":"Requested";
-    var seatsText=this.state.type=="offer"?"Seats":"# of People";
+    var list=(<ListView ref="list" type={this.props.type} from={this.state.from} to={this.state.to} date={this.state.date} passenger={this.state.passenger} luggage={this.state.luggage} user={this.props.user}/>)
+    var text=this.props.type=="offer"?"Offered":"Requested";
+    var seatsText=this.props.type=="offer"?"Seats":"# of People";
     return(
       <div>
         <form role='form' onSubmit={this.search}>
@@ -460,14 +464,106 @@ FilterView=React.createClass({
         </div>
         {list}
         </form>
-        <MakeRequestModel />
       </div>
     );
   }
 });
 
+MainView=React.createClass({
+  getInitialState: function() {
+    return {showProfile:false,user:data.user,type:data.type};
+  },
+  componentDidMount:function(){
+  },
+  switchToRequest:function(){this.setState({type:'request'})},
+  switchToOffer:function(){this.setState({type:'offer'})},
+  hideProfile:function(){this.setState({showProfile:false})},
+  showProfile:function(){
+    if(!this.state.showProfile){
+      var that=this;
+      this.setState({showProfile:true},function(){
+        setTimeout(function(){$(window).one('click',that.hideProfile.bind(that))},50)
+      });
+    }
+  },
+  changeUser:function(userObj){
+    this.setState({user:userObj})
+  },
+  openSetting:function(){
+    settings();
+  },
+  makeRequest:function(){
+    makeRequest();
+  },
+  makeOffer:function(){
+    makeOffer();
+  },
+  render: function() {
+    var userPage=this.state.user?(
+                  <li><a onClick={this.showProfile}>{this.state.user.firstname}</a>
+                    <div className={"profile "+(this.state.showProfile?"show":"")}>
+                      <div className='info'>
+                      <p className="name">{this.state.user.firstname+" "+this.state.user.lastname}</p>
+                      <span className="makeoffer" onClick={this.makeRequest}>Make a request <i className="fa fa-angle-right"></i></span>
+                      {(this.state.user.type>1)?(
+                        <span className="makeoffer" onClick={this.makeOffer}>Make a offer <i className="fa fa-angle-right"></i></span>):""}
+                      </div>
+                      <div className='buttons'>
+                        <a href="/dashboard"><i className="fa fa-tachometer"></i>Dashboard</a>
+                        <a onClick={this.openSetting}><i className="fa fa-cog"></i>Settings</a>
+                        <a href="/index/logout"><i className="fa fa-power-off"></i>Logout</a>
+                      </div>
+                    </div>
+                  </li>):(<li><a href="login">Login</a></li>)
+    var modals=this.state.user?(
+      <div className="modals">
+        <SettingsModel onSubmit={this.changeUser} user={this.state.user}/>
+        <MakeRequestModel user={this.state.user}/>
+      </div>):{}
+    return(
+      <div>
+        <nav className="navbar topbar navbar-default navbar-fixed-top" role="navigation"  data-spy="affix" data-offset-top="150">
+          <div className="container">
+            <div className="navbar-header">
+              <button type="button" className="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span className="sr-only">Toggle navigation</span>
+                <span className="icon-bar"></span>
+                <span className="icon-bar"></span>
+                <span className="icon-bar"></span>
+              </button>
+              <a className="navbar-brand" href="http://www.uwcarpool.com/"><span>UWCarpool </span><i className="fa fa-heart"></i></a>
+            </div>
 
-React.renderComponent(
-  <FilterView />,
-  $("#filterWrapper").get(0)
-);
+            <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul className="nav navbar-nav navbar-right">
+
+                {this.state.user&&this.state.user.type>1?(
+                  <li className={this.state.type=="request"?"active":""} id='requestLi'><a onClick={this.switchToRequest}><span>Requests</span></a></li>):""}
+
+                {this.state.user&&this.state.user.type>1?(
+                  <li className={this.state.type=="offer"?"active":""} id='offerLi'><a onClick={this.switchToOffer}><span>Offers</span></a></li>
+                ):(
+                  <li className="active"><a><span>Offers</span></a></li>
+                )}
+
+                {(this.state.user&&this.state.user.type==1)?(<li><a href='become_a_driver'><span>Become a driver</span></a></li>):{}}
+
+                {userPage}
+              </ul>
+            </div>
+          </div>
+        </nav>
+        {modals}
+        <FilterView type={this.state.type} user={this.state.user}/>
+      </div>
+    );
+  }
+});
+
+$(function(){
+  $('body').append($("<div id='main'></div>"))
+  React.renderComponent(
+    <MainView />,
+    $("#main").get(0)
+  );
+})

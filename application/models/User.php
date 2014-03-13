@@ -133,10 +133,40 @@ class User extends Model{
 				$user->profilePicture=thumbnail_folder . $filename;
 				$result=User::update($user);
 				return json_encode(array('success' => $result ? 1:0,'data'=>$result));
+
 			} catch (Exception $e) {
-				return json_encode(array('success' => 0,'data'=>NULL));
+				return json_encode(array('success' => 0,'data'=>NULL,'error'=>$e->getMessage()));
 			}
 		}
+    if ($data['func'] == 'updateGeneral') {
+      if(!$data['email']||!$data['firstname']||!$data['lastname']){
+        return json_encode(array('success' => 0,'data'=>NULL,'error'=>"email,firstname,lastname cannot be empty"));
+      }
+      if($data['cellphone']&&$data['cellphone']!=""&&!is_numeric($data['cellphone'])){
+        return json_encode(array('success' => 0,'data'=>NULL,'error'=>"cellphone must be numeric"));
+      }
+      try {
+        $user_id=$data['user_id'];
+        $user=User::find(Array('id'=>$user_id));
+
+        $verified=$data['email']==$user->email?$user->emailverified:0;
+        $user->populate(Array(
+          'email'=>$data['email'],
+          'emailverified'=>$verified,
+          'firstname'=>$data['firstname'],
+          'lastname'=>$data['lastname'],
+          'cellphone'=>$data['cellphone']
+        ));
+        $result=User::update($user);
+        if($verified==0){
+          //send email verify new email
+          //send email to old email to notify
+        }
+        return json_encode(array('success' => $result ? 1:0,'data'=>$result));
+      } catch (Exception $e) {
+        return json_encode(array('success' => 0,'data'=>NULL,'error'=>$e->getMessage()));
+      }
+    }
 	}
 
 }

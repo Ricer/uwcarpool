@@ -27,6 +27,7 @@ body{
   right:0;
   transition:top .4s;
   z-index: 10;
+  border-bottom: 1px solid @lightBorderColor;
   .merge-input{
       .hoverZoom;
     padding: 0;
@@ -52,7 +53,8 @@ body{
       }
     }
     input,input.form-control[readonly]{
-      border:none;
+      border:1px solid @lightBorderColor;
+      border-bottom-width:3px;
       width: 100%;
       height:@filterHeight - 65px;
       padding:0 10px 0 45px;
@@ -62,17 +64,15 @@ body{
       background: white;
       text-align: center;
       border-radius: 4px;
-      box-shadow: 0 3px 0 rgba(0, 0, 0, 0.075);
-      transition:height .4s,background .4s,box-shadow .4s;
+      transition:background .4s,box-shadow .4s,border .4s;
       &:hover{
         background: #fafafa;
-        box-shadow: 0 3px 0 rgba(0, 0, 0, 0.2);
       }
-
-      &:focus{
+      &:focus,&:active{
         outline: 0;
         background: #fafafa;
-        box-shadow: 0 3px 0 #747474;
+        border-color:#bbbbbb;
+        box-shadow: inset 0 4px 30px rgba(200, 200, 200, 0.3);
       }
     }
     input.form-control[readonly]{
@@ -105,7 +105,7 @@ body{
 .listContent{
   background: @listColor;
   padding-top:@filterHeight;
-  ul{padding:10px 0;position: relative;}
+  ul{padding:@listPadding 0;position: relative;}
   .loading{
     color:@darkTextColor;
     font-size:24px;
@@ -197,8 +197,8 @@ body{
   input.form-control,button.form-control{padding-left:40px;}
 }
 
-
-
+.listContent .alert{margin-bottom: @listPadding;border-bottom-width:3px;.hoverZoom}
+.alert-warning{border-color:#ece0bb}
 .picker__holder{z-index: 1200;}
 
 
