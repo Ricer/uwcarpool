@@ -108,13 +108,17 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
 }
 .hoverZoom(@zoom:1.05){
   -webkit-transition: -webkit-transform .4s @animationFn;
+  transition: transform .4s @animationFn;
   &:hover{
     -webkit-transform:scale(@zoom);
+    transform:scale(@zoom);
   }
 }
 .hoverZoomBlue(@zoom:1.05){
   -webkit-transition: -webkit-transform .4s @animationFn,color .4s;
+  transition: transform .4s @animationFn,color .4s;
   &:hover{
+    transform:scale(@zoom);
     -webkit-transform:scale(@zoom);
     color:@blue;
   }
@@ -122,7 +126,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
 .fadeShow(@opac:1){
   opacity: 0;
   pointer-events:none;
-  transition:opacity .3s,-webkit-transform .3s @animationFn;
+  transition:opacity .3s,-webkit-transform .3s @animationFn,transform .3s @animationFn;
   -webkit-transform:scale(0.5);
   transform:scale(0.5);
   &.show,&.in{
@@ -133,8 +137,8 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
   }
 }
 .modal.fade .modal-dialog{
-  -webkit-transition:-webkit-transform .3s @animationFn;
-  transition:transform .3s @animationFn;
+  -webkit-transition:-webkit-transform .4s @animationFn;
+  transition:transform .4s @animationFn;
   -webkit-transform:scale(0.1);
   transform:scale(0.1);
 }
@@ -301,12 +305,15 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
   box-shadow: 0 3px 0 rgba(0, 0, 0, 0.075);
   width:100%;
   border-radius: 5px;
-  transition:border .4s,box-shadow .4s,-webkit-transform .4s @animationFn;
+  transition:border .4s,box-shadow .4s,transform .4s @animationFn;
+  -webkit-transition:border .4s,box-shadow .4s,-webkit-transform .4s @animationFn;
+
   margin-bottom:10px;
   &:hover{
     text-decoration: none;
     box-shadow: 0 3px 0 #0094ff;
     -webkit-transform:scale(1.05);
+    transform:scale(1.05);
   }
 }
 .carpoolRow a table{
