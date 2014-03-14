@@ -21,5 +21,10 @@ Class CarpoolController extends Controller{
 		
 		$this->user = User::find_from_auth($auth_key);
 	}
+
+	public function redirectWithError($errorMsg,$redirectUrl='/'){
+		echo $errorMsg?><a href="<?=$redirectUrl?>">Click to go back.</a><?php
+		die();
+	}
 }
 ?>

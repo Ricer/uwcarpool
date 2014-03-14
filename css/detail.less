@@ -3,7 +3,7 @@
 @infoBarWidth:360px;
 @infoBarPadding: 10px;
 
-@lightWhite:rgba(255,255,255,0.4);
+@lightWhite:rgba(255,255,255,0.6);
 
 body{padding:0;overflow: hidden;}
 #map-wrapper{position:absolute;top:0;left:0;right:@infoBarWidth;bottom:0;z-index:-1}
@@ -14,7 +14,8 @@ body{padding:0;overflow: hidden;}
   height:@topbarShortHeight;
   padding:0 20px;
   background: white;
-  border-bottom: 1px solid @lightBorderColor;
+  border-bottom: 1px solid @midBorderColor;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
   li{
     list-style: none;
     float:right;
@@ -42,16 +43,19 @@ body{padding:0;overflow: hidden;}
 }
 
 .CarpoolInfo{
-  padding:@infoBarPadding;
+  padding:@infoBarPadding/2 @infoBarPadding @infoBarPadding;
   position: absolute;top:@topbarShortHeight;
   bottom: 0;
   overflow-y:auto;
   overflow-x:hidden;
   z-index: 2;
+  .alert{margin-bottom:5px;border-radius: 10px;}
   .topRow{
+    .hoverZoom;
     text-align: center;
     margin-bottom: @infoBarPadding;
-    border-radius: 4px;
+    border-radius: 10px;
+    overflow: hidden;
     background:@lightWhite;
     .bordered();
     .CarpoolInfo-location{
@@ -97,20 +101,30 @@ body{padding:0;overflow: hidden;}
     text-align: center;
     border-bottom: 1px solid @lightBorderColor;
   }
+  .seatNote{
+    background: @lightWhite;
+    border-radius: 10px;
+    position: relative;
+    padding: 10px;
+    .bordered;
+    .hoverZoom;
+  }
+  h4{margin-left: 5px;}
   .seatInfo{
+    .hoverZoom;
     margin-bottom: @infoBarPadding;
-    border-radius: 4px;
     overflow: hidden;
     position: relative;
     text-align: center;
-    .bordered;
+    border-radius: 35px 10px 10px 35px;
     .profilePic{
       float:left;
       width:70px;height:70px;
-      padding: 3px;
-      border-right:1px solid @lightBorderColor;
+      border-radius: 35px;
+      padding: 3px;      
       background: white;
     }
+    .bordered;
     .seatDesc{
       background: white;
       width: 100%;
@@ -123,44 +137,37 @@ body{padding:0;overflow: hidden;}
       display:block;
       width: 100%;
       font-size: 20px;
-      line-height: 45px;
+      line-height: 70px;
     }
-    .seatNote{
-      border-top:1px solid @lightBorderColor;
-      background: white;
-      text-align: left;
-      padding: 20px;
+
+    .seatForm{
+      display: inline-block;
+      float:right;
+      .seatBtn{
+        color:@darkTextColor;
+      }
     }
+
     &.pending{
+      .seatName{
+        line-height: 45px;
+      }
       .seatDesc{
         background: @blueDark;
         color:white;
+        padding-left:80px;
+        text-align: left;
       }
     }
-    &.driver{
-      .seatDesc{
-        background: @blue;
+
+    &.empty{
+      .seatName{
+        background: #aaaaaa ;
+        box-shadow: inset 0 10px 40px rgba(0, 0, 0, 0.2);
         color:white;
       }
-      .seatName{background: rgba(245,245,255,0.4)}
-    }
-    &.empty{
-      .seatDesc{
-      }
-    }
-  }
-  .seatBtn.pending{
-    color:white;
-    padding: 5px;
-    font-size: 20px;
-    background: @blue;
-    cursor: pointer;
-    border-radius: 4px;
-    width: 100%;
-    transition: background .4s;
-    .bordered(@blueDark);
-    &:hover{
-      background: @blueDark;
+      .bordered(white);
+      .profilePic{background: none; }
     }
   }
 }

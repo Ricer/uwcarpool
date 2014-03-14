@@ -177,9 +177,9 @@ CarpoolInfo=React.createClass({
   },
   payByCard:function(){
     handler.open({
-      name: 'Demo Site',
-      description: '2 widgets ($20.00)',
-      amount: 2000
+      name: 'UWCarpool',
+      description: 'carpool from '+this.props.data.departure+' to '+this.props.data.arrival,
+      amount: this.props.data.price*100
     });
   },
   render: function() {
@@ -192,16 +192,14 @@ CarpoolInfo=React.createClass({
     }).map(function(item,i){
       var currentSeats=[(
         <div className='seatInfo'>
-          <img className="profilePic" src={item.profilePicture} />
-          <span className='seatDesc'>{"Seat "+seatIndex}</span>
+          <img className="profilePic" src={item.profilePicture||"/images/no_profile.png"} />
           <span className='seatName'>{item.firstname+" "+item.lastname}</span>
         </div>)]
       seatIndex+=1;
       for (var i = 1; i < item.passenger; i++) {
         currentSeats.push(
           <div className='seatInfo'>
-            <img className="profilePic" src={item.profilePicture} />
-            <span className='seatDesc'>{"Seat "+seatIndex}</span>
+            <img className="profilePic" src={item.profilePicture||"/images/no_profile.png"} />
             <span className='seatName'>{item.firstname+" "+item.lastname+"'s friend"}</span>
           </div>
         )
@@ -212,12 +210,12 @@ CarpoolInfo=React.createClass({
           {currentSeats}
         </div>)
     })
-
+    var seatLeft=parseInt(data.passenger)+1-seatIndex;
     while(seatIndex<=data.passenger){
       seats.push(
         <div className='seatInfo empty'>
           <img className="profilePic" src="/images/no_profile.png" />
-          <span className='seatDesc'>Empty Seat</span>
+          <span className='seatName'>Empty Seat</span>
         </div>)
       seatIndex+=1
     }
@@ -227,17 +225,22 @@ CarpoolInfo=React.createClass({
         return item.pending==1
       })
       if(allPending.length>0){
-        confirm = [(<div className="title pending" >Pending requests</div>)].concat(
+        confirm = [(<h4>Pending: <small>{allPending.length+" request"}</small></h4>)].concat(
         allPending.map(function(item,i){
           return (
             <div className='seatInfo pending'>
-              <img className="profilePic" src={item.profilePicture} />
-              <span className='seatDesc'>{item.passenger==1?"1 person":item.passenger+" people"}</span>
+              <img className="profilePic" src={item.profilePicture||"/images/no_profile.png"} />
               <span className='seatName'>{item.firstname+" "+item.lastname}</span>
-              <form action="/detail/acceptPendingRequest" method="post" name="accept_form">
+              <div className='seatDesc'>{item.passenger==1?"1 person":item.passenger+" people"}
+              <form action="/detail/acceptPendingRequest" method="post" className="seatForm">
                 <input type='hidden' name='passenger_id' value={item.id} />
-                <input type='submit' className='seatBtn pending' value="accept request" />
+                <input type='submit' className='seatBtn' value="accept" />
               </form>
+              <form action="/detail/declinePendingRequest" method="post" className="seatForm">
+                <input type='hidden' name='passenger_id' value={item.id} />
+                <input type='submit' className='seatBtn' value="decline" />
+              </form>
+              </div>
             </div>)
       }))}else{
           confirm = (<div className='alert alert-info'>No Pending Requests</div>)
@@ -248,8 +251,15 @@ CarpoolInfo=React.createClass({
       })
       if(mySeats.length>0&&mySeats[0].pending==1){
         confirm=(<div className='alert alert-info'>You request is still pending</div>)
+      }else if(mySeats.length>0&&mySeats[0].paid==1){
+        confirm=(<div>
+          <div className='alert alert-info'>You have paid. Have fun!</div>
+          </div>)
       }else if(mySeats.length>0){
-        confirm=(<div className='alert alert-info'>You are one of the passengers</div>)
+        confirm=(<div>
+            <div className='alert alert-info'>You are one of the passengers</div>
+            <a className='btn btn-primary' onClick={this.payByCard}>Pay by Credit Card</a>
+          </div>)
       }else{
         confirm =(
           <form action="/detail/applyForOffer" method="post" name="accept_form">
@@ -264,6 +274,7 @@ CarpoolInfo=React.createClass({
     }
     return(
       <div className="CarpoolInfo">
+        <h4>Description: </h4>
         <div className="topRow">
         <table className='CarpoolInfo-date'>
           <tr>
@@ -291,14 +302,15 @@ CarpoolInfo=React.createClass({
         </table>
         <div className="clearfix" />
         </div>
-        <div className=" seperator" />
-        <div className='seatInfo driver'>
-          <img className="profilePic" src={data.profilePicture} />
-          <span className='seatDesc'>Driver</span>
-          <span className='seatName'>{data.firstname+" "+data.lastname}</span>
           <div className='seatNote clearfix'>{data.description}</div>
+        <div className=" seperator" />
+        <h4>Driver:</h4>
+        <div className='seatInfo'>
+          <img className="profilePic" src={data.profilePicture} />
+          <span className='seatName'>{data.firstname+" "+data.lastname}</span>
         </div>
         <div className=" seperator" />
+        <h4>Seats: <small>{seatLeft+" out of "+data.passenger+" seats left.    $"+data.price+" per person"}</small></h4>
         {seats}
         <div className=" seperator" />
 

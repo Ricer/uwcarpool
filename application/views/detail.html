@@ -62,7 +62,10 @@
         key: 'pk_test_daTATlsm1bouNWLDzKGJHuNk',
         image: '/images/favicon.ico',
         token: function(token, args) {
-          console.log(token);
+          var $input = $('<input type=hidden name=stripeToken />').val(token.id);
+          var $input2 = $('<input type=hidden name=carpool_id />').val(data.item.id);
+          $('<form action="/detail/payByCard" method="POST">').append($input).append($input2).submit();
+          //$("#payForm").submit();
         }
       });
   </script>

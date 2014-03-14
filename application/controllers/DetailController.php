@@ -32,8 +32,8 @@ class DetailController extends CarpoolController {
         return;
       }
     }
-    //$this->redirect('',true);
-  } 
+    $this->redirectWithError('Cannot find pending request');
+  }
   public function applyForOffer(){
     if($this->user&&isset($_REQUEST['carpool_id'])&&isset($_REQUEST['passenger'])){
       $carpool=Carpool::find(Array('id'=>$_REQUEST['carpool_id']));
@@ -50,7 +50,30 @@ class DetailController extends CarpoolController {
         return;
       }
     }
-    $this->redirect('',true);
+    $this->redirectWithError('Failed to apply.');
+  }
+  public function payByCard(){
+    if($this->user&&isset($_REQUEST['stripeToken'])&&isset($_REQUEST['carpool_id'])){
+      $carpool=Carpool::find(Array('id'=>$_REQUEST['carpool_id']));
+      $passenger=Passenger::find(Array('user_id'=>$this->user->id,'carpool_id'=>$carpool->id));
+      if($carpool&&$carpool->user_id!=$this->user->id&&!$passenger->pending&&!$passenger->paid){
+        try {
+          $charge = Stripe_Charge::create(array(
+            "amount" => $carpool->price*100, // amount in cents, again
+            "currency" => "cad",
+            "card" => $_REQUEST['stripeToken'],
+            "description" => "uwcarpool: carpool form ".$carpool->departure." to ".$carpool->arrival)
+          );
+        } catch(Stripe_CardError $e) {
+          $this->redirectWithError('Your payment is declined.');
+        }
+        $passenger->paid=1;
+        $passenger->save();
+        $this->redirect('detail/'.$passenger->carpool_id,true);
+        return;
+      }
+    }
+    $this->redirectWithError('Failed to pay.');
   }
   
   public function __call($name, $arguments) {
