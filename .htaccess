@@ -27,4 +27,3 @@ RewriteRule ^.*$ index.php [L,QSA]
 </IfModule>
 
 # END WordPress
-php_value memory_limit 64M

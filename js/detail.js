@@ -220,7 +220,7 @@ CarpoolInfo=React.createClass({
       seatIndex+=1
     }
     var confirm
-    if(user.id==data.user_id){
+    if(user&&user.id==data.user_id){
       var allPending=this.props.passengers.filter(function(item,i){
         return item.pending==1
       })

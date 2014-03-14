@@ -2,8 +2,8 @@
 define("APP_ROOT", dirname(__FILE__));
 
 define('hostname', "localhost");
-define('username', "root");
-define('password', "");
+define('username', "uwcarpool");
+define('password', "Thisispassword");
 define('database', "carpoolfinder");
 
 define('DEFAULT_CONTROLLER', "index");
