@@ -265,7 +265,7 @@ CarpoolInfo=React.createClass({
           <form action="/detail/applyForOffer" method="post" name="accept_form">
             <input type='hidden' name='carpool_id' value={data.id} />
             <input type='hidden' name='passenger' value="1" />
-            <button type='submit' className='seatBtn pending'>{"apply this offer for $"+data.price}</button>
+            <button type='submit' className='accept btn btn-primary'>{"apply this offer for $"+data.price}</button>
           </form>
         )
       }
@@ -306,7 +306,7 @@ CarpoolInfo=React.createClass({
         <div className=" seperator" />
         <h4>Driver:</h4>
         <div className='seatInfo'>
-          <img className="profilePic" src={data.profilePicture} />
+          <img className="profilePic" src={data.profilePicture||"/images/no_profile.png"} />
           <span className='seatName'>{data.firstname+" "+data.lastname}</span>
         </div>
         <div className=" seperator" />

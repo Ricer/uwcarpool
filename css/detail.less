@@ -49,7 +49,7 @@ body{padding:0;overflow: hidden;}
   overflow-y:auto;
   overflow-x:hidden;
   z-index: 2;
-  .alert{margin-bottom:5px;border-radius: 10px;}
+  .alert{margin-bottom:@infoBarPadding;border-radius: 10px;}
   .topRow{
     .hoverZoom;
     text-align: center;
@@ -171,19 +171,7 @@ body{padding:0;overflow: hidden;}
     }
   }
 }
-.accept>a{
-  display: block;
-  background: @blue;
-  box-shadow: 0 3px 0 @blueDark;
-  color:white;
-  border-radius: 4px;
-  padding:15px;
-  font-size: 20px;
-  text-align: center;
-  width:100%;
-  &:active,&:focus,&:hover{
-    outline: none;
-    text-decoration: none;
-  }
+.accept{
+  width: 100%;
 }
 
