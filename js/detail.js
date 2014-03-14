@@ -161,56 +161,216 @@ MapView = React.createClass({
   render: function() {
     var classString="map-canvas"
     return(
-
-      <div id="map" className={classString}>
+      <div id="map-wrapper">
+        <div id="map" className={classString}>
+        </div>
       </div>
     );
   }
 });
 
-CarpoolRow=React.createClass({
+CarpoolInfo=React.createClass({
   getInitialState: function() {
     return {};
   },
   componentDidMount:function(e){
   },
-
+  payByCard:function(){
+    handler.open({
+      name: 'Demo Site',
+      description: '2 widgets ($20.00)',
+      amount: 2000
+    });
+  },
   render: function() {
     var data=this.props.data
+    var user=this.props.user
     var date=moment(data.date);
+    var seatIndex=1;
+    var seats=this.props.passengers.filter(function(item,i){
+      return item.pending==0;
+    }).map(function(item,i){
+      var currentSeats=[(
+        <div className='seatInfo'>
+          <img className="profilePic" src={item.profilePicture} />
+          <span className='seatDesc'>{"Seat "+seatIndex}</span>
+          <span className='seatName'>{item.firstname+" "+item.lastname}</span>
+        </div>)]
+      seatIndex+=1;
+      for (var i = 1; i < item.passenger; i++) {
+        currentSeats.push(
+          <div className='seatInfo'>
+            <img className="profilePic" src={item.profilePicture} />
+            <span className='seatDesc'>{"Seat "+seatIndex}</span>
+            <span className='seatName'>{item.firstname+" "+item.lastname+"'s friend"}</span>
+          </div>
+        )
+        seatIndex+=1
+      };
+      return (
+        <div>
+          {currentSeats}
+        </div>)
+    })
+
+    while(seatIndex<=data.passenger){
+      seats.push(
+        <div className='seatInfo empty'>
+          <img className="profilePic" src="/images/no_profile.png" />
+          <span className='seatDesc'>Empty Seat</span>
+        </div>)
+      seatIndex+=1
+    }
+    var confirm
+    if(user.id==data.user_id){
+      var allPending=this.props.passengers.filter(function(item,i){
+        return item.pending==1
+      })
+      if(allPending.length>0){
+        confirm = [(<div className="title pending" >Pending requests</div>)].concat(
+        allPending.map(function(item,i){
+          return (
+            <div className='seatInfo pending'>
+              <img className="profilePic" src={item.profilePicture} />
+              <span className='seatDesc'>{item.passenger==1?"1 person":item.passenger+" people"}</span>
+              <span className='seatName'>{item.firstname+" "+item.lastname}</span>
+              <form action="/detail/acceptPendingRequest" method="post" name="accept_form">
+                <input type='hidden' name='passenger_id' value={item.id} />
+                <input type='submit' className='seatBtn pending' value="accept request" />
+              </form>
+            </div>)
+      }))}else{
+          confirm = (<div className='alert alert-info'>No Pending Requests</div>)
+      }
+    }else if(user){
+      var mySeats=this.props.passengers.filter(function(item,i){
+        return item.user_id==user.id;
+      })
+      if(mySeats.length>0&&mySeats[0].pending==1){
+        confirm=(<div className='alert alert-info'>You request is still pending</div>)
+      }else if(mySeats.length>0){
+        confirm=(<div className='alert alert-info'>You are one of the passengers</div>)
+      }else{
+        confirm =(
+          <form action="/detail/applyForOffer" method="post" name="accept_form">
+            <input type='hidden' name='carpool_id' value={data.id} />
+            <input type='hidden' name='passenger' value="1" />
+            <button type='submit' className='seatBtn pending'>{"apply this offer for $"+data.price}</button>
+          </form>
+        )
+      }
+    }else{
+
+    }
     return(
-      <li className="carpoolRow">
-        <a href={'/detail/'+data.id}>
-          <table>
+      <div className="CarpoolInfo">
+        <div className="topRow">
+        <table className='CarpoolInfo-date'>
+          <tr>
+          <td className='month'>{date.format("MMM")}
+          </td>
+          </tr>
+          <tr>
+          <td className='day'>{date.format("DD")}
+          </td>
+          </tr>
+          <tr>
+          <td className='time'>{date.format("hh:mm")}
+          </td>
+          </tr>
+        </table>
+        <table className='CarpoolInfo-location'>
           <tbody>
           <tr>
             <td className="departure">{data.departure}</td>
-            <td className="to">to</td>
+          </tr>
+          <tr>
             <td className="arrival">{data.arrival}</td>
           </tr>
           </tbody>
-          </table>
-          <div className='carpoolRow-date'>
-              <p className='month'>{date.format("MMM")}</p>
-              <p className='day'>{date.format("DD")}</p>
-              <p className='time'>{date.format("hh:mm")}</p>
-            </div>
-        </a>
-        <div className='hiddenInfo'>
-          <div className='driverInfo'><img className="profilePic" src="https://fbcdn-profile-a.akamaihd.net/hprofile-ak-frc1/t1/p160x160/1888716_707739892580029_325955122_n.jpg" />
-          {data.firstname+" "+data.lastname}</div>
-          <div className='desc'>{data.description}</div>
+        </table>
+        <div className="clearfix" />
         </div>
-      </li>
+        <div className=" seperator" />
+        <div className='seatInfo driver'>
+          <img className="profilePic" src={data.profilePicture} />
+          <span className='seatDesc'>Driver</span>
+          <span className='seatName'>{data.firstname+" "+data.lastname}</span>
+          <div className='seatNote clearfix'>{data.description}</div>
+        </div>
+        <div className=" seperator" />
+        {seats}
+        <div className=" seperator" />
+
+        {confirm}
+        
+      </div>
     );
   }
 });
 
-React.renderComponent(
-  <MapView from={data.item.departure} to={data.item.arrival} showDirection="true" />,
-  $("#map-wrapper").get(0)
-);
-React.renderComponent(
-  <CarpoolRow data={data.item} />,
-  $("#carpoolRow-wrapper").get(0)
-);
+MainView=React.createClass({
+  getInitialState: function() {
+    return {showProfile:false,user:data.user,item:data.item};
+  },
+  componentDidMount:function(){
+  },
+  hideProfile:function(){this.setState({showProfile:false})},
+  showProfile:function(){
+    if(!this.state.showProfile){
+      var that=this;
+      this.setState({showProfile:true},function(){
+        setTimeout(function(){$(window).one('click',that.hideProfile.bind(that))},50)
+      });
+    }
+  },
+  changeUser:function(userObj){
+    this.setState({user:userObj})
+  },
+  openSetting:function(){
+    settings();
+  },
+  render: function() {
+    var userPage=this.state.user?(
+                  <li><a onClick={this.showProfile}>{this.state.user.firstname}</a>
+                    <div className={"profile "+(this.state.showProfile?"show":"")}>
+                      <div className='info'>
+                      <p className="name">{this.state.user.firstname+" "+this.state.user.lastname}</p>
+                      <span className="makeoffer" onClick={this.makeRequest}>Make a request <i className="fa fa-angle-right"></i></span>
+                      {(this.state.user.type>1)?(
+                        <span className="makeoffer" onClick={this.makeOffer}>Make a offer <i className="fa fa-angle-right"></i></span>):""}
+                      </div>
+                      <div className='buttons'>
+                        <a href="/dashboard"><i className="fa fa-tachometer"></i>Dashboard</a>
+                        <a onClick={this.openSetting}><i className="fa fa-cog"></i>Settings</a>
+                        <a href="/index/logout"><i className="fa fa-power-off"></i>Logout</a>
+                      </div>
+                    </div>
+                  </li>):(<li><a href="login">Login</a></li>)
+    var modals=this.state.user?(
+      <div className="modals">
+        <SettingsModel onSubmit={this.changeUser} user={this.state.user}/>
+      </div>):{}
+    return(
+      <div>
+        <MapView from={data.item.departure} to={data.item.arrival} showDirection="true" />
+        {modals}
+        <div className="infobar">
+          <div className="header">
+            <a className="navbar-brand" href="http://www.uwcarpool.com/"><span>UWCarpool </span><i className="fa fa-heart"></i></a>
+            {userPage}
+          </div>
+          <CarpoolInfo data={data.item} passengers={data.passengers} user={data.user}/>
+        </div>
+      </div>
+    );
+  }
+});
+
+$(function(){
+  $('body').append($("<div id='main'></div>"))
+  React.renderComponent(
+    <MainView />,
+    $("#main").get(0)
+  );
+})

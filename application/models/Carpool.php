@@ -73,6 +73,47 @@ class Carpool extends Model{
 			return json_encode(array('success' => $result ? 1:0,'data'=>$result));
 		}
 		
+		if ($data['func'] == 'apply'){
+			if(!isset($data['user_id'])||!isset($data['carpool_id'])||!isset($data['passenger'])){
+				return mkError('no user id or carpool id or passenger count');
+			}
+			$result=Passenger::find(Array('user_id'=>$data['user_id'],'carpool_id'=>$data['user_id']));
+			if($result){
+				return mkError("already a passenger");
+			}else{
+				$data_array = array(
+					'user_id' => $data['user_id'],
+					'carpool_id' => $data['carpool_id'],
+					'passenger' => $data['passenger']
+				);
+				$pass = new Passenger();
+				$pass->populate($data_array);
+				$result = $pass->save();
+				return json_encode(array('success' => $result ? 1:0,'data'=>$result));
+			}
+		}
+
+		if ($data['func'] == 'payByCard'){
+
+			// Get the credit card details submitted by the form
+			$token = $data['stripeToken'];
+
+			// Create the charge on Stripe's servers - this will charge the user's card
+			try {
+				$charge = Stripe_Charge::create(array(
+				  "amount" => 1000, // amount in cents, again
+				  "currency" => "cad",
+				  "card" => $token,
+				  "description" => "payinguser@example.com")
+				);
+			} catch(Stripe_CardError $e) {
+				return json_encode(array('success' => 0,'data'=>NULL,'error'=>'card rejected!'));
+			}
+
+			//charge successful.
+
+
+		}
 	}
 }	
 ?>

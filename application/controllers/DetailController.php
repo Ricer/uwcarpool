@@ -20,11 +20,44 @@ class DetailController extends CarpoolController {
     session_start();
     $this->process_url();
   }
+
+  public function acceptPendingRequest(){
+    $passenger=Passenger::find(Array('id'=>$_REQUEST['passenger_id']));
+    if($passenger){
+      $carpool=Carpool::find(Array('id'=>$passenger->carpool_id));
+      if($carpool->user_id==$this->user->id){
+        $passenger->pending=0;
+        $passenger->save();
+        $this->redirect('detail/'.$passenger->carpool_id,true);
+        return;
+      }
+    }
+    //$this->redirect('',true);
+  } 
+  public function applyForOffer(){
+    if($this->user&&isset($_REQUEST['carpool_id'])&&isset($_REQUEST['passenger'])){
+      $carpool=Carpool::find(Array('id'=>$_REQUEST['carpool_id']));
+      if($carpool&&$carpool->user_id!=$this->user->id&&!Passenger::find(Array('id'=>$this->user->id,'carpool_id'=>$carpool->id))){
+        $data_array = array(
+          'user_id' => $this->user->id,
+          'carpool_id' => $carpool->id,
+          'passenger' => $_REQUEST['passenger']
+        );
+        $passenger = new Passenger();
+        $passenger->populate($data_array);
+        $result=$passenger->save();
+        $this->redirect('detail/'.$passenger->carpool_id,true);
+        return;
+      }
+    }
+    $this->redirect('',true);
+  }
   
   public function __call($name, $arguments) {
     $view = array();
+    $carpool_id=$this->todo['id'];
     $selector = array(
-      'id' => $this->todo['id']
+      'id' => $carpool_id
     );
     $view['current']=Carpool::find($selector);
     if(!$view['current']){
@@ -36,8 +69,24 @@ class DetailController extends CarpoolController {
     $driver=User::find($selector);
     $view['current']->firstname=$driver->firstname;
     $view['current']->lastname=$driver->lastname;
+    $view['current']->profilePicture=$driver->profilePicture;
 
     $view['user'] = $this->user;
+
+    $query = "
+      SELECT 
+        `p`.*,
+        `u`.profilePicture,`u`.firstname,`u`.lastname
+      FROM 
+          `passengers` AS  `p`
+        LEFT JOIN
+          `users` AS `u`
+        ON
+          `p`.`user_id` = `u`.`id`
+      WHERE
+        `p`.`carpool_id` = $carpool_id
+      ";
+    $view['passengers'] = DB::run_query($query);
     return $view;
   }
   

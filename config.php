@@ -25,6 +25,8 @@ $paths[] = APP_ROOT . '/application/controllers';
 $paths[] = APP_ROOT . '/application/models';
 $paths[] = APP_ROOT . '/lib';
 
+require_once("./lib/Stripe.php"); 
+Stripe::setApiKey("sk_test_BQokikJOvBiI2HlWgH4olfQ2");
 
 set_include_path(implode(PATH_SEPARATOR, $paths));
 

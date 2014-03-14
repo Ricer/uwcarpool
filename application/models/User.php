@@ -1,4 +1,5 @@
 <?php
+
 /*
   Function resize($filename_original,$filename_resized,$new_w,$new_h)
   creates a resized image

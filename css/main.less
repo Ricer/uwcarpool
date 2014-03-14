@@ -57,6 +57,13 @@ a{cursor: pointer;}
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
   font-weight: 700;
 }
+
+
+
+.bordered(@c:@lightBorderColor){
+  border:1px solid @c;
+  border-bottom-width: 3px;
+}
 .btn,.input{
   display: block;
   padding:8px 10px;
@@ -161,31 +168,6 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
   box-shadow: none;
   border-bottom: 1px solid @lightBorderColor;
   padding:0;
-  .navbar-brand,.nav>li{
-    margin-left:15px;
-    margin-right:15px;
-  }
-  .navbar-brand,.nav>li>a,.navbar-toggle{
-    line-height: 44px;
-    font-size: 20px;
-    padding:(@topbarHeight - 44px)/2 0;
-    border-bottom: 4px solid transparent;
-  }
-  .container .navbar-brand{
-    margin-left: 0;
-    span{
-      color:@darkTextColor;
-      font-size: 24px;
-      font-weight: bold;
-      vertical-align: text-bottom;
-    }
-    .fa.fa-heart{
-      color:@red;
-      line-height: 44px;
-      font-size: 40px;
-    }
-  }
-  
   .navbar-nav > .active > a,.navbar-nav > .active > a:hover{
     font-weight: bold;
     background: none;
@@ -211,17 +193,42 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
     transition:margin .4s,padding .4s;
     .hoverZoom(1.2);
   }
-  &.affix{
-    min-height:@topbarShortHeight;
-    .navbar-toggle{
-      margin:(@topbarShortHeight - 40px)/2;
-    }
-    .navbar-brand,.nav>li>a,.navbar-toggle{
-      padding:(@topbarShortHeight - 44px)/2 0;
-    }
+}
+.navbar-brand,.topbar .nav>li{
+  margin-left:15px;
+  margin-right:15px;
+}
+.navbar-brand,.topbar .nav>li>a,.topbar .navbar-toggle{
+  line-height: 44px;
+  font-size: 20px;
+  padding:(@topbarHeight - 44px)/2 0;
+  border-bottom: 4px solid transparent;
+}
+.navbar-brand{
+  margin-left: 0;
+  span{
+    color:@darkTextColor;
+    font-size: 24px;
+    font-weight: bold;
+    vertical-align: text-bottom;
+  }
+  .fa.fa-heart{
+    color:@red;
+    line-height: 44px;
+    font-size: 40px;
+  }
+}
+.topbar.affix{
+  min-height:@topbarShortHeight;
+  .navbar-toggle{
+    margin:(@topbarShortHeight - 40px)/2;
+  }
+  .navbar-brand,.nav>li>a,.navbar-toggle{
+    padding:(@topbarShortHeight - 44px)/2 0;
   }
 }
 }
+
 
 .navbar-collapse.in{
   overflow-y:visible;
@@ -233,6 +240,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
   color:white;
   position:absolute;
   right:0;
+  z-index: 2000;
   width: 400px;
   height:200px;
   text-align: center;
@@ -240,6 +248,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
   margin-top: 5px;
   font-size: 18px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  .bordered(@midBorderColor);
   .info{
     height:100px;
     padding:30px;
@@ -302,7 +311,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
 .carpoolRow>a{
   display: block;
   height:@carpoolRowHeight;
-  background-image: linear-gradient(to bottom, #ffffff 0%, #f9f9f9 100%);
+  background: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%);
   border: 1px solid @lightBorderColor;
   border-bottom-width: 3px;
   width:100%;
@@ -383,6 +392,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
     float:left;
     padding: 20px;
     .profilePicWrapper{
+      .bordered();
       position: relative;
       background: white;
       padding: 5px;
@@ -425,6 +435,8 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
     }
     .nav-pills > li > a{
       color:@darkTextColor;
+      transition:background .3s,color .3s,border .3s;
+      .bordered(transparent);
       &:hover{
         color:@darkTextColor;
         background: #dddddd;
@@ -433,17 +445,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
     .nav-pills > li.active > a{
       background: @blue;
       color:white;
-      &:before {
-        content: ' ';
-        height: 0;
-        position: absolute;
-        width: 0;
-        border: 7px solid transparent;
-        border-right-color: @cloud;  /* arrow color */
-        top: 14px;
-        right: 0;
-        z-index: 2;
-      }
+      .bordered(@blueDark);
     }
   }
   .tab-content{

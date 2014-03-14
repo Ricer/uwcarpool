@@ -1,154 +1,182 @@
 @import "main.less";
 
-@infoBarHeight:100px;
+@infoBarWidth:360px;
+@infoBarPadding: 10px;
+
+@lightWhite:rgba(255,255,255,0.4);
+
 body{padding:0;overflow: hidden;}
-.topbar{
-  position:fixed;margin:0;background:rgba(255, 255, 255, 0.9);
-}
-#map-wrapper{position:absolute;top:0;left:0;right:0;bottom:0;z-index:-1}
+#map-wrapper{position:absolute;top:0;left:0;right:@infoBarWidth;bottom:0;z-index:-1}
 #map{width:100%;height:100%}
-.carpoolRow>a{
-  height:60px;
-  background: none;
-  box-shadow: none;
-  border-radius: 0;
-  overflow: visible;
-  margin: 0;
-  .to{
-    width: 2%;
-    color:@midTextColor;
-  }
-  &:hover{
-    box-shadow: none;
-    -webkit-transform:none;
-  }
-  table{
-    height:60px;
-  }
-}
-.carpoolRow-date{
-  min-width: 180px;
-  font-size: 18px;
-  font-weight: normal;
-  position:absolute;
-  left:50%;
-  margin-left:-90px;
-  margin-top:-78px;
-  height:35px;
-  padding:0 10px;in-width: 170px;
-  border-radius: 20px;
-  padding-top:3px;
-  text-align: center;
-  background: linear-gradient(to bottom,#2a2a35 0%,#5c5c74 100%);
-  opacity: 0.8;
-  color:white;
-  p{
-    margin: 0;
-    display:inline-block;
-  }
-  .month{
-    padding-top: 5px;
-    line-height: 20px;
-  }
-  .day{
-    margin: -5px 10px 0 5px;
-    font-size: 22px;
-    &:after{
-      content:" @ "
+
+
+.header{
+  height:@topbarShortHeight;
+  padding:0 20px;
+  background: white;
+  border-bottom: 1px solid @lightBorderColor;
+  li{
+    list-style: none;
+    float:right;
+    >a{
+      .hoverZoom(1.2);
+      color: #777777;
+      display:block;
+      line-height: 44px;
+      font-size: 20px;
+      &:hover{text-decoration: none}
     }
   }
-  .time{
-    line-height: 20px;
+  .navbar-brand,li>a{
+    padding:(@topbarShortHeight - 44px)/2 0;
   }
 }
-.carpoolRow{
-  height:60px;
-  overflow: hidden;
-  background-image: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%);
-  border-radius: 4px;
-  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.075);
-  transition:height .4s;
-}
-.carpoolRow tr td:nth-child(1){
-  width: auto;
+.infobar{
+  position: absolute;
+  bottom:0;top:0;right:0;
+  width: @infoBarWidth;
+  background: #eeeeee;
+  border:none;
+  border-left:1px solid @midBorderColor;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3)
 }
 
-.topbar .nav>li.accept>a{
-  margin-top:15px;
+.CarpoolInfo{
+  padding:@infoBarPadding;
+  position: absolute;top:@topbarShortHeight;
+  bottom: 0;
+  overflow-y:auto;
+  overflow-x:hidden;
+  z-index: 2;
+  .topRow{
+    text-align: center;
+    margin-bottom: @infoBarPadding;
+    border-radius: 4px;
+    background:@lightWhite;
+    .bordered();
+    .CarpoolInfo-location{
+      float: right;
+      width:@infoBarWidth - 103px;
+      td{height:45px}
+      font-size: 22px;
+    }
+    .CarpoolInfo-date{
+      float:left;
+      width:60px;
+      color:@darkTextColor;
+      font-size: 18px;
+      border-right:1px solid @lightBorderColor;
+      background: white;
+        border-top-left-radius: 4px;
+        overflow: hidden;
+      .month{
+        background: @red;
+        color:white;
+        height:25px;
+      }
+      .day{
+        font-size: 26px;
+        height:40px;
+      }
+      .time{
+        height:25px;
+      }
+    }
+  }
+  .seperator{
+    margin: @infoBarPadding -@infoBarPadding;
+    width: @infoBarWidth;
+    border-bottom: 1px solid @lightBorderColor
+  }
+  .title{
+    margin: 40px -@infoBarPadding @infoBarPadding ;
+    width: @infoBarWidth;
+    border-top: 1px solid @lightBorderColor;
+    background: white;
+    font-size: 20px;
+    text-align: center;
+    border-bottom: 1px solid @lightBorderColor;
+  }
+  .seatInfo{
+    margin-bottom: @infoBarPadding;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+    .bordered;
+    .profilePic{
+      float:left;
+      width:70px;height:70px;
+      padding: 3px;
+      border-right:1px solid @lightBorderColor;
+      background: white;
+    }
+    .seatDesc{
+      background: white;
+      width: 100%;
+      line-height: 25px;
+      display:block;
+      border-bottom:1px solid @lightBorderColor;
+    }
+    .seatName{
+      background: @lightWhite;
+      display:block;
+      width: 100%;
+      font-size: 20px;
+      line-height: 45px;
+    }
+    .seatNote{
+      border-top:1px solid @lightBorderColor;
+      background: white;
+      text-align: left;
+      padding: 20px;
+    }
+    &.pending{
+      .seatDesc{
+        background: @blueDark;
+        color:white;
+      }
+    }
+    &.driver{
+      .seatDesc{
+        background: @blue;
+        color:white;
+      }
+      .seatName{background: rgba(245,245,255,0.4)}
+    }
+    &.empty{
+      .seatDesc{
+      }
+    }
+  }
+  .seatBtn.pending{
+    color:white;
+    padding: 5px;
+    font-size: 20px;
+    background: @blue;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 100%;
+    transition: background .4s;
+    .bordered(@blueDark);
+    &:hover{
+      background: @blueDark;
+    }
+  }
+}
+.accept>a{
+  display: block;
   background: @blue;
   box-shadow: 0 3px 0 @blueDark;
   color:white;
   border-radius: 4px;
-  height:(@topbarShortHeight - 30);
-  line-height: (@topbarShortHeight - 30);
-  padding:0 20px ;
-}
-@textBgColor: #ecf0f1;
-@userBgColor: #e0e0e0;
-.hiddenInfo{
+  padding:15px;
   font-size: 20px;
-  .driverInfo{
-    background:@userBgColor;
-    height:260px;
-    width: 30%;
-    padding:20px;
-    font-size: 24px;
-    text-align: center;
-    float:left;
-    border-right: 2px solid @textBgColor;
-    img.profilePic{
-      width:70px;
-      height:70px;
-      border-radius: 35px;
-      margin-right: 20px;
-    }
-  }
-  .desc{
-    height:260px;
-    background: @textBgColor;
-    width:70%;
-    float:right;
-    padding:20px;
-
-
-    &:before, &:after {
-      content: ' ';
-      height: 0;
-      opacity: 0;
-      width: 0;
-      transition: opacity .4s;
-      border: 15px solid transparent; /* arrow size */
-    }
-
-    /* these arrows will point up */
-
-    /* top-stacked, smaller arrow */
-    &:before {
-      border-right-color: @textBgColor;  /* arrow color */
-
-      /* positioning */
-      position: absolute;
-      margin-left:-50px;
-      margin-top:20px;
-    }
+  text-align: center;
+  width:100%;
+  &:active,&:focus,&:hover{
+    outline: none;
+    text-decoration: none;
   }
 }
-.infobar{
-  position: absolute;bottom:0;left:0;right:0;padding-bottom: 50px;
-  &:hover{
-    .carpoolRow{
-      height:300px;
-      .desc:before{
-        opacity: 1;
-      }
-    }
-  }
-}
-@media(max-width:1024px){
-    .carpoolRow{
-      height:300px;
-      .desc:before{
-        opacity: 1;
-      }
-    }
-}
+

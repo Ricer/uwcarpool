@@ -210,6 +210,17 @@ class Model{
 		self::run_query($sql, $connection);
 	}
 	
+	public static function mkError($errorMsg="")
+	{
+		return json_encode(array('success' => 0,'data'=>NULL,'error'=>$errorMsg));
+	}
+	
+	public static function mkResponse($data=NULL)
+	{
+		return json_encode(array('success' => 1,'data'=>$data));
+	}
+
+	
 	public static function me($val, $connection = null)
 	{
 		if($connection == null) $connection = $GLOBALS['default'];
