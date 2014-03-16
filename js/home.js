@@ -489,9 +489,6 @@ MainView=React.createClass({
   changeUser:function(userObj){
     this.setState({user:userObj})
   },
-  openSetting:function(){
-    settings();
-  },
   makeRequest:function(){
     makeRequest();
   },
@@ -510,16 +507,12 @@ MainView=React.createClass({
                       </div>
                       <div className='buttons'>
                         <a href="/dashboard"><i className="fa fa-tachometer"></i>Dashboard</a>
-                        <a onClick={this.openSetting}><i className="fa fa-cog"></i>Settings</a>
+                        <a href="/settings"><i className="fa fa-cog"></i>Settings</a>
                         <a href="/index/logout"><i className="fa fa-power-off"></i>Logout</a>
                       </div>
                     </div>
                   </li>):(<li><a href="login">Login</a></li>)
-    var modals=this.state.user?(
-      <div className="modals">
-        <SettingsModel onSubmit={this.changeUser} user={this.state.user}/>
-        <MakeRequestModel user={this.state.user}/>
-      </div>):{}
+    var modals=this.state.user?(<MakeRequestModel user={this.state.user}/>):{}
     return(
       <div>
         <nav className="navbar topbar navbar-default navbar-fixed-top" role="navigation"  data-spy="affix" data-offset-top="150">

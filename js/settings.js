@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 
 var timer=null;
-SettingsModel=React.createClass({
+SettingsModal=React.createClass({
   getInitialState: function() {
     return {user:data.user,changed:false,saveMsg:""};
   },
@@ -51,7 +51,6 @@ SettingsModel=React.createClass({
           dataType:'json',
           success: function(json){
             if(json.success==1){
-              that.props.onSubmit(json.data);
               that.setState({saveMsg:"Save successful.",user:json.data})
               if(timer){clearTimeout(timer)}
               timer=setTimeout(function(){
@@ -79,7 +78,6 @@ SettingsModel=React.createClass({
         dataType:'json',
         success: function(json){
           if(json.success==1){
-            that.props.onSubmit(json.data);
             that.setState({user:json.data});
           }
         },
@@ -97,11 +95,10 @@ SettingsModel=React.createClass({
     var errorDiv=this.state.user.emailverified==1?"":(<div className="alert alert-warning">Please verify your email address.<a href="/resendEmail" className="alert-link pull-right">Resend email</a></div>)
     var saveMsgDiv=this.state.saveMsg==""?"":(<div className="alert alert-info"><strong>{this.state.saveMsg}</strong></div>)
     return(
-      <div className="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div className="modal fade" id="settingsModal" data-backdrop="false" tabindex="-1" role="dialog" aria-hidden="true">
         <div className="modal-dialog modal-lg">
           <div className="modal-content">
             <div className="modal-header">
-              <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
               <h4 className="modal-title" >Settings</h4>
             </div>
             <div className="modal-body noPadding">
@@ -172,3 +169,11 @@ SettingsModel=React.createClass({
     );
   }
 });
+$(function(){
+  $('body').append($("<div id='main'></div>"))
+  React.renderComponent(
+    <SettingsModal />,
+    $("#main").get(0)
+  );
+  settings();
+})
