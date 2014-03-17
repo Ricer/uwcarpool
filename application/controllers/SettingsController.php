@@ -44,6 +44,7 @@ class SettingsController extends CarpoolController {
             'cellphone'=>$_REQUEST['cellphone']
           ));
           $result=User::update($user);
+		  $user->set_login_cookie();
           if($verified==0){
             //send email verify new email
             //send email to old email to notify
