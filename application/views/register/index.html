@@ -8,35 +8,10 @@
         <link rel="stylesheet" href="css/font-awesome.min.css">
         <link rel="stylesheet" href="css/login.css">
 
-
-        <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
-        <!--[if lt IE 9]>
-          <script src="js/html5shiv.js"></script>
-          <script src="js/respond.min.js"></script>
-        <![endif]-->
-        <script src="js/lib/jquery-1.8.3.min.js"></script>
+        <script src="js/lib/jquery-2.0.3.min.js"></script>
         <script src="js/lib/bootstrap.min.js"></script>
-        <script type="text/JavaScript" src="js/sha512.js"></script> 
         <script type="text/JavaScript" src="js/forms.js"></script>
-        <link rel="stylesheet" href="css/login.css" />
-        <script>
-        function updateShadow(){
-            var mainElem=$(".main");
-            var windowBottom=$(window).outerHeight()+20;
-            var mkP=function(fn,point){
-                return fn+" "+point.x+" "+point.y+" ";
-            }
-            var tr={y:mainElem.offset().top,x:mainElem.offset().left+mainElem.outerWidth()}
-            var tl={y:mainElem.offset().top+mainElem.outerHeight(),x:mainElem.offset().left}
-            var bl={y:windowBottom,x:tl.x+150}
-            var br={y:windowBottom,x:$(window).outerWidth()+200}
-            $("#shadow").attr('d',mkP("M",tl)+mkP("L",bl)+mkP("L",br)+mkP("L",tr)+mkP("L",tl))
-        }
-        $(function(){
-            updateShadow();
-            $(window).resize(updateShadow);
-        })
-        </script>
+        <script type="text/JavaScript" src="js/shadow.js"></script>
     </head>
     <body>
 

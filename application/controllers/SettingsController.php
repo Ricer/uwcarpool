@@ -22,7 +22,38 @@ class SettingsController extends CarpoolController {
   }
 
   public function __call($name, $arguments) {
+    return $this->general();
+  }
+  public function general() {
     $view = array();
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      if(!$_REQUEST['email']||!$_REQUEST['firstname']||!$_REQUEST['lastname']){
+        $view['error']="email,firstname,lastname cannot be empty";
+      }else if($_REQUEST['cellphone']&&$_REQUEST['cellphone']!=""&&!is_numeric($_REQUEST['cellphone'])){
+        $view['error']="cellphone must be numeric";
+      }else{
+        try {
+          $user=$this->user;
+
+          $verified=$_REQUEST['email']==$user->email?$user->emailverified:0;
+          $user->populate(Array(
+            'email'=>$_REQUEST['email'],
+            'emailverified'=>$verified,
+            'firstname'=>$_REQUEST['firstname'],
+            'lastname'=>$_REQUEST['lastname'],
+            'cellphone'=>$_REQUEST['cellphone']
+          ));
+          $result=User::update($user);
+          if($verified==0){
+            //send email verify new email
+            //send email to old email to notify
+          }
+          $view['saved']=1;
+        } catch (Exception $e) {
+          $view['error']=$e->getMessage();
+        }
+      }
+    }    
     $view['user'] = $this->user;
     if(!isset($this->todo)){
       $view['page']="general";

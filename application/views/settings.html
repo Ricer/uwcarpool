@@ -14,21 +14,17 @@
 
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/main.css">
-
-
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
-    <!--[if lt IE 9]>
-      <script src="js/html5shiv.js"></script>
-      <script src="js/respond.min.js"></script>
-    <![endif]-->
+    
     <script src="js/lib/jquery-2.0.3.min.js"></script>
     <script src="js/lib/bootstrap.min.js"></script>
     <script src="js/lib/moment.min.js"></script>
+    <script src="js/shadow.js"></script>
 
     <script>
       data={user:<?=$view['user']?json_encode($view['user']):"null"?>}
       $(function(){
-        $("#settingsModal").modal()
+        $("#settingsModal").modal();
+        updateShadow();
       });
       function submitNewProfilePic(){
         var formData = new FormData($('.profilePicForm').get(0));
@@ -56,9 +52,9 @@
   </head>
   <body>
 
-      <div class="modal fade" id="settingsModal" data-backdrop="false" data-show="true">
+      <div class="modal" id="settingsModal" data-backdrop="false" data-show="true">
         <div class="modal-dialog modal-lg">
-          <div class="modal-content">
+          <div class="modal-content main">
             <div class="modal-header">
               <h4 class="modal-title" >Settings</h4>
             </div>
@@ -67,7 +63,13 @@
               <?php endif; ?>
 
               <?php if($view['saved']):?>
-                <div class="alert alert-info"><strong>Save successful</strong></div>
+                <div class="alert alert-info" id="saveMsg"><strong>Save successful</strong></div>
+                <script>
+                  setTimeout(function(){$("#saveMsg").fadeOut(updateShadow)},2000);
+                </script>
+              <?php endif;?>
+              <?php if($view['error']):?>
+                <div class="alert alert-danger"><strong><?=$view['error']?></strong></div>
               <?php endif;?>
 
               <div class='sidebar col-sm-4'>
@@ -101,7 +103,7 @@
 
                 <?php else:?>
                 <div id="general">
-                  <form role="form" method="POST" action="/settings/general/submit" onsubmit="submitGeneral()">
+                  <form role="form" method="POST" action="/settings/general" onsubmit="submitGeneral()">
                     <div class="col-sm-6">
                     <div class="form-group">
                       <label for="general-firstname">First Name</label>
