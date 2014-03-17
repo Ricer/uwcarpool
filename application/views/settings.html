@@ -18,6 +18,7 @@
     <script src="js/lib/jquery-2.0.3.min.js"></script>
     <script src="js/lib/bootstrap.min.js"></script>
     <script src="js/lib/moment.min.js"></script>
+    <script src="js/forms.js"></script>
     <script src="js/shadow.js"></script>
 
     <script>
@@ -103,21 +104,21 @@
 
                 <?php else:?>
                 <div id="general">
-                  <form role="form" method="POST" action="/settings/general" onsubmit="submitGeneral()">
+                  <form role="form" method="POST" action="/settings/general" data-trigger='checker'>
                     <div class="col-sm-6">
                     <div class="form-group">
                       <label for="general-firstname">First Name</label>
-                      <input type="text" class="form-control" id="general-firstname" name='firstname' placeholder="First Name" value="<?=$view['user']->firstname?>"/>
+                      <input type="text" class="form-control" data-check="notempty" id="general-firstname" name='firstname' placeholder="First Name" value="<?=$view['user']->firstname?>"/>
                     </div></div>
                     <div class="col-sm-6">
                     <div class="form-group">
                       <label for="general-lastname">Last Name</label>
-                      <input type="text" class="form-control" id="general-lastname" name='lastname' placeholder="Last Name" value="<?=$view['user']->lastname?>"/>
+                      <input type="text" class="form-control" data-check="notempty" id="general-lastname" name='lastname' placeholder="Last Name" value="<?=$view['user']->lastname?>"/>
                     </div></div>
                     <p class="help-block col-sm-12">Please user your real name so people knows who is who. It does not have to be legal name.</p>
                     <div class="form-group col-sm-12">
                       <label for="general-email">Email address</label>
-                      <input type="email" class="form-control" id="general-email" name='email' placeholder="Email"  value="<?=$view['user']->email?>"/>
+                      <input type="text" class="form-control" data-check="notempty email" id="general-email" name='email' placeholder="Email"  value="<?=$view['user']->email?>"/>
                       
                       <div class="checkbox">
                         <label>
@@ -127,7 +128,7 @@
                     </div>
                     <div class="col-sm-12">
                       <label for="general-cellphone">Cell phone</label>
-                      <input type="text" class="form-control" id="general-cellphone"  name='cellphone' value="<?=$view['user']->cellphone?>"/>
+                      <input type="text" class="form-control" id="general-cellphone" data-check="numeric" name='cellphone' value="<?=$view['user']->cellphone?>"/>
                     </div>
                     <div class="clearfix"></div>
                     <button type="submit" class="btn btn-primary btn-lg submitBtn">Save</button>
@@ -136,9 +137,6 @@
                     $("#general form input").keypress(function(){
                       $(".submitBtn").addClass('show');
                     })
-                    function submitGeneral(){
-                      //check value then submit;
-                    }
                   </script>
                 </div>
                 <?php endif;?>

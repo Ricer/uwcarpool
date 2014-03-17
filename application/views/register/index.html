@@ -18,29 +18,23 @@
         <div class="main register">
             <a class="brand" href="http://www.uwcarpool.com/"><span>UWCarpool </span><i class="fa fa-heart"></i></a>
             
-            <form action="/register/submit" method="post" name="registration_form" id="login">
+            <form action="/register/submit" method="post" name="registration_form" id="login" data-trigger='checker'>
                 
                 <div class='fbBtnWrapper'>
                     <a id="fbLoginBtn" href="" class='btn-fb btn'>Sign up with <span class="fb">facebook</span></a>
                     <span id='or'>or</span>
                 </div>
                 <div class="inputGroup horizontal">
-                    <input type="text" name="firstname" id="firstname" placeholder="First Name"  class='input input-default'/>
-                    <input type="text" name="lastname" id="lastname" placeholder="Last Name"  class='input input-default'/>
+                    <input type="text" name="firstname" id="firstname" placeholder="First Name"  class='input input-default' data-check='notempty'/>
+                    <input type="text" name="lastname" id="lastname" placeholder="Last Name"  class='input input-default' data-check='notempty'/>
                 </div>
                 <div class="inputGroup vertical">
-                    <input type="text" name="email" id="email" placeholder="Email" class='input input-default'/>
-                    <input type="password" name="password" id="password" placeholder="Password" class='input input-default'/>
-                    <input type="password" name="confirmpwd" id="confirmpwd" placeholder="Confirm Password" class='input input-default'/>
+                    <input type="text" name="email" id="email" placeholder="Email" class='input input-default' data-check='notempty email'/>
+                    <input type="password" name="password" id="password" placeholder="Password" class='input input-default' data-check='notempty minlength6 password' data-hash='true' />
+                    <input type="password" name="confirmpwd" id="confirmpwd" placeholder="Confirm Password" class='input input-default' data-check='confirm' data-target='#password' />
                 </div>
-                <input id="loginBtn" type="roundBtn" class="btn btn-primary"
-                   value="Sign up" 
-                   onclick="return regformhash(this.form,
-                                   this.form.firstname,
-                                   this.form.lastname,
-                                   this.form.email,
-                                   this.form.password,
-                                   this.form.confirmpwd);" />
+                <input id="loginBtn" type="submit" class="btn btn-primary"
+                   value="Sign up" />
             </form>
             <a href="/login" id="login" class="link right">login</a>
         </div>
