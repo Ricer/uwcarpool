@@ -1,6 +1,6 @@
 UWCarpool Website
 ----------------------
-####Form validation before submit **checker**: version 1
+###Form validation before submit **checker**: version 2
 In **forms.js**, There is an easier way to validate your form input before submiting a form.
 To use it, include the following in your head tag.
 ```html
@@ -28,9 +28,23 @@ A complete example:
   <input type="text" name="firstname" id="firstname" placeholder="First Name"  class='input input-default' data-check='notempty'/>
   <input type="text" name="lastname" id="lastname" placeholder="Last Name"  class='input input-default' data-check='notempty'/>
   <input type="text" name="email" id="email" placeholder="Email" class='input input-default' data-check='notempty email'/>
-  <input type="password" name="password" id="password" placeholder="Password" class='input input-default' data-check='notempty minlength6 password' data-hash='true' />
+  <input type="password" name="password" id="password" placeholder="Password" class='input input-default' data-check='notempty minlength6 password' data-hash='p' />
   <input type="password" name="confirmpwd" id="confirmpwd" placeholder="Confirm Password" class='input input-default' data-check='confirm' data-target='#password' />
   <input id="loginBtn" type="submit" class="btn btn-primary" value="Sign up" />
 </form>
 ```
+
+####data-check='confirm'
+this validator needs an extra parameter `data-target="<jQuery Selector>"` to specify the element to compare, see above example.
+
+
+####data-check='minlength<num>'
+check the minimun length of a input value. the num must be a int number immediately follow "minlength"
+
+
+####data-hash='x'
+create a hidden field with name='x' when submit. the hidden field will store the hash value of the current input & the current input will have no value when submitting. (use for passwords)
+
+
+
 
