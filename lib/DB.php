@@ -8,7 +8,7 @@ $facebook = new Facebook(array(
 	'appId' => '414737555322863',
 	'secret' => '54275a5a600f76b04fa957d9c1d72d37',
 	'allowSignedRequest' => false
-		));
+));
 
 class DB {
 
