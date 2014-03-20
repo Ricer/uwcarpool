@@ -28,6 +28,7 @@ class UserController extends CarpoolController {
     ));
     $view['offers'] = Carpool::find_all("user_id=".$this->todo['id']." AND type='offer'");
     $view['requests'] = Carpool::find_all("user_id=".$this->todo['id']." AND type='request'");
+    //$view['comments'] = Carpool::find_all("to_user_id=".$this->todo['id']." SORT BY time DESC");
     return $view;
   }
   
