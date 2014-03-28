@@ -21,7 +21,7 @@ class Carpool extends Model{
 			FROM (
 				SELECT
 					`c`.`id` , `c`.`departure`, `c`.`arrival` , 
-					`u`.`firstname`, `u`.`lastname`, `u`.`type` AS `user_type`,
+					`u`.`firstname`, `u`.`lastname`,`u`.`profilePicture`, `u`.`type` AS `user_type`, 
 					`c`.`user_id`,
 					`c`.`date` , `c`.`price` , `c`.`type`, `c`.`description`, 
 					`c`.`date_created` , `c`.`last_edited` , `c`.`passenger` , 
@@ -70,6 +70,7 @@ class Carpool extends Model{
 			$carpool = new Carpool();
 			$carpool->populate($data_array);
 			$result = $carpool->save();
+			Location::entry($data['from'], $data['to']);
 			return json_encode(array('success' => $result ? 1:0,'data'=>$result));
 		}
 		

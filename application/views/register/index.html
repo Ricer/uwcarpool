@@ -18,8 +18,11 @@
         <div class="main register">
             <a class="brand" href="http://www.uwcarpool.com/"><span>UWCarpool </span><i class="fa fa-heart"></i></a>
             
-            <form action="/register/submit" method="post" name="registration_form" id="login" data-trigger='checker'>
+            <form action="/register" method="post" name="registration_form" id="login" data-trigger='checker'>
                 
+                <?php if(isset($view['error'])):?>
+                    <div class="alert alert-danger"><?=$view['error']?></div>
+                <?php endif;?>
                 <div class='fbBtnWrapper'>
                     <a id="fbLoginBtn" href="" class='btn-fb btn'>Sign up with <span class="fb">facebook</span></a>
                     <span id='or'>or</span>
@@ -38,9 +41,6 @@
             </form>
             <a href="/login" id="login" class="link right">login</a>
         </div>
-        <svg width="100%" height="100%">
-          <path id="shadow" />
-        </svg>
         <!-- <ul>
             <li>Usernames may contain only digits, upper and lower case letters and underscores</li>
             <li>Emails must have a valid email format</li>

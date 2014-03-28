@@ -13,8 +13,6 @@ class IndexController extends CarpoolController {
 	 */
 	public $view_override = null;
 
-	
-	
 	public function __construct() {
 		parent::__construct();
 		session_start();
@@ -32,8 +30,12 @@ class IndexController extends CarpoolController {
 	public function index(){
 		$view = array();
 		$view['user'] = $this->user;
-		
 		return $view;
+	}
+
+	public function getLocations(){
+		$this->render='json';
+		return Array('suggestions'=>Location::all($_REQUEST['query']));
 	}
 	
 	public function __call($name, $arguments) {

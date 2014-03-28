@@ -29,7 +29,6 @@ body{
   z-index: 10;
   border-bottom: 1px solid @lightBorderColor;
   .merge-input{
-      .hoverZoom;
     padding: 0;
     padding-right:20px;
     position:relative;
@@ -99,6 +98,9 @@ body{
     opacity: 0.9;
   &.affix{
     top:@topbarShortHeight - (@filterHeight - 45px);
+  }
+  &.affix:hover,&.affix:active,&.affix:focus{
+    top:@topbarShortHeight;
   }
 }
 
@@ -201,7 +203,22 @@ body{
 .alert-warning{border-color:#ece0bb}
 .picker__holder{z-index: 1200;}
 
-
+.autocomplete-suggestions {
+  margin-top:-5px;
+  border: 1px solid #bbb;
+  border-bottom-width: 3px;
+  border-radius:0 0 3px 3px;
+  background: #FFF;
+  overflow: auto;width: 100%;
+}
+.autocomplete-suggestion { 
+  padding:10px 10px 10px 40px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-align: center;
+ }
+.autocomplete-selected { background: #F0F0F0; }
+.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
 @media (max-width: 767px){
   body{
     padding: 50px 0;
@@ -238,7 +255,7 @@ body{
   .listContent .nomore .makeoffer{
     float: none;
   }
-  .preview{
+  .preview.show{
     display: none;
     opacity: 0;
   }

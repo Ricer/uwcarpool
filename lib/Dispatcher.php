@@ -7,6 +7,9 @@ class Dispatcher
 
 	public static function clean_url($url)
 	{
+		if($pos=strrpos($url,"?")){
+			$url=substr($url, 0,$pos);
+		}
 		return $url;
 	}
 

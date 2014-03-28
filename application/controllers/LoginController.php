@@ -23,20 +23,18 @@ class LoginController extends CarpoolController {
 	
 	public function index()
 	{
-		
-	}
-	
-	public function submit()
-	{
-		if (!$user = User::login($_REQUEST['email'], $_REQUEST['p']))
-		{
-			$this->redirect('login/index/?failure=1', true);
-		}
-		else
-		{
-			$user->set_login_cookie();
-			$this->redirect('index', true);
-		}
+		if($this->user){$this->redirect('index', true);}
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    	if (!$user = User::login($_REQUEST['email'], $_REQUEST['p']))
+			{
+				return Array('error'=>'No matching user');
+			}
+			else
+			{
+				$user->set_login_cookie();
+				$this->redirect('index', true);
+			}
+    }
 	}
 	
 	public function __call($name, $arguments) {

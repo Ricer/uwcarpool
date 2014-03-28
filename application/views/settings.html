@@ -19,13 +19,10 @@
     <script src="js/lib/bootstrap.min.js"></script>
     <script src="js/lib/moment.min.js"></script>
     <script src="js/forms.js"></script>
-    <script src="js/shadow.js"></script>
-
     <script>
       data={user:<?=$view['user']?json_encode($view['user']):"null"?>}
       $(function(){
         $("#settingsModal").modal();
-        updateShadow();
       });
       function submitNewProfilePic(){
         var formData = new FormData($('.profilePicForm').get(0));
@@ -88,16 +85,41 @@
                   <ul class="nav nav-pills nav-stacked settingsNav">
                     <li class="<?=$view['page']=='general'?"active":""?>"><a href="/settings"><i class="fa fa-fw fa-user"></i> General</a></li>
                     <li class="<?=$view['page']=='password'?"active":""?>"><a href="/settings/password"><i class="fa fa-fw fa-pencil-square"></i> Password</a></li>
-                    <li class="<?=$view['page']=='vehicle'?"active":""?>"><a href="/settings/vehicle"><i class="fa fa-fw fa-truck"></i> Vehicle</a></li>
                     <li class="<?=$view['page']=='facebookconnect'?"active":""?>"><a href="/settings/facebookconnect"><i class="fa fa-fw fa-facebook-square"></i> Facebook Connect</a></li>
                     <li class="<?=$view['page']=='about'?"active":""?>"><a href="/settings/about"><i class="fa fa-fw fa-info-circle"></i> About UWCarpool</a></li>
                   </ul>
               </div>
               <div class="tab-content col-sm-8">
                 <?php if($view['page']=='password'):?>
-
-                <?php elseif($view['page']=='vehicle'):?>
-
+                  <div id="password">
+                    <form role="form" method="POST" action="/settings/password" data-trigger='checker'>
+                      <div class="col-sm-12">
+                        <div class="form-group">
+                          <label for="password-old">Old Password</label>
+                          <input type="password" class="form-control" data-check="notempty minlength6 password" id="password-old" name='password-old' placeholder="Old Password" value="" data-hash="op" />
+                        </div>
+                      </div>
+                      <div class="col-sm-12">
+                        <div class="form-group">
+                          <label for="password-new">New Password</label>
+                          <input type="password" class="form-control" data-check="notempty minlength6 password" id="password-new" name='password-new' placeholder="New Password" value="" data-hash="np" />
+                        </div>
+                      </div>
+                      <div class="col-sm-12">
+                        <div class="form-group">
+                          <label for="password-confirm">Confirm Password</label>
+                          <input type="password" class="form-control" data-check="confirm" id="password-confirm" name='password-confirm' placeholder="Confirm your new password" value="" data-target="#password-new" />
+                        </div>
+                      </div>
+                      <div class="clearfix"></div>
+                      <button type="submit" class="btn btn-primary btn-lg submitBtn">Save</button>
+                    </form>
+                    <script>
+                      $("#password form input").keydown(function(){
+                        $(".submitBtn").addClass('show');
+                      })
+                    </script>
+                  </div>
                 <?php elseif($view['page']=='facebookconnect'):?>
 
                 <?php elseif($view['page']=='about'):?>

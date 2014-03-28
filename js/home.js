@@ -78,7 +78,19 @@ MakeRequestModel=React.createClass({
       $('#makeRequest-to').val($('#filter-to').val())
       $('#makeRequest-date').val($('#filter-date').val())
     }).on('shown.bs.modal', function (e) {
-      $('#makeRequest-from').focus();
+      setTimeout(function(){$('#makeRequest-from').focus()},400);
+    })
+
+    $('#makeRequest-from,#makeRequest-to').keyup(function(e){
+      if (e.keyCode == 38||e.keyCode==40) {
+        that.handleChange(e);
+      }
+    }).autocomplete({
+      serviceUrl: '/index/getLocations',
+      minChars:0,
+      onSelect:function(){
+        that.handleChange({target:this});
+      }
     })
     makeOffer=this.showMakeOffer.bind(this)
     makeRequest=this.showMakeRequest.bind(this)
@@ -265,10 +277,10 @@ ListView=React.createClass({
                 page:that.state.page-1,
                 type:that.props.type};
       var rc=that.state.requestCount;
-      console.log("try loading page "+that.state.page);
+      //console.log("try loading page "+that.state.page);
       $.ajax({url: "/post", dataType:"json",data:data,type:"POST"}).done(function( json ) {
         if(rc!=that.state.requestCount)return;
-        console.log("done loading page "+that.state.page);
+        //console.log("done loading page "+that.state.page);
         that.setState({page:that.state.page+1,list:that.state.list.concat(json)})
         if(json.length<5)that.setState({nomore:true});
         that.setState({loading:false})
@@ -304,7 +316,6 @@ ListView=React.createClass({
 
   componentDidUpdate:function(previousProps){
     if(previousProps.from!=this.props.from||previousProps.to!=this.props.to||previousProps.date!=this.props.date||previousProps.type!=this.props.type){
-      console.log(previousProps.type+this.props.type);
       this.reload();
     }
   },
@@ -360,9 +371,17 @@ ListView=React.createClass({
     }else if(this.state.loading){
       items.push(<div className="loadingPage"><i className="fa fa-spinner fa-spin"></i></div>)
     }else if(this.state.nomore&&this.state.list.length==0){
-      items=(<div className="none"><i className="fa fa-frown-o"></i><p>Sorry, we cannot find any carpool that matches your criteria.</p><span className="makeoffer" onClick={this.showMakeModal}>Make a {that.props.type=="offer"?"request ":"offer "} <i className="fa fa-angle-right"></i></span></div>)
+      items=(
+        <div className="none"><i className="fa fa-frown-o"></i><p>Sorry, we cannot find any carpool that matches your criteria.</p>
+          {this.props.user?(<span className="makeoffer" onClick={this.showMakeModal}>Make a {that.props.type=="offer"?"request ":"offer "} <i className="fa fa-angle-right"></i></span>):(
+            <span href='/login' className="makeoffer">Login to make {that.props.type=="offer"?"request ":"offer "} <i className="fa fa-angle-right"></i></span>)}
+        </div>)
     }else if(this.state.nomore)
-      items.push(<div className="alert alert-danger"><i className="fa fa-exclamation-triangle"></i> Thats all matching {that.props.type} avaliable. <a className="alert-link pull-right" onClick={this.showMakeModal}>Make a {that.props.type=="offer"?"request ":"offer "} <i className="fa fa-angle-right"></i></a></div>)
+      items.push(
+        <div className="alert alert-danger"><i className="fa fa-exclamation-triangle"></i> Thats all matching {that.props.type} avaliable. 
+          {this.props.user?(<a className="alert-link pull-right" onClick={this.showMakeModal}>Make a {that.props.type=="offer"?"request ":"offer "} <i className="fa fa-angle-right"></i></a>):(
+            <a href='/login' className="alert-link pull-right">Login to make {that.props.type=="offer"?"request ":"offer "} <i className="fa fa-angle-right"></i></a>)}
+        </div>)
     var preview=(
       <div className={"preview "+((this.state.showPreview)?"show":"")}><h5>{this.state.previewData.firstname+" "+this.state.previewData.lastname+": "}</h5>{this.state.previewData.description}</div>
     )
@@ -376,7 +395,6 @@ ListView=React.createClass({
             {emailVerification}
             {items}
           </ul>
-
           {preview}
         </div>
       </div>
@@ -386,7 +404,7 @@ ListView=React.createClass({
 
 FilterView=React.createClass({
   getInitialState: function() {
-    return {hide:false,from:"",to:"",date:"",passenger:1,luggage:0};
+    return {hide:false,from:"",to:"",date:"",passenger:1,luggage:0,focus:"",select:0};
   },
   componentWillUnmount: function() {
     $(window).off('typeChange', this.handleTypeChange.bind(this));
@@ -420,12 +438,26 @@ FilterView=React.createClass({
         top: 150
       }
     })
+    $('#filter-from,#filter-to').keyup(function(e){
+      if (e.keyCode == 38||e.keyCode==40) {
+        that.handleChange(e);
+      }
+    }).autocomplete({
+      serviceUrl: '/index/getLocations',
+      minChars:0,
+      onSelect:function(){
+        that.handleChange({target:this});
+      }
+    })
   },
+
   render: function() {
+    var that=this;
     var classString="filterPanel "+(this.state.isTop?"affix-top":"affix");
     var list=(<ListView ref="list" type={this.props.type} from={this.state.from} to={this.state.to} date={this.state.date} passenger={this.state.passenger} luggage={this.state.luggage} user={this.props.user}/>)
     var text=this.props.type=="offer"?"Offered":"Requested";
     var seatsText=this.props.type=="offer"?"Seats":"# of People";
+
     return(
       <div>
         <form role='form' onSubmit={this.search}>
@@ -434,11 +466,11 @@ FilterView=React.createClass({
             <div className='inputs'>
             <div className="merge-input col-xs-12 col-sm-4"> 
               <label><span className="glyphicon glyphicon-map-marker from-marker"></span></label>
-              <input id='filter-from' value={this.state.from} placeholder="FROM" data-change="from" onChange={this.handleChange} />
+              <input id='filter-from' placeholder="FROM" data-change="from" onChange={this.handleChange} />
             </div>
             <div className="merge-input col-xs-12 col-sm-4"> 
               <label><span className="glyphicon glyphicon-map-marker to-marker"></span></label>
-              <input id='filter-to' value={this.state.to} placeholder="TO" data-change="to" onChange={this.handleChange}  />
+              <input id='filter-to' placeholder="TO" data-change="to" onChange={this.handleChange}  />
             </div>
             <div className='merge-input col-xs-12 col-sm-4'> 
               <label><i className='fa fa-calendar date-marker'/></label>
