@@ -1,177 +1,99 @@
-@import "main.less";
 
-@infoBarWidth:360px;
-@infoBarPadding: 10px;
-
-@lightWhite:rgba(255,255,255,0.6);
-
-body{padding:0;overflow: hidden;}
-#map-wrapper{position:absolute;top:0;left:0;right:@infoBarWidth;bottom:0;z-index:-1}
-#map{width:100%;height:100%}
-
-
-.header{
-  height:@topbarShortHeight;
-  padding:0 20px;
-  background: white;
-  border-bottom: 1px solid @midBorderColor;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
-  li{
-    list-style: none;
-    float:right;
-    >a{
-      .hoverZoom(1.2);
-      color: #777777;
-      display:block;
-      line-height: 44px;
-      font-size: 20px;
-      &:hover{text-decoration: none}
+#map-wrapper{
+  //-webkit-perspective:1500px; /* Chrome, Safari, Opera */
+  //perspective:1500px;
+  height:400px;
+  padding: 0;
+  position: relative;
+    overflow: visible;
+  .close{
+    z-index: 3000;
+    position: absolute;
+    color:#333;
+    top:8px;right:10px;
+    //right:9%;
     }
   }
-  .navbar-brand,li>a{
-    padding:(@topbarShortHeight - 44px)/2 0;
-  }
-}
-.infobar{
-  position: absolute;
-  bottom:0;top:0;right:0;
-  width: @infoBarWidth;
-  background: #eeeeee;
-  border:none;
-  border-left:1px solid @midBorderColor;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3)
-}
-
-.CarpoolInfo{
-  padding:@infoBarPadding/2 @infoBarPadding @infoBarPadding;
-  position: absolute;top:@topbarShortHeight;
-  bottom: 0;
-  overflow-y:auto;
-  overflow-x:hidden;
-  z-index: 2;
-  .alert{margin-bottom:@infoBarPadding;border-radius: 10px;}
-  .topRow{
-    .hoverZoom;
-    text-align: center;
-    margin-bottom: @infoBarPadding;
-    border-radius: 10px;
-    overflow: hidden;
-    background:@lightWhite;
-    .bordered();
-    .CarpoolInfo-location{
-      float: right;
-      width:@infoBarWidth - 103px;
-      td{height:45px}
-      font-size: 22px;
-    }
-    .CarpoolInfo-date{
-      float:left;
-      width:60px;
-      color:@darkTextColor;
-      font-size: 18px;
-      border-right:1px solid @lightBorderColor;
-      background: white;
-        border-top-left-radius: 4px;
-        overflow: hidden;
-      .month{
-        background: @red;
-        color:white;
-        height:25px;
-      }
-      .day{
-        font-size: 26px;
-        height:40px;
-      }
-      .time{
-        height:25px;
-      }
-    }
-  }
-  .seperator{
-    margin: @infoBarPadding -@infoBarPadding;
-    width: @infoBarWidth;
-    border-bottom: 1px solid @lightBorderColor
-  }
-  .title{
-    margin: 40px -@infoBarPadding @infoBarPadding ;
-    width: @infoBarWidth;
-    border-top: 1px solid @lightBorderColor;
-    background: white;
-    font-size: 20px;
-    text-align: center;
-    border-bottom: 1px solid @lightBorderColor;
-  }
-  .seatNote{
-    background: @lightWhite;
-    border-radius: 10px;
-    position: relative;
-    padding: 10px;
-    .bordered;
-    .hoverZoom;
-  }
-  h4{margin-left: 5px;}
-  .seatInfo{
-    .hoverZoom;
-    margin-bottom: @infoBarPadding;
-    overflow: hidden;
-    position: relative;
-    text-align: center;
-    border-radius: 35px 10px 10px 35px;
-    .profilePic{
-      float:left;
-      width:70px;height:70px;
-      border-radius: 35px;
-      padding: 3px;      
-      background: white;
-    }
-    .bordered;
-    .seatDesc{
-      background: white;
-      width: 100%;
-      line-height: 25px;
-      display:block;
-      border-bottom:1px solid @lightBorderColor;
-    }
-    .seatName{
-      background: @lightWhite;
-      display:block;
-      width: 100%;
-      font-size: 20px;
-      line-height: 70px;
-    }
-
-    .seatForm{
-      display: inline-block;
-      float:right;
-      .seatBtn{
-        color:@darkTextColor;
-      }
-    }
-
-    &.pending{
-      .seatName{
-        line-height: 45px;
-      }
-      .seatDesc{
-        background: @blueDark;
-        color:white;
-        padding-left:80px;
-        text-align: left;
-      }
-    }
-
-    &.empty{
-      .seatName{
-        background: #aaaaaa ;
-        box-shadow: inset 0 10px 40px rgba(0, 0, 0, 0.2);
-        color:white;
-      }
-      .bordered(white);
-      .profilePic{background: none; }
-    }
-  }
-}
-.accept{
+#map{
   width: 100%;
+  height:100%;
+  //-webkit-transform: rotateX(30deg) !important;
+  //transform: rotateX(30deg) !important;
+  //width:92.5%;
+  //height:460px;
+  // position: absolute;
+  // left:3.75%;
+  // top:-45px;
+  background: rgb(229, 227, 223);
+  z-index: 1000;
+  border-radius: 5px 5px 0 0;
+  h1{width: 100%;text-align: center;margin-top:180px}
 }
+.modal-content{
+  background: none;
+}
+.detail{
+    overflow: visible;
+  &.modal-header{
+    overflow: visible;
+  }
+  &.modal-body{
+    border-radius: 0;
+    border-bottom: 1px solid #ccc;
+    table{
+      table-layout: fixed;width:100%;text-align: center;
+      td{padding-bottom: 10px;}
+      border-bottom:1px solid #dddddd;
+    }
+    .infobar{
+      margin: 0 -20px -10px;
+      padding: 5px 20px;
+      font-size: 16px;
+      span{
+        strong{
+          text-shadow:1px 1px 0 white;
+        }
+        i{
+          color:#112;
+          font-size: 18px;
+          margin-right:20px;
+        }
+      }
+    }
+  }
+  &.modal-footer{
+    background: white;
+    border-top:none;
+    padding-top:10px;
+    border-radius: 0 0 5px 5px;
+    text-align: left;
+    vertical-align: top;
+    position: relative;
+    .profilePicWrapper{
+      width:70px;
+      height:70px;
+      border:1px solid #444;
+      margin-right:20px;
+      border-radius: 5px;
+      float:left;
+      overflow: hidden;
+      position: relative;
+      img{
+        width: 100%;height:100%;
+      }
+      .overlay{
+        width: 100%;height:100%;
+        position: absolute;
+        box-shadow:inset 0 4px 25px rgba(0, 0, 0, 0.5);
+      }
+    }
+    .info{
+      margin-left:90px;
+      .name{
+        font-weight: bold;
+        font-size: 16px;
+      }
+    }
 
+  }
+}

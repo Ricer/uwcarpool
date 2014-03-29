@@ -1,65 +1,118 @@
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, target-densityDpi=device-dpi" />
-    <title>UWCarpool ♥</title>
-    <link rel="shortcut icon" href="images/favicon.ico">
 
-    <!-- Loading CSS -->
-    <link href="/css/bootstrap.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/picker/default.css" id="theme_base">
-    <link rel="stylesheet" href="/css/picker/default.date.css" id="theme_date">
-    <link rel="stylesheet" href="/css/picker/default.time.css" id="theme_time">
 
-    <link rel="stylesheet" href="/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/detail.css">
 
-    <script src="js/lib/jquery-2.0.3.min.js"></script>
-    <script src="/js/lib/bootstrap.min.js"></script>
-    <script src="/js/lib/moment.min.js"></script>
-    <script src="/js/lib/picker.js"></script>
-    <script src="/js/lib/picker.date.js"></script>
-    <script src="/js/lib/picker.time.js"></script>
-    
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?=GOOGLE_API_KEY;?>&sensor=true"></script>
-    <script src="/js/lib/react/react-with-addons.min.js"></script>
-    <script src="/js/lib/react/JSXTransformer.js"></script>
-    
-    <script src="https://checkout.stripe.com/checkout.js"></script>
-    <script>
-      data={
-        item:<?= json_encode($view['current']); ?>,
-        user:<?=$view['user']?json_encode($view['user']):"null"?>,
-        passengers:<?=json_encode($view['passengers'])?>
-      }
-      function showProfile(){
-        if(!$('.profile').is(".show")){
-          $(window).one('click',function(){
-            $('.profile').addClass('show');
-            $(window).one('click',function(){
-              $('.profile').removeClass('show');
-            })
-          })
-        }
-      }
-    </script>
-    <script type='text/jsx' src='/js/detail.js'></script>
-  </head>
+<script>
+mapController={
+  map:null,
+  markers:[],
+  directionsService: new google.maps.DirectionsService(),
+  directionsDisplay: new google.maps.DirectionsRenderer(),
+  geocoderService: new google.maps.Geocoder(),
 
-  <body>
-  <script>
-      var handler = StripeCheckout.configure({
-        key: 'pk_test_daTATlsm1bouNWLDzKGJHuNk',
-        image: '/images/favicon.ico',
-        token: function(token, args) {
-          var $input = $('<input type=hidden name=stripeToken />').val(token.id);
-          var $input2 = $('<input type=hidden name=carpool_id />').val(data.item.id);
-          $('<form action="/detail/payByCard" method="POST">').append($input).append($input2).submit();
-          //$("#payForm").submit();
-        }
+  initialize:function(){
+      this.map = new google.maps.Map($(".map-canvas").get(0), {
+        zoom: 14,
+        disableDefaultUI: true
       });
-  </script>
-  </body>
-</html>
+      this.updateMapDisplay("<?=$view['current']->departure?>","<?=$view['current']->arrival?>");
+  },
+
+  calcRoute: function (from,to) {
+    var that=this;
+    var request = {
+      origin: from,
+      destination: to,
+      provideRouteAlternatives: false,
+      travelMode: google.maps.TravelMode.DRIVING,
+      unitSystem: google.maps.UnitSystem.IMPERIAL
+    };
+    this.directionsService.route(request, function(response, status) {
+      if (status == google.maps.DirectionsStatus.OK) {
+        that.directionsDisplay.setMap(that.map);
+        that.directionsDisplay.setDirections(response);
+      }
+    });
+  },
+
+  getGeocode:function(address,callback){
+    var that=this;
+    this.geocoderService.geocode( { 'address': address}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        callback(results[0].geometry.location)
+      } else {
+        $("#map").html("<h1>No direction avaliable</h1>")
+      }
+    });
+  },
+
+  updateMapDisplay:function(from,to){
+    var that=this;
+    that.getGeocode(from,function(fromLocation){
+      that.getGeocode(to,function(toLocation){
+        that.calcRoute(fromLocation,toLocation);
+      })
+    })
+  }
+};
+$(function(){
+  setTimeout(function(){mapController.initialize();},400)
+})
+</script>
+<div id="map-wrapper" class="detail modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+  <div id="map" class="map-canvas">
+  </div>
+</div>
+<div class="modal-body detail">
+<table>
+  <td>
+    <h4><?=$view['current']->departure?></h4>
+  </td>
+  <td style="width:20px">
+    <h4><small>to</small></h4>
+  </td>
+  <td>
+    <h4><?=$view['current']->arrival?></h4>
+  </td>
+</table>
+<div class="infobar">
+  <div class='col-md-8 col-sm-12'>
+  <div class='col-xs-12'>
+    <span><i class="fa fa-envelope fa-fw"></i><strong><?=$view['current']->email?></strong></span>
+  </div>
+  <div class='col-xs-12'>
+    <span><i class="fa fa-phone fa-fw"></i><strong><?=$view['current']->cellphone?></strong></span>
+  </div>
+  </div>
+  <div class='col-md-4'>
+  <div class='col-xs-6 col-md-12'>
+    <span><i class="fa fa-users fa-fw"></i><strong><?=$view['current']->passenger?></strong> seats</span>
+  </div>
+  <div class='col-xs-6 col-md-12'>
+    <span><i class="fa fa-usd fa-fw"></i><strong><?=$view['current']->price?></strong> dollars</span>
+  </div>
+  </div>
+  <div class='clearfix'></div>
+</div>
+
+</div>
+<div class="modal-footer detail">
+<div>
+<div class="profilePicWrapper">
+  <div class="overlay"></div>
+  <img class="profilePic" src="<?=$view['current']->profilePicture?$view['current']->profilePicture:"/images/no_profile.png"?>" />
+</div>
+<div class='info'>
+  <h5 class="name"><?=$view['current']->firstname?> <?=$view['current']->lastname?> <small>driver</small></h5>
+  <p class="desc"><?=$view['current']->description?></p>
+</div>
+<div class='clearfix'></div>
+</div>
+</div>
+
+<!--
+  <?php
+    echo "debug _POST---<br>";print_r($view);echo "<br><br>debug _SESSION---<br>";print_r($_SESSION);
+  ?>
+-->

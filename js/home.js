@@ -216,6 +216,29 @@ MakeRequestModel=React.createClass({
 });
 
 
+CarpoolDetail=React.createClass({
+  getInitialState: function() {
+    return {};
+  },
+  componentDidMount:function(e){
+    showDetail=this.showDetail;
+  },
+  showDetail:function(id){
+    $('#myModal').modal('show');
+    $('#myModal .modal-content').load('/detail/'+id);
+  },
+  render: function() {
+    return(
+      <div className="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div className="modal-dialog">
+          <div className="modal-content">
+          </div>
+        </div>
+      </div>
+    );
+  }
+});
+
 CarpoolRow=React.createClass({
   getInitialState: function() {
     return {};
@@ -227,6 +250,10 @@ CarpoolRow=React.createClass({
     this.props.onMouseEnter(this.props.data);
   },
 
+  openDetail:function(){
+    showDetail(this.props.data.id);
+  },
+
   render: function() {
     var data=this.props.data?this.props.data:{id:-1,type:"offer"}
     var classString="carpoolRow "+(this.props.className||"");
@@ -234,7 +261,7 @@ CarpoolRow=React.createClass({
     var date=moment(data.date);
     return(
       <li key={data.id} className={classString}>
-        <a href={'/detail/'+data.id} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.props.onMouseLeave}>
+        <a onClick={this.openDetail} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.props.onMouseLeave}>
           <table>
           <tbody>
           <tr>
@@ -578,6 +605,7 @@ MainView=React.createClass({
             </div>
           </div>
         </nav>
+        <CarpoolDetail />
         {modals}
         <FilterView type={this.state.type} user={this.state.user}/>
       </div>

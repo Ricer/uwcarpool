@@ -92,6 +92,8 @@ class DetailController extends CarpoolController {
     $driver=User::find($selector);
     $view['current']->firstname=$driver->firstname;
     $view['current']->lastname=$driver->lastname;
+    $view['current']->email=$driver->email;
+    $view['current']->cellphone=$driver->cellphone;
     $view['current']->profilePicture=$driver->profilePicture;
 
     $view['user'] = $this->user;
