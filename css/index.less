@@ -4,6 +4,7 @@
 body{
   background: @listColor;
   padding-top:@topbarHeight;
+  overflow: scroll;
 }
 
 
@@ -204,11 +205,11 @@ body{
 .picker__holder{z-index: 1200;}
 
 .autocomplete-suggestions {
-  margin-top:-5px;
   border: 1px solid #bbb;
-  border-bottom-width: 3px;
-  border-radius:0 0 3px 3px;
+  border-radius:4px;
   background: #FFF;
+  margin-top:4px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   overflow: auto;width: 100%;
 }
 .autocomplete-suggestion { 
@@ -216,9 +217,18 @@ body{
   white-space: nowrap;
   overflow: hidden;
   text-align: center;
+  font-weight: bold; 
  }
 .autocomplete-selected { background: #F0F0F0; }
-.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+.autocomplete-suggestions strong { color: #3399FF; }
+
+
+.modal-backdrop{
+  &.in{
+    opacity: 0.7;
+  }
+}
+
 @media (max-width: 767px){
   body{
     padding: 50px 0;

@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -14,6 +13,7 @@
 
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/detail.css" />
 
     <script src="js/lib/jquery-2.0.3.min.js"></script>
     <script src="js/lib/bootstrap.min.js"></script>
@@ -25,6 +25,7 @@
     
     <script src="js/lib/react/react-with-addons.min.js"></script>
     <script src="js/lib/react/JSXTransformer.js"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?=GOOGLE_API_KEY;?>&sensor=true"></script>
     <script>
       data={
         type:"<?=$view['user']&&$view['user']->type>1?'request':'offer'?>",
@@ -48,10 +49,23 @@
         }
       }
     </script>
+    <script src="https://checkout.stripe.com/checkout.js"></script>
     <script type='text/jsx' src="js/home.js"></script>
     
   </head>
   <body>
+    <script>
+        var handler = StripeCheckout.configure({
+          key: 'pk_test_daTATlsm1bouNWLDzKGJHuNk',
+          image: '/images/favicon.ico',
+          token: function(token, args) {
+            var $input = $('<input type=hidden name=stripeToken />').val(token.id);
+            var $input2 = $('<input type=hidden name=carpool_id />').val(data.item.id);
+            $('<form action="/detail/payByCard" method="POST">').append($input).append($input2).submit();
+            //$("#payForm").submit();
+          }
+        });
+    </script>
   </body>
 </html>
 
