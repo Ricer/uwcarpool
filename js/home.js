@@ -1,6 +1,10 @@
 /** @jsx React.DOM */
-// Patch Bootstrap popover to take a React component instead of a
-// plain HTML string
+
+/*=============================================
+=            Patch Bootstrap popover 
+=            to take a React component
+=            instead of a plain HTML string   
+=============================================*/
 $.extend($.fn.popover.Constructor.DEFAULTS, {react: false});
 var oldSetContent = $.fn.popover.Constructor.prototype.setContent;
 $.fn.popover.Constructor.prototype.setContent = function() {
@@ -27,18 +31,19 @@ $.fn.popover.Constructor.prototype.setContent = function() {
         React.renderComponent(content,  $tip.find('.popover-content')[0]);
     }
 };
-function fieldError(fieldElem,errorStr){
-  fieldElem.tooltip({
-      placement:fieldElem.is("#makeRequest-time")?"right":"left",
-      trigger:'manual',
-      container:'#makeRequest',
-      title:errorStr,
-  }).tooltip('show').addClass('has-tooltip').closest('.form-group').addClass('has-error')
-  fieldElem.one('keypress blur change',function(){
-      fieldElem.tooltip('destroy').removeClass('has-tooltip').closest('.form-group').removeClass('has-error')
-  });
-}
+/*-----  End of Patch  ------*/
 
+
+
+/**
+*
+* Make Request View
+* use bootstrap modal
+* 
+* Self Registered Global functions:
+*   makeOffer()  //show make offer modal
+*   makeRequest()  //show make request modal
+**/
 MakeRequestModel=React.createClass({
   getInitialState: function() {
     return {people:"1",price:"",style:{}};
@@ -49,6 +54,23 @@ MakeRequestModel=React.createClass({
 
   componentDidUpdate:function(previousProps){
   },
+
+  /**
+  *
+  * handleChange(e)
+  * e: react event, e.target must be a html element
+  * automatically change states according to input's data-values
+  * 
+  * data-source (default:value): html|value|<attr-name>
+  * data-change (required): name of the state that the input is changing
+  * 
+  * eg:
+  *   <a onClick={this.handleChange} 
+  *      data-value="1" 
+  *      data-change="people" 
+  *      data-source="data-value"></a>
+  *   POST: change state named "people" to 1
+  **/
   handleChange:function(e){
     var nextState={};
     var target=$(e.target);
@@ -63,6 +85,7 @@ MakeRequestModel=React.createClass({
   },
 
   componentDidMount:function(){
+    var that=this;
     $('#makeRequest-date').pickadate({
       container:'body',
       min: new Date(),
@@ -74,26 +97,38 @@ MakeRequestModel=React.createClass({
       clear:""
     })
     $('#makeRequest').on('show.bs.modal', function (e) {
+      // take values from filter view's inputs
       $('#makeRequest-from').val($('#filter-from').val())
       $('#makeRequest-to').val($('#filter-to').val())
       $('#makeRequest-date').val($('#filter-date').val())
     }).on('shown.bs.modal', function (e) {
+      // focus on the first input when modal has shown
       setTimeout(function(){$('#makeRequest-from').focus()},400);
     })
 
-    $('#makeRequest-from,#makeRequest-to').keyup(function(e){
-      if (e.keyCode == 38||e.keyCode==40) {
-        that.handleChange(e);
-      }
-    }).autocomplete({
+    $('#makeRequest-from,#makeRequest-to').autocomplete({
       serviceUrl: '/index/getLocations',
       minChars:0,
       onSelect:function(){
         that.handleChange({target:this});
       }
     })
+
+    //bind external functions:
     makeOffer=this.showMakeOffer.bind(this)
     makeRequest=this.showMakeRequest.bind(this)
+  },
+
+  fieldError:function(fieldElem,errorStr){
+    fieldElem.tooltip({
+        placement:fieldElem.is("#makeRequest-time")?"right":"left",
+        trigger:'manual',
+        container:'#makeRequest',
+        title:errorStr,
+    }).tooltip('show').addClass('has-tooltip').closest('.form-group').addClass('has-error')
+    fieldElem.one('keypress blur change',function(){
+        fieldElem.tooltip('destroy').removeClass('has-tooltip').closest('.form-group').removeClass('has-error')
+    });
   },
 
   showMakeOffer:function(e){
@@ -118,13 +153,13 @@ MakeRequestModel=React.createClass({
     var desc=$('#makeRequest-desc')
     var price=$('#makeRequest-price')
     var re=/^\d+(\.\d{2})?$/
-    if (  price.val() == ''      ){fieldError(price,"Cannot be empty");errorElem=price;}
-    else if ( !re.test(price.val()) ){fieldError(price,"Not a valid price, only numbers and decimal point are allowed");errorElem=price;}
+    if (  price.val() == ''      ){this.fieldError(price,"Cannot be empty");errorElem=price;}
+    else if ( !re.test(price.val()) ){this.fieldError(price,"Not a valid price, only numbers and decimal point are allowed");errorElem=price;}
 
-    if (  time.val() == ''      ){fieldError(time,"Cannot be empty");errorElem=time;}
-    if (  date.val() == ''      ){fieldError(date,"Cannot be empty");errorElem=date;}
-    if (  to.val() == ''      ){fieldError(to,"Cannot be empty");errorElem=to;}
-    if (  from.val() == ''      ){fieldError(from,"Cannot be empty");errorElem=from;}
+    if (  time.val() == ''      ){this.fieldError(time,"Cannot be empty");errorElem=time;}
+    if (  date.val() == ''      ){this.fieldError(date,"Cannot be empty");errorElem=date;}
+    if (  to.val() == ''      ){this.fieldError(to,"Cannot be empty");errorElem=to;}
+    if (  from.val() == ''      ){this.fieldError(from,"Cannot be empty");errorElem=from;}
 
     if(errorElem){
       errorElem.focus();
@@ -224,12 +259,12 @@ CarpoolDetail=React.createClass({
     showDetail=this.showDetail;
   },
   showDetail:function(id){
-    $('#myModal').modal('show');
-    $('#myModal .modal-content').load('/detail/'+id);
+    $('#carpoolDetailModal').modal('show');
+    $('#carpoolDetailModal .modal-content').load('/detail/'+id);
   },
   render: function() {
     return(
-      <div className="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div className="modal fade" id="carpoolDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div className="modal-dialog">
           <div className="modal-content">
           </div>

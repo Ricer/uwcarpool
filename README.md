@@ -1,5 +1,9 @@
 UWCarpool Website
 ----------------------
+###TODO:
+GEOCODE Locations
+facebook integration
+
 ###Form validation before submit **checker**: version 2
 In **forms.js**, There is an easier way to validate your form input before submiting a form.
 To use it, include the following in your head tag.
