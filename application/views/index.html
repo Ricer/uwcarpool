@@ -30,7 +30,7 @@
       data={
         type:"<?=$view['user']&&$view['user']->type>1?'request':'offer'?>",
         user:<?=$view['user']?json_encode($view['user']):"null"?>,
-        locations:<?=json_encode($view['locations'])?>
+        locations:null
       }
       function switchTo(str){
         $('#requestLi,#offerLi').removeClass('active')
