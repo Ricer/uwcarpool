@@ -101,9 +101,6 @@ MakeRequestModel=React.createClass({
       $('#makeRequest-from').val($('#filter-from').val())
       $('#makeRequest-to').val($('#filter-to').val())
       $('#makeRequest-date').val($('#filter-date').val())
-    }).on('shown.bs.modal', function (e) {
-      // focus on the first input when modal has shown
-      setTimeout(function(){$('#makeRequest-from').focus()},400);
     })
 
     $('#makeRequest-from,#makeRequest-to').autocomplete({
@@ -466,7 +463,7 @@ ListView=React.createClass({
 
 FilterView=React.createClass({
   getInitialState: function() {
-    return {hide:false,from:"",to:"",date:"",passenger:1,luggage:0,focus:"",select:0};
+    return {from:"",to:"",date:"",passenger:1,luggage:0,focus:false,select:0};
   },
   componentWillUnmount: function() {
     $(window).off('typeChange', this.handleTypeChange.bind(this));
@@ -477,11 +474,10 @@ FilterView=React.createClass({
     this.setState(nextState);
   },
   handleTypeChange:function(e){
-    console.log("type changed")
     this.setState({type:data.type});
   },
   componentDidMount: function() {
-
+    $(window).on('scroll', this.handleScroll);
     $(window).on('typeChange', this.handleTypeChange.bind(this));
     var that=this;
     $('#filter-date').pickadate({
@@ -504,7 +500,22 @@ FilterView=React.createClass({
       if (e.keyCode == 38||e.keyCode==40) {
         that.handleChange(e);
       }
-    }).autocomplete({
+    })
+  },
+  componentWillUnmount: function() {
+    $(window).off('scroll', this.handleScroll);
+  },
+  handleScroll: function(e){
+    $('#filter-from,#filter-to').autocomplete('hide')
+    $("#filter-from,#filter-to,#filter-date").blur()
+  },
+  handleBlur: function(e){
+    this.setState({focus:false})
+    $(e.target).autocomplete('disable')
+  },
+  handleFocus: function(e){
+    this.setState({focus:true})
+    $(e.target).autocomplete({
       serviceUrl: '/index/getLocations',
       minChars:0,
       onSelect:function(){
@@ -515,7 +526,7 @@ FilterView=React.createClass({
 
   render: function() {
     var that=this;
-    var classString="filterPanel "+(this.state.isTop?"affix-top":"affix");
+    var classString="filterPanel "+(this.state.isTop?"affix-top ":"affix ")+(this.state.focus?"focused":"");
     var list=(<ListView ref="list" type={this.props.type} from={this.state.from} to={this.state.to} date={this.state.date} passenger={this.state.passenger} luggage={this.state.luggage} user={this.props.user}/>)
     var text=this.props.type=="offer"?"Offered":"Requested";
     var seatsText=this.props.type=="offer"?"Seats":"# of People";
@@ -528,15 +539,15 @@ FilterView=React.createClass({
             <div className='inputs'>
             <div className="merge-input col-xs-12 col-sm-4"> 
               <label><span className="glyphicon glyphicon-map-marker from-marker"></span></label>
-              <input id='filter-from' placeholder="FROM" data-change="from" onChange={this.handleChange} />
+              <input id='filter-from' placeholder="FROM" data-change="from" onChange={this.handleChange} onBlur={this.handleBlur} onFocus={this.handleFocus}/>
             </div>
             <div className="merge-input col-xs-12 col-sm-4"> 
               <label><span className="glyphicon glyphicon-map-marker to-marker"></span></label>
-              <input id='filter-to' placeholder="TO" data-change="to" onChange={this.handleChange}  />
+              <input id='filter-to' placeholder="TO" data-change="to" onChange={this.handleChange} onBlur={this.handleBlur} onFocus={this.handleFocus}/>
             </div>
             <div className='merge-input col-xs-12 col-sm-4'> 
               <label><i className='fa fa-calendar date-marker'/></label>
-              <input id='filter-date' type='text' ref='dateInput' id='filter-date' placeholder="DATE" className="form-control" data-format="YYYY-MM-DD"  value={this.state.date} data-change="date" onChange={this.handleChange}/>
+              <input id='filter-date' type='text' ref='dateInput' id='filter-date' placeholder="DATE" className="form-control" data-format="YYYY-MM-DD"  value={this.state.date} data-change="date" onChange={this.handleChange} onBlur={this.handleBlur} onFocus={this.handleFocus}/>
             </div>
             </div>
 

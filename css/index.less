@@ -7,7 +7,6 @@ body{
   overflow: scroll;
 }
 
-
 .carpoolHeader tr,.carpoolRow tr{
   td:nth-child(1),td:nth-child(5),td:nth-child(6){
     width:12%;
@@ -100,8 +99,12 @@ body{
   &.affix{
     top:@topbarShortHeight - (@filterHeight - 45px);
   }
+  &.affix.focused{
+    top:@topbarShortHeight;
+  }
   &.affix:hover,&.affix:active,&.affix:focus{
     top:@topbarShortHeight;
+
   }
 }
 
